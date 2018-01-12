@@ -426,7 +426,9 @@ end ;;; process_aerosol_emissions
 
 
 undef("nmvoc_fraction_calculations")
-function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string)
+function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string,\
+										nmvoc_species:string,nmvoc_species_index:logical,\
+										nmvoc_groups:string,nmvoc_sectors:string)
 local FILE, total_emissions, im, js, sector_pointer, species_pointer, emiss_data, total_mass
 begin
 
@@ -435,28 +437,28 @@ begin
 
 	;;; create data array for storing the summed emission data
 	; 2 dimensions: 1st is MACCity Species; 2nd is standard (not MACCity) emission sector
-	total_emissions = new((/dimsizes(maccity_species),dimsizes(emiss_sector)/),float)
+	total_emissions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
 	; initialise all the data to zero
 	total_emissions = 0.0
 	
 	;;; create data array for storing the generated information
 	; 2 dimensions: 1st is MACCity Species; 2nd is standard (not MACCity) emission sector
-	nmvoc_mass_fractions = new((/dimsizes(maccity_species),dimsizes(emiss_sector)/),float)
+	nmvoc_mass_fractions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
 
 	;;; extract the emission data
 	; loop through the MACCity emission sectors
-	do im = 0, dimsizes(maccity_sectors)-1
+	do im = 0, dimsizes(nmvoc_sectors)-1
 		; determine our pointer for the standard emission sector we will populate
-		sector_pointer = emiss_sector_index@$maccity_groups(im)$
+		sector_pointer = emiss_sector_index@$nmvoc_groups(im)$
 		
 		; loop through the MACCity emission species for each sector
-		do js = 0, dimsizes(maccity_species)-1
+		do js = 0, dimsizes(nmvoc_species)-1
 			
 			; determine our pointer for the emission species
-			species_pointer = maccity_species_index@$maccity_species(js)$
+			species_pointer = nmvoc_species_index@$nmvoc_species(js)$
 			
 			; load data
-			emiss_data = FILE->$(/"E_"+maccity_species(js)+"_"+maccity_sectors(im)/)$
+			emiss_data = FILE->$(/"E_"+nmvoc_species(js)+"_"+nmvoc_sectors(im)/)$
 			
 			; sum up the data, and add the result to our storage array
 			total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + sum(emiss_data)
@@ -500,15 +502,18 @@ end
 
 undef("process_nmvoc_emissions_by_fraction")
 procedure process_nmvoc_emissions_by_fraction(INDIR:string,OUTFILE:file,nmvoc_scheme:string,VAR_LIST_NMVOC:string,\
-												NMVOC_MAP_VAR:logical,NMVOC_MAP_TRN:logical,emissions_data:float)
+												NMVOC_MAP_VAR:logical,NMVOC_MAP_TRN:logical,emissions_data:float,\
+												nmvoc_species:string,nmvoc_species_index:logical,\
+												nmvoc_groups:string,nmvoc_sectors:string,nmvoc_mol_weights:logical)
 local ig, pname, pcount, ename, epname, e_point, ksp, mname, cfac, mwgt, \
 		ies, esname, s_point, mfac, emissions 
 begin
 
 	;;;;; calculate the NMVOC fractional values
 	print("== Calculating the NMVOC fractions ==")
-	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme)
-
+	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme,\
+														nmvoc_species,nmvoc_species_index,\
+														nmvoc_groups,nmvoc_sectors)
 
 	do ig = 0, dimsizes(VAR_LIST_NMVOC)-1
 
@@ -539,7 +544,7 @@ begin
 				cfac = NMVOC_MAP_TRN@$pname$(ksp)
 				;print("cfac = "+cfac)
 				;;; get the MACCity NMVOC molecular weight
-				mwgt = maccity_mol_weights@$mname$
+				mwgt = nmvoc_mol_weights@$mname$
 				;print("mwgt = "+mwgt)
 			
 			
@@ -552,7 +557,7 @@ begin
 					s_point = emiss_sector_index@$esname$
 
 					;;; get the MACCity NMVOC mass fraction, for the given sector
-					mfac = nmvoc_mass_fractions(maccity_species_index@$mname$,s_point)
+					mfac = nmvoc_mass_fractions(nmvoc_species_index@$mname$,s_point)
 					;print("mfac = "+mfac)
 				
 	
@@ -613,9 +618,11 @@ end ;;; process_nmvoc_emissions_by_fraction
 undef("process_nmvoc_emissions_direct")
 procedure process_nmvoc_emissions_direct(INDIR:string,OUTFILE:file,nmvoc_scheme:string,fname:string,\
 										VAR_LIST_NMVOC:string,NMVOC_MAP_VAR:logical,\
-										NMVOC_MAP_TRN:logical,NMVOC_MOL_WGT:logical)
+										NMVOC_MAP_TRN:logical,NMVOC_MOL_WGT:logical,\
+										nmvoc_mol_weights:logical)
 local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, ies, \
-		ecname, cfac, cat_var, icat, emissions
+		ecname, cfac, cat_var, icat, emissions, \
+		mwgt
 begin
 
 	;;; open the NMVOC emission data file
@@ -632,6 +639,7 @@ begin
 		ename_list := NMVOC_MAP_VAR@$pname$
 		;;; get number of emission categories
 		enum = dimsizes(ename_list)
+
 		
 		;;; check that the last category is "NMVOC" - if not then skip this species
 		if(ename_list(enum-1) .eq. "NMVOC")
@@ -647,6 +655,16 @@ begin
 				;;; get the category conv factor
 				cfac = cfac_list(ies)
 			
+				;;; get the NMVOC molecular weight - with a choice of using
+				;;;    either the molecular weights from the source scheme,
+				;;;    or molecular weights for the destination scheme
+				if(nmvoc_scheme@molweights .eq. "source")
+					mwgt = nmvoc_mol_weights@$ecname$
+				else if(nmvoc_scheme@molweights .eq. "destination")
+					mwgt = NMVOC_MOL_WGT@$pname$
+				end if
+				end if
+
 				;;; obtain a list of nmvoc variables within that category
 				cat_var := str_match(var_list,ecname)
 			
@@ -655,10 +673,11 @@ begin
 				
 					do icat = 0, dimsizes(cat_var)-1
 					
+
 						if(ies .eq. 0 .and. icat .eq. 0)
-							emissions = (/INFILE->$cat_var(icat)$/) * cfac
+							emissions = (/INFILE->$cat_var(icat)$/) * cfac / mwgt
 						else
-							emissions = emissions + (/INFILE->$cat_var(icat)$/) * cfac
+							emissions = emissions + ( (/INFILE->$cat_var(icat)$/) * cfac / mwgt )
 						end if
 	
 					end do ;;; icat in cat_var
@@ -691,7 +710,10 @@ procedure generate_scheme_emissions(INDIR:string, OUTDIR:string, fname:string, \
 			wrfchem_scheme:string, nmvoc_scheme:string, nox_frac:float, \
 			INORG_MAP_VAR:logical, INORG_MAP_TRN:logical, \
 			AERO_MAP_VAR:logical, AERO_MAP_TRN:logical, NMVOC_MAP_VAR:logical, \
-			NMVOC_MAP_TRN:logical, NMVOC_MOL_WGT:logical)
+			NMVOC_MAP_TRN:logical, NMVOC_MOL_WGT:logical, \
+			nmvoc_species:string,nmvoc_species_index:logical, \
+			nmvoc_groups:string,nmvoc_sectors:string, \
+			nmvoc_mol_weights:logical)
 local INFILE, emissions_data, OUTFILE, VAR_LIST_GAS, VAR_LIST_AERO, VAR_LIST_NMVOC, \
 		ig, ies, pname, ename, epname, e_point, \
 		esname, s_point, cfac, emissions, e_point_bc, e_point_oc, e_point_pm, e_point_pm25, \
@@ -739,13 +761,16 @@ begin
 	if(nmvoc_scheme@method .eq. "direct")
 
 		process_nmvoc_emissions_direct(INDIR,OUTFILE,nmvoc_scheme,fname,VAR_LIST_NMVOC, \
-												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT)
+												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT, \
+												nmvoc_mol_weights)
 
 
 	else if(nmvoc_scheme@method .eq. "fraction")
 
 		process_nmvoc_emissions_by_fraction(INDIR,OUTFILE,nmvoc_scheme,VAR_LIST_NMVOC,\
-												NMVOC_MAP_VAR,NMVOC_MAP_TRN,emissions_data)
+												NMVOC_MAP_VAR,NMVOC_MAP_TRN,emissions_data,\
+												nmvoc_species,nmvoc_species_index,\
+												nmvoc_groups,nmvoc_sectors,nmvoc_mol_weights)
 
 	end if  ;;; nmvoc_scheme@method selection
 	end if
@@ -765,7 +790,8 @@ procedure combine_emission_sectors(INDIR:string,OUTDIR:string,fname:string,wrfch
 									nmvoc_scheme:string,nox_frac:float)
 local INFILE, OUTFILE, emissions_data, \
 		INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, \
-		NMVOC_VAR, NMVOC_TRN, NMVOC_WGT
+		NMVOC_VAR, NMVOC_TRN, NMVOC_WGT, \
+		nmvoc_species, nmvoc_species_index, nmvoc_groups, nmvoc_sectors, nmvoc_mol_weights
 begin
 
 
@@ -829,7 +855,7 @@ begin
 			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cri_mos_edgar_htap
 			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap
 			NMVOC_WGT = NMVOC_edgar_MOL_WGT_cri_mos_edgar_htap
-		
+			
 		end if
 		end if
 
@@ -842,9 +868,35 @@ begin
 	end if
 	end if
 
+	;;; load the NMVOC information which is generic for all chemical schemes
+	if(nmvoc_scheme .eq. "MACCITY")
+
+			nmvoc_species       = maccity_species
+			nmvoc_species_index = maccity_species_index
+			nmvoc_groups        = maccity_groups
+			nmvoc_sectors       = maccity_sectors
+			nmvoc_mol_weights   = maccity_mol_weights
+
+			nmvoc_scheme@molweights = "source"			;;; set flag to use MACCITY molecular weights for NMVOC calculations
+
+
+	else if(nmvoc_scheme .eq. "EDGAR")
+
+			nmvoc_species       = edgar_nmvoc_species
+			nmvoc_species_index = edgar_nmvoc_species_index
+			nmvoc_groups        = edgar_nmvoc_groups
+			nmvoc_sectors       = edgar_nmvoc_sectors
+			nmvoc_mol_weights   = edgar_nmvoc_mol_weights
+
+			nmvoc_scheme@molweights = "destination"		;;; set flag to use final scheme molecular weights for NMVOC calculations
+
+	end if
+	end if
 
 	generate_scheme_emissions(INDIR, OUTDIR, fname, wrfchem_scheme, nmvoc_scheme, nox_frac, \
-					INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, NMVOC_VAR, NMVOC_TRN, NMVOC_WGT)
+					INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, NMVOC_VAR, NMVOC_TRN, NMVOC_WGT, \
+					nmvoc_species, nmvoc_species_index, nmvoc_groups, nmvoc_sectors, nmvoc_mol_weights)
+
 
 
 
