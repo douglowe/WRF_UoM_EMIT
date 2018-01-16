@@ -426,23 +426,29 @@ end ;;; process_aerosol_emissions
 
 
 undef("nmvoc_fraction_calculations")
-function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string,\
+function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string,fname:string,\
 										nmvoc_species:string,nmvoc_species_index:logical,\
 										nmvoc_groups:string,nmvoc_sectors:string)
-local FILE, total_emissions, im, js, sector_pointer, species_pointer, emiss_data, total_mass
+local FILE, total_emissions, im, js, sector_pointer, species_pointer, emiss_data, total_mass, \
+		var_list, var_num, emiss_name, cat_var
 begin
 
-	;;; open the MACCity data file
-	FILE = addfile(INDIR+nmvoc_scheme@fname1+".nc","r")
+	;;; open the NMVOC data file
+	FILE = addfile(INDIR+nmvoc_scheme@$fname$+".nc","r")
+
+	;;; pull out a list of the variables in the emission file
+	var_list = getfilevarnames(FILE)
+	var_num = dimsizes(var_list)
+
 
 	;;; create data array for storing the summed emission data
-	; 2 dimensions: 1st is MACCity Species; 2nd is standard (not MACCity) emission sector
+	; 2 dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector
 	total_emissions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
 	; initialise all the data to zero
 	total_emissions = 0.0
 	
 	;;; create data array for storing the generated information
-	; 2 dimensions: 1st is MACCity Species; 2nd is standard (not MACCity) emission sector
+	; 2 dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector
 	nmvoc_mass_fractions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
 
 	;;; extract the emission data
@@ -457,14 +463,33 @@ begin
 			; determine our pointer for the emission species
 			species_pointer = nmvoc_species_index@$nmvoc_species(js)$
 			
-			; load data
-			emiss_data = FILE->$(/"E_"+nmvoc_species(js)+"_"+nmvoc_sectors(im)/)$
+			; create the emission variable name
+			emiss_name = "E_"+nmvoc_species(js)+"_"+nmvoc_sectors(im)
 			
-			; sum up the data, and add the result to our storage array
-			total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + sum(emiss_data)
+			; check that this emission variable is in the file
+			cat_var := str_match(var_list,emiss_name)
+			if(.not. any(ismissing(cat_var)))
 			
-			; delete data array
-			delete(emiss_data)
+				; load data
+				emiss_data = FILE->$emiss_name$
+			
+				; sum up the data, and add the result to our storage array
+				;  Note: we add, not replace, because a single (final) emission sector
+				;        could contain multiple NMVOC input emission sectors 
+				total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + sum(emiss_data)
+			
+				; delete data array
+				delete(emiss_data)
+
+			else
+			
+				; add a zero value to the storage array (to ensure there is something there)
+				;  Note: we add, not replace, because a single (final) emission sector
+				;        could contain multiple NMVOC input emission sectors 
+				total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + 0.0
+			
+			
+			end if
 
 		end do
 	
@@ -501,17 +526,20 @@ end
 
 
 undef("process_nmvoc_emissions_by_fraction")
-procedure process_nmvoc_emissions_by_fraction(INDIR:string,OUTFILE:file,nmvoc_scheme:string,VAR_LIST_NMVOC:string,\
-												NMVOC_MAP_VAR:logical,NMVOC_MAP_TRN:logical,emissions_data:float,\
+procedure process_nmvoc_emissions_by_fraction(INDIR:string,OUTFILE:file,nmvoc_scheme:string,fname:string,\
+												VAR_LIST_NMVOC:string,NMVOC_MAP_VAR:logical,\
+												NMVOC_MAP_TRN:logical, NMVOC_MOL_WGT:logical,\
+												emissions_data:float,\
 												nmvoc_species:string,nmvoc_species_index:logical,\
-												nmvoc_groups:string,nmvoc_sectors:string,nmvoc_mol_weights:logical)
+												nmvoc_groups:string,nmvoc_sectors:string,\
+												nmvoc_mol_weights:logical)
 local ig, pname, pcount, ename, epname, e_point, ksp, mname, cfac, mwgt, \
 		ies, esname, s_point, mfac, emissions 
 begin
 
 	;;;;; calculate the NMVOC fractional values
 	print("== Calculating the NMVOC fractions ==")
-	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme,\
+	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme,fname,\
 														nmvoc_species,nmvoc_species_index,\
 														nmvoc_groups,nmvoc_sectors)
 
@@ -525,26 +553,32 @@ begin
 
 		;;; grab the name of the emission category we're using (this is the last variable in the list)
 		ename = NMVOC_MAP_VAR@$pname$(pcount-1)
+		;print("ename = "+ename)
 		;;; grab the name of the parent emission category (in case this is different)
 		epname = emiss_orig(emiss_cat_index@$ename$)
 		;;; get the pointer for the emissions we'll be converting (using the parent emission category)
 		e_point = emiss_cat_index@$epname$
 
 	
-		;;; check if we are to use MACCity mapping or not (i.e. there's more than one mapping species)
+		;;; check if we are to use NMVOC mapping or not (i.e. there's more than one mapping species)
 		if(pcount .gt. 1)
 	
 			;;; loop through the mapping species (not using the last species)
 			do ksp = 0, pcount - 2 
 
-				;;; get the MACCity species name
+				;;; get the NMVOC source scheme species name
 				mname = NMVOC_MAP_VAR@$pname$(ksp)
 				;print("mname = "+mname)
-				;;; get the MACCity to new scheme multiplier
+				;;; get the NMVOC source to new scheme multiplier
 				cfac = NMVOC_MAP_TRN@$pname$(ksp)
 				;print("cfac = "+cfac)
-				;;; get the MACCity NMVOC molecular weight
-				mwgt = nmvoc_mol_weights@$mname$
+				;;; get the NMVOC molecular weight, choosing either source or final scheme
+				if(nmvoc_scheme@molweights.eq."source")
+					mwgt = nmvoc_mol_weights@$mname$
+				else if(nmvoc_scheme@molweights.eq."destination")
+					mwgt = NMVOC_MOL_WGT@$pname$				
+				end if
+				end if
 				;print("mwgt = "+mwgt)
 			
 			
@@ -563,10 +597,10 @@ begin
 	
 					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
 					; NMVOC emissions input is in kg/m2/s --- we multiple this by the mass fraction to
-					;       get the emitted mass of the MACCity NMVOC, then divide by the molecular weight
+					;       get the emitted mass of the original NMVOC, then divide by the molecular weight
 					;       of this to get the emission in mol/m2/s. The scheme multiplier will modify this
 					;       emission (if, for example, there are 2 moles of the scheme NMVOC for every one
-					;       mole of the MACCity NMVOC).
+					;       mole of the original NMVOC).
 					if(ksp .eq. 0 .and. ies .eq. 0)
 						emissions = emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * cfac
 					else
@@ -767,9 +801,9 @@ begin
 
 	else if(nmvoc_scheme@method .eq. "fraction")
 
-		process_nmvoc_emissions_by_fraction(INDIR,OUTFILE,nmvoc_scheme,VAR_LIST_NMVOC,\
-												NMVOC_MAP_VAR,NMVOC_MAP_TRN,emissions_data,\
-												nmvoc_species,nmvoc_species_index,\
+		process_nmvoc_emissions_by_fraction(INDIR,OUTFILE,nmvoc_scheme,fname,VAR_LIST_NMVOC,\
+												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT,\
+												emissions_data,nmvoc_species,nmvoc_species_index,\
 												nmvoc_groups,nmvoc_sectors,nmvoc_mol_weights)
 
 	end if  ;;; nmvoc_scheme@method selection
