@@ -79,12 +79,12 @@ begin
 	
 
 
-	; list of emission sectors for MACCity
+	; list of emission sectors for EDGAR NMVOC
 	edgar_nmvoc_sectors = (/ "AWB", "ENE", "FFF", "IND", "PPA", "PRO", "RCO", "REF", "SWD", \
 								"TNR_Other", "TNR_Ship", "TRF", "TRO" /)
 	; info on how we're grouping these into the HTAP emission sectors
 	edgar_nmvoc_groups = (/ "AGR", "POW", "IND", "IND", "SLV", "IND", "RES", "IND", "AGR", \
-								"IND", "SHP", "TRA" /)
+								"IND", "SHP", "IND", "TRA" /)
 
 
 
