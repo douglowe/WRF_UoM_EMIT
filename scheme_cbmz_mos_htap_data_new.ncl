@@ -21,19 +21,19 @@ begin
 
 
 ;;;;; inorganic gas-phase data
-INORG_MAP_VAR_cbmz_mos_htap = True
-INORG_MAP_VAR_cbmz_mos_htap@E_CO 	= "CO"
-INORG_MAP_VAR_cbmz_mos_htap@E_NO 	= "NOx"
-INORG_MAP_VAR_cbmz_mos_htap@E_NO2 	= "NOx"
-INORG_MAP_VAR_cbmz_mos_htap@E_SO2 	= "SO2"
-INORG_MAP_VAR_cbmz_mos_htap@E_NH3 	= "NH3"
+INORG_MAP_VAR_cbmz_mos_htap_new = True
+INORG_MAP_VAR_cbmz_mos_htap_new@E_CO 	= "CO"
+INORG_MAP_VAR_cbmz_mos_htap_new@E_NO 	= "NOx"
+INORG_MAP_VAR_cbmz_mos_htap_new@E_NO2 	= "NOx"
+INORG_MAP_VAR_cbmz_mos_htap_new@E_SO2 	= "SO2"
+INORG_MAP_VAR_cbmz_mos_htap_new@E_NH3 	= "NH3"
 
-INORG_MAP_TRN_cbmz_mos_htap = True
-INORG_MAP_TRN_cbmz_mos_htap@E_CO 	= 1.0
-INORG_MAP_TRN_cbmz_mos_htap@E_NO 	= -9999. 	; this will be replaced later with NOX_FRAC
-INORG_MAP_TRN_cbmz_mos_htap@E_NO2 	= -9999.	; this will be replaced later with 1-NOX_FRAC
-INORG_MAP_TRN_cbmz_mos_htap@E_SO2 	= 1.0
-INORG_MAP_TRN_cbmz_mos_htap@E_NH3 	= 1.0
+INORG_MAP_TRN_cbmz_mos_htap_new = True
+INORG_MAP_TRN_cbmz_mos_htap_new@E_CO 	= 1.0
+INORG_MAP_TRN_cbmz_mos_htap_new@E_NO 	= -9999. 	; this will be replaced later with NOX_FRAC
+INORG_MAP_TRN_cbmz_mos_htap_new@E_NO2 	= -9999.	; this will be replaced later with 1-NOX_FRAC
+INORG_MAP_TRN_cbmz_mos_htap_new@E_SO2 	= 1.0
+INORG_MAP_TRN_cbmz_mos_htap_new@E_NH3 	= 1.0
 
 
 ;;;;; aerosol data
@@ -128,55 +128,55 @@ AERO_MAP_VAR_cbmz_mos_htap_new@E_ECC		= 0.0 ; Elemental Carbon - course mode
 
 ;;;;;;; EDGAR information ;;;;;;;;;;;;;;;;;;;
 ; Mapping information for NMVOC species
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap = True
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ETH		= (/"VOC02","NMVOC"/)
-;NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_PAR		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new = True
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ETH		= (/"VOC02","NMVOC"/)
+;NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_PAR		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
 												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
 												"VOC23","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ISO		= (/"VOC10","VOC11","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC3		= "CO"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ISO		= (/"VOC10","VOC11","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_HC3		= "CO"
 ;;; using hc5 for par in chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC5		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_HC5		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
 												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC8		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_XYL		= (/"VOC15","VOC16","VOC17","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OL2		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OLT		= (/"VOC08","VOC12","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OLI		= (/"VOC12","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_TOL		= (/"VOC13","VOC14","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_CSL		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HCHO	= (/"VOC21","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ALD		= (/"VOC22","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_KET		= (/"VOC23","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ORA2	= (/"VOC24","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_CH3OH	= (/"VOC01","VOC19","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_C2H5OH	= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_C2H4    = (/"VOC07","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_HC8		= "CO"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_XYL		= (/"VOC15","VOC16","VOC17","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_OL2		= "CO"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_OLT		= (/"VOC08","VOC12","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_OLI		= (/"VOC12","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_TOL		= (/"VOC13","VOC14","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_CSL		= "CO"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_HCHO	= (/"VOC21","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ALD		= (/"VOC22","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_KET		= (/"VOC23","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ORA2	= (/"VOC24","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_CH3OH	= (/"VOC01","VOC19","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_C2H5OH	= "CO"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_C2H4    = (/"VOC07","NMVOC"/)
 
 
 ; Scaling factors for NMVOC species
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap = True
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_ETH		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_PAR		= (/0.8,3.0,4.0,5.0,6.0,1.0,\
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new = True
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_ETH		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_PAR		= (/0.8,3.0,4.0,5.0,6.0,1.0,\
 												2.0,1.0,-1.0,1.0,1.0,0.8,\
 												0.33/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_ISO		= (/1.0,2.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_HC3		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_HC5		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_HC8		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_XYL		= (/1.0,1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_OL2		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_OLT		= (/1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_OLI		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_TOL		= (/1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_CSL		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_HCHO	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_ALD		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_KET		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_ORA2	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_CH3OH	= (/1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_C2H5OH  = 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_C2H4    = 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_ISO		= (/1.0,2.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_HC3		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_HC5		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_HC8		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_XYL		= (/1.0,1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_OL2		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_OLT		= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_OLI		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_TOL		= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_CSL		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_HCHO	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_ALD		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_KET		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_ORA2	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_CH3OH	= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_C2H5OH  = 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new@E_C2H4    = 1.0
 
 ; emission formation:
 ; ETH = v02
@@ -229,26 +229,26 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_C2H4    = 1.0
 ; v25 (other VOC's - not used for CRI or CBMZ)
 
 ; molecular weight for NMVOC species
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap = True
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_ETH	 	= 30.07
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_PAR	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_ISO	 	= 68.117
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_HC3	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_HC5	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_HC8	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_XYL	 	= 106.165
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_OL2	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_OLT	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_OLI	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_TOL	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_CSL	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_HCHO	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_ALD	 	= 58.08
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_KET	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_ORA2	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_CH3OH	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_C2H5OH	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@E_C2H4	= 28.05
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new = True
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_ETH	 	= 30.07
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_PAR	 	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_ISO	 	= 68.117
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_HC3	 	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_HC5	 	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_HC8	 	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_XYL	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_OL2	 	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_OLT	 	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_OLI	 	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_TOL	 	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_CSL	 	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_HCHO	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_ALD	 	= 58.08
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_KET	 	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_ORA2	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_CH3OH	= 99999.9 ; ?????? temporary value
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_C2H5OH	= 0.0
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new@E_C2H4	= 28.05
 
 
 
@@ -263,50 +263,50 @@ NMVOC_maccity_MOL_WGT_cbmz_mos_htap = NMVOC_edgar_MOL_WGT_cbmz_mos_htap
 
 
 ; Mapping information for NMVOC species
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap = True
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_PAR	= (/"PRPA","BUTA","PRPE","BUTE","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_ISO	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_ETH	= (/"ETHA","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_HC3	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_HC5	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_HC8	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_XYL	= (/"TARO","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_OL2	= (/"ETHE","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_OLT	= (/"PRPE","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_OLI	= (/"BUTE","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_TOL	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_CSL	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_HCHO	= (/"FORM","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_ALD	= (/"OALD","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_KET	= (/"ACET","OKET","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_ORA2	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_CH3OH	= (/"METH","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_C2H5OH= (/"OALC","NMVOC"/)
-NMVOC_maccity_MAP_VAR_cbmz_mos_htap@E_C2H4  = "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new = True
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_PAR	= (/"PRPA","BUTA","PRPE","BUTE","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_ISO	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_ETH	= (/"ETHA","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_HC3	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_HC5	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_HC8	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_XYL	= (/"TARO","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_OL2	= (/"ETHE","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_OLT	= (/"PRPE","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_OLI	= (/"BUTE","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_TOL	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_CSL	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_HCHO	= (/"FORM","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_ALD	= (/"OALD","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_KET	= (/"ACET","OKET","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_ORA2	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_CH3OH	= (/"METH","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_C2H5OH= (/"OALC","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new@E_C2H4  = "CO"
 
 
 
 ; Scaling factors for NMVOC species
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap = True
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_PAR	= (/3.0,5.0,1.0,2.0/)
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_ISO	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_ETH	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_HC3	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_HC5	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_HC8	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_XYL	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_OL2	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_OLT	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_OLI	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_TOL	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_CSL	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_HCHO	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_ALD	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_KET	= (/1.0,1.0/)
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_ORA2	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_CH3OH	=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_C2H5OH=    1.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_htap@E_C2H4  =    0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new = True
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_PAR	= (/3.0,5.0,1.0,2.0/)
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_ISO	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_ETH	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_HC3	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_HC5	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_HC8	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_XYL	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_OL2	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_OLT	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_OLI	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_TOL	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_CSL	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_HCHO	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_ALD	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_KET	= (/1.0,1.0/)
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_ORA2	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_CH3OH	=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_C2H5OH=    1.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new@E_C2H4  =    0.0
 
 ; emission formation:
 ; ETH = ETHA
