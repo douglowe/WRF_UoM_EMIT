@@ -99,132 +99,214 @@ AERO_MAP_TRN_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
 
 ;;;;;;; EDGAR information ;;;;;;;;;;;;;;;;;;;
 ; Mapping information for NMVOC species
-;;; Note: we are using hc5 for par because of code in
-;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig = True
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ETH		= (/"VOC02","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ETH		= (/"ETH_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_PAR		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ISO		= (/"VOC10","VOC11","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ISO		= (/"ISO_INT","APINENE_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC3		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC5		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
-												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
-												"VOC23","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC5		= (/"C3H8_INT","NC4H10_4_INT","NC4H10_5_INT",\
+												"NC4H10_6_INT","C3H6_INT","C2H2_INT",\
+												"TBUT2ENE_INT","BENZENE_INT","XYL_2_INT",\
+												"XYL_3_INT","MEK_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC8		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_XYL		= (/"VOC15","VOC16","VOC17","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_XYL		= (/"XYL_1_INT","XYL_2_INT","XYL_3_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OL2		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OLT		= (/"VOC08","VOC12","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OLI		= (/"VOC12","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_TOL		= (/"VOC13","VOC14","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OLT		= (/"C3H6_INT","TBUT2ENE_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OLI		= (/"TBUT2ENE_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_TOL		= (/"BENZENE_INT","TOL_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_CSL		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HCHO	= (/"VOC21","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ALD		= (/"VOC22","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_KET		= (/"VOC23","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ORA2	= (/"VOC24","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_CH3OH	= (/"VOC01","VOC19","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H5OH	= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H4    = (/"VOC07","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HCHO	= (/"HCHO_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ALD		= (/"ALD_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_KET		= (/"KET_INT","MEK_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ORA2	= (/"ORA2_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_CH3OH	= (/"CH3OH_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H5OH	= (/"C2H5OH_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H4    = (/"C2H4_INT","NMVOC"/)
+
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@ETH_INT		= "VOC02"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C3H8_INT		= "VOC03"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@NC4H10_4_INT	= "VOC04"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@NC4H10_5_INT	= "VOC05"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@NC4H10_6_INT	= "VOC06"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C3H6_INT		= "VOC08"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C2H2_INT		= "VOC09"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@TBUT2ENE_INT	= "VOC12"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@BENZENE_INT	= "VOC13"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@XYL_2_INT		= "VOC16"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@XYL_3_INT		= "VOC17"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@MEK_INT		= "VOC23"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@ISO_INT		= "VOC10"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@APINENE_INT	= "VOC11"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@XYL_1_INT		= "VOC15"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@TOL_INT		= "VOC14"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@HCHO_INT		= "VOC21"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@ALD_INT		= "VOC22"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@KET_INT		= "VOC23"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@ORA2_INT		= (/"VOC18","VOC24"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@CH3OH_INT		= (/"VOC01","VOC19"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C2H5OH_INT	= (/"VOC01","VOC19"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C2H4_INT		= "VOC07"
+
 
 
 ; Scaling factors for NMVOC species
-;;; Note: we are using hc5 for par because of code in
-;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig = True
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ETH		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_PAR		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ISO		= (/1.0,2.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ISO		= (/1.0, 2.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC3		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC5		= (/0.8,3.0,4.0,5.0,6.0,1.0,\
-												2.0,1.0,-1.0,1.0,1.0,0.8,\
-												0.33/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC5		= (/3.0, 4.0, 5.0, 6.0, 1.0, \
+												2.0, 1.0, -1.0, 1.0, 1.0, 1.0 /)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC8		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_XYL		= (/1.0,1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_XYL		= (/1.0, 1.0, 1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_OL2		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_OLT		= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_OLT		= (/1.0, 1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_OLI		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_TOL		= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_TOL		= (/1.0, 1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_CSL		= 0.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HCHO	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ALD		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_KET		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_KET		= (/1.0, 1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ORA2	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_CH3OH	= (/1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H5OH  = 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_CH3OH	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H5OH  = 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H4    = 1.0
 
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ETH_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C3H8_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@NC4H10_4_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@NC4H10_5_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@NC4H10_6_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C3H6_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H2_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@TBUT2ENE_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@BENZENE_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_2_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_3_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@MEK_INT		= 0.33
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ISO_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@APINENE_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_1_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@TOL_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@HCHO_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ALD_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@KET_INT		= 0.67
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ORA2_INT		= (/1.0,1.0/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@CH3OH_INT		= (/0.2,0.8/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H5OH_INT	= (/0.2,0.8/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 
-
-; emission formation:
-; ETH = v02
-; PAR = 0.8*v01 + 3.0*v03 + 4.0*v04 + 5.0*v05 + 6.0*v06 + v08 
-;		+ 2.0*v09 + v12 + (-1.0)*v13 + v16 + v17 + 0.8*v19
-;		+ 0.33*v23
-; ISO = v10 + 2.0*v11
+; emission formation from intermediates:
+;;; Note: we are using hc5 for par because of code in
+;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
+; ETH = ETH_INT
+; PAR = 0.0
+; ISO = ISO_INT + 2.0*APINENE_INT
 ; HC3 = 0.0 
-; HC5 = 0.0
+; HC5 = 3.0*C3H8_INT + 4.0*NC4H10_4_INT + 5.0*NC4H10_5_INT + 6.0*NC4H10_6_INT + C3H6_INT 
+;		+ 2.0*C2H2_INT + TBUT2ENE_INT + (-1.0)*BENZENE_INT + XYL_2_INT + XYL_3_INT + MEK_INT
 ; HC8 = 0.0
-; XYL = v15 + v16 + v17
+; XYL = XYL_1_INT + XYL_2_INT + XYL_3_INT
 ; OL2 = 0.0
-; OLT = v08 + v12 ?
-; OLI = v12 ?
-; TOL = v13 + v14
+; OLT = C3H6_INT + TBUT2ENE_INT ?
+; OLI = TBUT2ENE_INT ?
+; TOL = BENZENE_INT + TOL_INT
 ; CSL = 0.0
-; HCHO = v21
-; ALD = v22 ?
-; KET = v23
-; ORA2 = v24
-; CH3OH = v01 + v19
-; C2H5OH = 0.0
-; C2H4 = v07
+; HCHO = HCHO_INT
+; ALD = ALD_INT ?
+; KET = KET_INT + MEK_INT
+; ORA2 = ORA2_INT
+; CH3OH = CH3OH_INT
+; C2H5OH = C2H5OH_INT
+; C2H4 = C2H4_INT
 
+; intermediate formation from sources
+; ETH_INT  = v02
+; C3H8_INT = v03
+; NC4H10_4_INT = v04
+; NC4H10_5_INT = v05
+; NC4H10_6_INT = v06
+; C3H6_INT = v08
+; C2H2_INT = v09
+; TBUT2ENE_INT = v12
+; BENZENE_INT = v13
+; XYL_2_INT = v16
+; XYL_3_INT = v17
+; MEK_INT = 0.33 * v23
+; ISO_INT = v10
+; APININE_INT = v11
+; XYL_1_INT = v15
+; TOL_INT = v14
+; HCHO_INT = v21
+; ALD_INT = v22
+; KET_INT = 0.67 * v23
+; ORA2_INT = v18 + v24
+; CH3OH_INT = 0.2 * v01 + 0.2 * v19
+; C2H5OH_INT = 0.8 * v01 + 0.8 * v19
+; C2H4_INT = v07
 
-;;; speciation for EDGAR species to CBMZ emissions
-; v01 (alcohols)  = CH3OH*0.2 + (PAR + CH3OH)*0.8
-; v02 (ethane)    = ETH 
-; v03 (propane)   = PAR * 3.0
-; v04 (butane)    = PAR * 4.0
-; v05 (pentane)   = PAR * 5.0
-; v06 (hexanes)   = PAR * 6.0
-; v07 (ethene)    = C2H4
-; v08 (propene)   = OLT + PAR
-; v09 (ethyne)    = PAR * 2.0    (needs checking????)
-; v10 (isoprene)  = ISO
-; v11 (monoterpenes) = ISO * 2.0
-; v12 (other alkenes)= OLI + OLT + PAR  (needs checking????)
-; v13 (benzene)   = TOL - PAR
-; v14 (toluene)   = TOL
-; v15 (xylene)    = XYL
-; v16 (trimethylbenzenes) = XYL + PAR
-; v17 (other aromatics)   = XYL + PAR    (needs checking????)
-; v18 (esters)    = ORA2
-; v19 (ethers)    = CH3OH*0.2 + (PAR + CH3OH)*0.8
+;;; speciation for EDGAR species to CBMZ emissions (via mid-stage "CRIMech")
+;;;
+;;;  We apportion by mass to the mid-stage components, then convert using their
+;;;  molecular weights to emissions of moles, and finally split those emissions
+;;;  between the appropriate CBM-Z species.
+;;;
+;;;  This will make use of two sets of mapping arrays (and require us to use
+;;;  multiple versions of the same chemical in the mid-stage to avoid cross-over
+;;;  in certain pathways).
+;;;
+; v01 (alcohols)  => CH3OH*0.2 + C2H5OH*0.8 (=> CH3OH and => C2H5OH respectively)
+; v02 (ethane)    => ETH (=> ETH)
+; v03 (propane)   => C3H8 => PAR * 3.0 
+; v04 (butane)    => NC4H10_4 => PAR * 4.0
+; v05 (pentane)   => NC4H10_5 => PAR * 5.0
+; v06 (hexanes)   => NC4H10_6 => PAR * 6.0
+; v07 (ethene)    => C2H4 (=> C2H4)
+; v08 (propene)   => C3H6 => OLT + PAR
+; v09 (ethyne)    => C2H2 => PAR * 2.0    (needs checking????)
+; v10 (isoprene)  => ISO  (=> ISO)
+; v11 (monoterpenes) => APINENE => ISO * 2.0
+; v12 (other alkenes)=> TBUT2ENE => OLI + OLT + PAR  (needs checking????)
+; v13 (benzene)   => BENZENE => TOL - PAR
+; v14 (toluene)   => TOL (=> TOL)
+; v15 (xylene)    => XYL_1 (=> XYL)
+; v16 (trimethylbenzenes) => XYL_2 => XYL + PAR
+; v17 (other aromatics)   => XYL_3 => XYL + PAR    (needs checking????)
+; v18 (esters)    => ORA2 (=> ORA2)
+; v19 (ethers)    => CH3OH*0.2 + C2H5OH*0.8 (=> CH3OH and => C2H5OH respectively)
 ; v20 (chlorinated hydrocarbons - not used for CRI or CBMZ) 
-; v21 (formaldehyde)    = HCHO
-; v22 (other aldehydes) = ALD
-; v23 (ketones)         = KET*0.67 + (KET + PAR)*0.33
-; v24 (alkanoic acids)  = ORA2
+; v21 (formaldehyde)    => HCHO (=> HCHO)
+; v22 (other aldehydes) => ALD (=> ALD)
+; v23 (ketones)         => KET*0.67 + MEK*0.33 (=> KET and => KET + PAR respectively)
+; v24 (alkanoic acids)  => ORA2 (=> ORA2)
 ; v25 (other VOC's - not used for CRI or CBMZ)
 
-; molecular weight for NMVOC species
+; molecular weight for NMVOC species from the mid-step array
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig = True
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_ETH	 	= 30.07
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_PAR	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_ISO	 	= 68.117
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_HC3	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_HC5	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_HC8	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_XYL	 	= 106.165
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_OL2	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_OLT	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_OLI	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_TOL	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_CSL	 	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_HCHO	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_ALD	 	= 58.08
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_KET	 	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_ORA2	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_CH3OH	= 99999.9 ; ?????? temporary value
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_C2H5OH	= 0.0
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_C2H4	= 28.05
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@CH3OH_INT	 	= 32.0419
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H5OH_INT	= 46.0684
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@ETH_INT		= 30.07
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C3H8_INT	 	= 44.1
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@NC4H10_4_INT 	= 58.12
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@NC4H10_5_INT 	= 58.12
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@NC4H10_6_INT 	= 58.12
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H4_INT	 	= 28.05
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C3H6_INT	 	= 42.08
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H2_INT	 	= 26.04
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@ISO_INT		= 68.117
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@APINENE_INT  	= 136.234
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@TBUT2ENE_INT 	= 56.11
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@BENZENE_INT  	= 78.1118
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@TOL_INT		= 92.1384
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@XYL_1_INT	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@XYL_2_INT	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@XYL_3_INT	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@CH3CO2H_INT  	= 60.052
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@HCHO_INT	 	= 30.03
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@ALD_INT		= 44.05
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@KET_INT	 	= 58.08
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@MEK_INT	 	= 72.11
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@ORA2_INT	 	= 60.05 ;;; using CH3COOH (acetic acid) molar mass 
 
 
 

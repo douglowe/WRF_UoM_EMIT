@@ -661,7 +661,8 @@ procedure process_nmvoc_emissions_direct(INDIR:string,OUTFILE:file,nmvoc_scheme:
 										nmvoc_mol_weights:logical)
 local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, ies, \
 		ecname, cfac, cat_var, icat, emissions, \
-		mwgt
+		mwgt, init_ies, init_iint, init_icat, \
+		input_list, input_cfac_list, innum, iint, inname, incfac
 begin
 
 	;;; open the NMVOC emission data file
@@ -674,9 +675,9 @@ begin
 	do ig = 0, dimsizes(VAR_LIST_NMVOC)-1
 		;;; grab the name of the nmvoc variable we're processing
 		pname = VAR_LIST_NMVOC(ig)
-		;;; grab the names of the emission categories we're using
+		;;; grab the names of the emission inputs we're using
 		ename_list := NMVOC_MAP_VAR@$pname$
-		;;; get number of emission categories
+		;;; get number of emission inputs
 		enum = dimsizes(ename_list)
 
 		
@@ -686,50 +687,135 @@ begin
 			;;; get the standard conversion factors
 			cfac_list := NMVOC_MAP_TRN@$pname$
 
-			;;; loop through the emission categories for this nmvoc, summing up the emissions
+			;;; set the flag for our first step in next loop
+			init_ies = True
+
+			;;; loop through the emission inputs for this nmvoc, summing up the emissions
 			do ies = 0, enum-2		;; last in list is "NMVOC", so we ignore this
 			
-				;;; get the category name
+				;;; get the input name
 				ecname = ename_list(ies)
-				;;; get the category conv factor
+				;;; get the input conversion factor (ratio of nmvoc to the input)
 				cfac = cfac_list(ies)
 			
-				;;; get the NMVOC molecular weight - with a choice of using
-				;;;    either the molecular weights from the source scheme,
-				;;;    or molecular weights for the destination scheme
-				if(nmvoc_scheme@molweights .eq. "source")
-					mwgt = nmvoc_mol_weights@$ecname$
-				else if(nmvoc_scheme@molweights .eq. "destination")
-					mwgt = NMVOC_MOL_WGT@$pname$
-				end if
-				end if
-
-				;;; obtain a list of nmvoc variables within that category
-				cat_var := str_match(var_list,ecname)
-			
-				;;; proceed if the list isn't empty
-				if(.not. any(ismissing(cat_var)))
+				;;; check if we are using intermediate compounds
+				if(nmvoc_scheme@use_intermediates)
 				
-					do icat = 0, dimsizes(cat_var)-1
-					
+					;;; get the list of inputs for this intermediate
+					input_list := NMVOC_MAP_VAR@$ecname$
+					;;; get the conversion factors for the intermediate
+					input_cfac_list := NMVOC_MAP_TRN@$ecname$
+					;;; get number of inputs for the intermediate
+					innum = dimsizes(input_list)
 
-						if(ies .eq. 0 .and. icat .eq. 0)
-							emissions = (/INFILE->$cat_var(icat)$/) * cfac / mwgt
-						else
-							emissions = emissions + ( (/INFILE->$cat_var(icat)$/) * cfac / mwgt )
-						end if
-	
-					end do ;;; icat in cat_var
+					;;; set the flag for our first step in next loop
+					init_iint = True
 					
-				end if  ;;; cat_var not empty
+					;;; we loop through the intermediates for this nmvoc
+					do iint = 0, innum-1
+					
+						;;; get the (original) input name
+						inname = input_list(iint)
+						;;; get the (original) input conversion factor
+						incfac = input_cfac_list(iint)
+
+						;;; get the NMVOC molecular weight - with a choice of using
+						;;;    either the molecular weights from the source scheme,
+						;;;    or molecular weights for the destination scheme
+						if(nmvoc_scheme@molweights .eq. "source")
+							mwgt = nmvoc_mol_weights@$inname$
+						else if(nmvoc_scheme@molweights .eq. "destination")
+							mwgt = NMVOC_MOL_WGT@$ecname$
+						end if
+						end if
+					
+						;;; obtain a list of nmvoc variables for that input (covering different emission categories)
+						cat_var := str_match(var_list,inname)
+
+						;;; proceed if the list isn't empty
+						if(.not. any(ismissing(cat_var)))
+				
+							;;; set the flag for our first step in next loop
+							init_icat = True
+
+							;;; loop through emission inputs, collecting them in the intermediate variable
+							do icat = 0, dimsizes(cat_var)-1
+					
+								if(init_iint .and. init_icat)
+									emissions_int = (/INFILE->$cat_var(icat)$/) * incfac / mwgt
+									init_iint = False
+									init_icat = False
+								else
+									emissions_int = emissions_int + ( (/INFILE->$cat_var(icat)$/) * incfac / mwgt )
+								end if
+	
+							end do ;;; icat in cat_var
+
+							;;; once we've collected all emissions in the intermediate then transfer them
+							;;;    to the final emission variable
+							
+							if(init_ies)
+								emissions = emissions_int * cfac
+								init_ies = False
+							else
+								emissions = emissions + emissions_int * cfac							
+							end if
+					
+						end if  ;;; cat_var not empty
+					
+					end do ;; iint in iinum
+				
+				
+				else ;;; carry on as normal, without intermediates
+
+					;;; get the NMVOC molecular weight - with a choice of using
+					;;;    either the molecular weights from the source scheme,
+					;;;    or molecular weights for the destination scheme
+					if(nmvoc_scheme@molweights .eq. "source")
+						mwgt = nmvoc_mol_weights@$ecname$
+					else if(nmvoc_scheme@molweights .eq. "destination")
+						mwgt = NMVOC_MOL_WGT@$pname$
+					end if
+					end if
+
+					;;; obtain a list of nmvoc variables for that input (covering different emission categories)
+					cat_var := str_match(var_list,ecname)
+			
+					;;; proceed if the list isn't empty
+					if(.not. any(ismissing(cat_var)))
+
+						;;; set the flag for our first step in next loop
+						init_icat = True
+				
+						;;; loop through emission inputs, collecting them in the emission variable
+						do icat = 0, dimsizes(cat_var)-1
+					
+							if(init_ies .and. init_icat)
+								emissions = (/INFILE->$cat_var(icat)$/) * cfac / mwgt
+								init_ies  = False
+								init_icat = False
+							else
+								emissions = emissions + ( (/INFILE->$cat_var(icat)$/) * cfac / mwgt )
+							end if
+	
+						end do ;;; icat in cat_var
+					
+					end if  ;;; cat_var not empty
+
+				end if ;;; use_intermediates check
 	
 			end do ;;; ies in ename_list
 
-			;;; push the emissions data to the outfile
-			OUTFILE->$pname$ = (/emissions/)
+			;;; make sure that we found some emissions (don't write to output if we didn't)
+			if(.not.init_ies) 
+				;;; push the emissions data to the outfile
+				OUTFILE->$pname$ = (/emissions/)
+				;;; tidy up
+				delete(emissions)
+			else
+				print("no emissions data found for "+pname+"!")
+			end if
 	
-			;;; tidy up
-			delete(emissions)
 
 		end if ;;; category is "NMVOC"
 			
@@ -833,6 +919,9 @@ local INFILE, OUTFILE, emissions_data, \
 		nmvoc_species, nmvoc_species_index, nmvoc_groups, nmvoc_sectors, nmvoc_mol_weights
 begin
 
+	;;; most combinations of schemes wont use intermediates for NMVOC mapping, so we
+	;;; set the default value of this flag to be false. It will be changed below as needed. 
+	nmvoc_scheme@use_intermediates = False
 
 	;;; call the scheme specific routines for generating the emissions
 	if(wrfchem_scheme .eq. "mozm_vbs4_pnnl")
@@ -862,13 +951,11 @@ begin
 					
 		else if(nmvoc_scheme .eq. "EDGAR")
 		
-			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_htap
-			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_htap
-			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_htap
-			
-			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
-			exit()
-			
+			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_htap
+			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_htap
+			NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_htap
+			nmvoc_scheme@use_intermediates = True		;;; set flag to use intermediate compounds during mapping of NMVOCs
+						
 		end if
 		end if
 
@@ -913,12 +1000,11 @@ begin
 					
 		else if(nmvoc_scheme .eq. "EDGAR")
 		
-			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
-			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
-			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
-			
-			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
-			exit()
+			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
+			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
+			NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
+			nmvoc_scheme@use_intermediates = True		;;; set flag to use intermediate compounds during mapping of NMVOCs
+
 
 		end if
 		end if
@@ -931,6 +1017,7 @@ begin
 	end if
 	end if
     end if
+    
 	;;; load the NMVOC information which is generic for all chemical schemes
 	if(nmvoc_scheme .eq. "MACCITY")
 
@@ -955,7 +1042,14 @@ begin
 
 	end if
 	end if
-
+	
+	;;; check to make sure we aren't using intermediates when we're also using fractional apportionment
+	if(nmvoc_scheme@use_intermediates .and. nmvoc_scheme@method .eq. "fraction")
+		print("the use of NMVOC intermediates and fractional apportionment is not supported at this time")
+		print("please set nmvoc_scheme@method = 'direct' instead")
+		exit()
+	end if
+	
 	generate_scheme_emissions(INDIR, OUTDIR, fname, wrfchem_scheme, nmvoc_scheme, nox_frac, \
 					INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, NMVOC_VAR, NMVOC_TRN, NMVOC_WGT, \
 					nmvoc_species, nmvoc_species_index, nmvoc_groups, nmvoc_sectors, nmvoc_mol_weights)
