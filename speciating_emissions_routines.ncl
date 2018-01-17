@@ -893,6 +893,26 @@ begin
 		end if
 		end if
 
+	else if(wrfchem_scheme .eq. "cbmz_mos_orig")
+
+		INORG_VAR = INORG_MAP_VAR_cbmz_mos_orig
+		INORG_TRN = INORG_MAP_TRN_cbmz_mos_orig
+		AERO_VAR  = AERO_MAP_VAR_cbmz_mos_orig
+		AERO_TRN  = AERO_MAP_TRN_cbmz_mos_orig
+
+		if(nmvoc_scheme .eq. "MACCITY")
+		
+			NMVOC_VAR = NMVOC_maccity_MAP_VAR_cbmz_mos_orig
+			NMVOC_TRN = NMVOC_maccity_MAP_TRN_cbmz_mos_orig
+			NMVOC_WGT = NMVOC_maccity_MOL_WGT_cbmz_mos_orig
+					
+		else if(nmvoc_scheme .eq. "EDGAR")
+		
+			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
+			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
+			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
+			
+
 	else
 	
 		print("wrfchem_scheme "+wrfchem_scheme+" not recognised in procedure combine_emission_sectors (speciating_emissions_routines.ncl)")
