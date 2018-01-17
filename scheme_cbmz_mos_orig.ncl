@@ -101,7 +101,7 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
 ; Mapping information for NMVOC species
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new = True
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ETH		= (/"VOC02","NMVOC"/)
-;NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_PAR		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_PAR		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
 												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
 												"VOC23","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ISO		= (/"VOC10","VOC11","NMVOC"/)
