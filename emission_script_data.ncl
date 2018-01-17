@@ -148,7 +148,7 @@ variable_lists@NMVOC_mozm_vbs4_pnnl = (/"E_BIGALK", "E_BIGENE", "E_C2H4", "E_C2H
 variable_lists@AERO_mozm_vbs4_pnnl = (/"E_PM25J", "E_PM_10", "E_NO3J", "E_NO3C", "E_SO4J","E_SO4C", \
 										"E_ECJ", "E_ECC", "E_ORGJ", "E_ORGC", "E_CO_A", "E_CO_BB" /)
 
-; settings for "cbmz_mos_htap" (emiss_opt==4)
+; settings for "cbmz_mos_htap" (emiss_opt==25)
 variable_lists@GAS_cbmz_mos_htap = (/"E_CO", "E_NO", "E_NO2",  "E_SO2", "E_NH3"/)
 variable_lists@NMVOC_cbmz_mos_htap = (/"E_PAR","E_ISO","E_ETH","E_HC3","E_HC5","E_HC8","E_XYL", \
 										"E_OL2","E_OLT","E_OLI","E_TOL","E_CSL","E_HCHO", \
@@ -167,9 +167,8 @@ variable_lists@AERO_cri_mos_edgar_htap = (/"E_BC_1","E_EC_1_25","E_EC_25_10","E_
 										"E_OC_25_10","E_PM25","E_OIN_25","E_OIN_10"/)
 
 									
-; Chris edit 12/Jan
 
-; settings for "cbmz_mos_orig" (emiss_opt==25)
+; settings for "cbmz_mos_orig" (emiss_opt==4)
 variable_lists@GAS_cbmz_mos_orig = (/"E_CO", "E_NO", "E_NO2",  "E_SO2", "E_NH3"/)
 variable_lists@NMVOC_cbmz_mos_orig = (/"E_PAR","E_ISO","E_ETH","E_HC3","E_HC5","E_HC8","E_XYL", \
 										"E_OL2","E_OLT","E_OLI","E_TOL","E_CSL","E_HCHO", \
