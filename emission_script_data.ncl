@@ -6,6 +6,7 @@
 
 load "./scheme_mozm_vbs4_pnnl_data.ncl"
 load "./scheme_cbmz_mos_htap_data.ncl"
+load "./scheme_cbmz_mos_orig_data.ncl"
 load "./scheme_cri_mos_edgar_htap_data.ncl"
 load "./scheme_nmvoc_data.ncl"
 
@@ -135,7 +136,7 @@ available_nmvoc_schemes = "EDGAR MACCITY"   ; this is be a single string, space 
 ;;;;; OUTPUT schemes setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-available_schemes = "mozm_vbs4_pnnl cbmz_mos_htap cri_mos_edgar_htap"   ; this is be a single string, space delimited, listing all the available schemes
+available_schemes = "mozm_vbs4_pnnl cbmz_mos_htap cri_mos_edgar_htap cbmz_mos_orig"   ; this is be a single string, space delimited, listing all the available schemes
 
 ;;; These lists of variables for each scheme
 ;;;    are used for creating the empty output files.
@@ -174,9 +175,8 @@ variable_lists@NMVOC_cbmz_mos_orig = (/"E_PAR","E_ISO","E_ETH","E_HC3","E_HC5","
 										"E_OL2","E_OLT","E_OLI","E_TOL","E_CSL","E_HCHO", \
 										"E_ALD","E_KET","E_ORA2","E_CH3OH","E_C2H5OH", "E_C2H4" /)
 variable_lists@AERO_cbmz_mos_orig = (/"E_PM25i","E_PM25j","E_ECI","E_ECJ","E_ORGI", \
-										"E_ORGJ","E_SO4I","E_SO4J","E_NO3I","E_NO3J",
-\
-										"E_PM10","E_SO4C","E_NO3","E_ORGC","E_ECC"/)
+										"E_ORGJ","E_SO4I","E_SO4J","E_NO3I","E_NO3J", \
+										"E_PM_10","E_SO4C","E_NO3C","E_ORGC","E_ECC"/)
 
 									
 

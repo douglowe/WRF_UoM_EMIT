@@ -333,7 +333,7 @@ begin
 		e_point = emiss_cat_index@$epname$
 		
 		;;; check if we're processing special data, if so follow the required rules
-		if(pname .eq. "E_OIN_25") ; OIN (other inorganics) for CBMZ_MOS_TNO
+		if(pname .eq. "E_OIN_25" .or. pname .eq. "E_PM25i" .or. pname .eq. "E_PM25j") ; OIN (other inorganics) for CBMZ_MOS_TNO
 			
 			;;; get the BC & OC pointers
 			e_point_bc = emiss_cat_index@BC
@@ -342,6 +342,8 @@ begin
 			;;; get the PM pointer
 			e_point_pm = emiss_cat_index@PM2_5
 
+			;;; get the standard conversion factor (giving the split between modes i and j)
+			cfac = AERO_MAP_TRN@$pname$
 
 			;;; loop through the emission sectors for this gas, summing up the emissions
 			do ies = 0, dimsizes(emiss_cat@$ename$)-1
@@ -354,16 +356,19 @@ begin
 				;;; This will be PM_2.5 - ( BC + OC ), OC is really OM (scaling factor already applied)
 				;;; All BC & OM is assumed to be in PM2.5
 				if(ies .eq. 0)
-					emissions = emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-								( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) )
+					emissions = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
+								  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \
+								) * cfac
 				else
-					emissions = emissions + emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-									( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) )	
-				end if		
+					emissions = emissions + \
+								( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
+								  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \	
+							    ) * cfac
+				end if
 		
 			end do
 			
-		else if(pname .eq. "E_OIN_10")
+		else if(pname .eq. "E_OIN_10" .or. pname .eq. "E_PM_10")
 
 			;;; get the PM2.5 pointer (and assume that we made sure earlier that PM2.5 > (BC + OM)!!!!)
 			e_point_pm25 = emiss_cat_index@PM2_5
@@ -908,11 +913,14 @@ begin
 					
 		else if(nmvoc_scheme .eq. "EDGAR")
 		
-			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
-			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
-			NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
+			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
+			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
+			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
 			
-                end if
+			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
+			exit()
+
+		end if
 		end if
 	else
 	
@@ -922,7 +930,7 @@ begin
 	end if
 	end if
 	end if
-        end if
+    end if
 	;;; load the NMVOC information which is generic for all chemical schemes
 	if(nmvoc_scheme .eq. "MACCITY")
 

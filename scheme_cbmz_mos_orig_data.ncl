@@ -63,22 +63,22 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= "BC" ; Elemental Carbon - course mode
 
 
 
-AERO_MAP_VAR_cbmz_mos_orig = True
-AERO_MAP_VAR_cbmz_mos_orig@E_PM25i		= 0.2 ; Unspeciated primary PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_PM25j  	= 0.8 ; Unspeciated primary PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ECI    	= 0.2 ; Elemental Carbon PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ECJ		= 0.8 ; Elemental Carbon PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ORGI		= 0.2 ; Organic Carbon PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ORGJ   	= 0.8 ; Organic Carbon PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_SO4I		= 0.0 ; Sulfate PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_SO4J		= 0.0 ; Sulfate PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_NO3I		= 0.0 ; Nitrate PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_NOJ		= 0.0 ; Nitrate PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_PM_10		= 1.0 ; Unspeciated PM10 emissions 
-AERO_MAP_VAR_cbmz_mos_orig@E_SO4C		= 0.0 ; Sulfate - course mode
-AERO_MAP_VAR_cbmz_mos_orig@E_NO3C		= 0.0 ; Nitrate - course mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ORGC		= 0.0 ; Organic Carbon - course mode
-AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
+AERO_MAP_TRN_cbmz_mos_orig = True
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25i		= 0.2 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25j  	= 0.8 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_ECI    	= 0.2 ; Elemental Carbon PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ECJ		= 0.8 ; Elemental Carbon PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGI		= 0.2 ; Organic Carbon PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGJ   	= 0.8 ; Organic Carbon PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_SO4I		= 0.0 ; Sulfate PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_SO4J		= 0.0 ; Sulfate PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_NO3I		= 0.0 ; Nitrate PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_NO3J		= 0.0 ; Nitrate PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_PM_10		= -9999.0 ; OIN PM10 emissions - this will be replaced by a calculation from PM10 and PM2.5
+AERO_MAP_TRN_cbmz_mos_orig@E_SO4C		= 0.0 ; Sulfate - course mode
+AERO_MAP_TRN_cbmz_mos_orig@E_NO3C		= 0.0 ; Nitrate - course mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGC		= 0.0 ; Organic Carbon - course mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
 
 ;;;;; organic gas-phase data
 ;
@@ -99,16 +99,16 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
 
 ;;;;;;; EDGAR information ;;;;;;;;;;;;;;;;;;;
 ; Mapping information for NMVOC species
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new = True
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_ETH		= (/"VOC02","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new@E_PAR		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
-												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
-												"VOC23","NMVOC"/)
+;;; Note: we are using hc5 for par because of code in
+;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig = True
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ETH		= (/"VOC02","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_PAR		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ISO		= (/"VOC10","VOC11","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC3		= "CO"
-;;; using hc5 for par in chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC5		= (/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
 												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
+												"VOC23","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC8		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_XYL		= (/"VOC15","VOC16","VOC17","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_OL2		= "CO"
@@ -126,14 +126,16 @@ NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H4    = (/"VOC07","NMVOC"/)
 
 
 ; Scaling factors for NMVOC species
+;;; Note: we are using hc5 for par because of code in
+;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig = True
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ETH		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_PAR		= (/0.8,3.0,4.0,5.0,6.0,1.0,\
-												2.0,1.0,-1.0,1.0,1.0,0.8,\
-												0.33/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_PAR		= 0.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ISO		= (/1.0,2.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC3		= 0.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC5		= 0.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC5		= (/0.8,3.0,4.0,5.0,6.0,1.0,\
+												2.0,1.0,-1.0,1.0,1.0,0.8,\
+												0.33/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_HC8		= 0.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_XYL		= (/1.0,1.0,1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_OL2		= 0.0
@@ -148,6 +150,8 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_ORA2	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_CH3OH	= (/1.0,1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H5OH  = 0.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H4    = 1.0
+
+
 
 ; emission formation:
 ; ETH = v02
@@ -171,6 +175,7 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H4    = 1.0
 ; CH3OH = v01 + v19
 ; C2H5OH = 0.0
 ; C2H4 = v07
+
 
 ;;; speciation for EDGAR species to CBMZ emissions
 ; v01 (alcohols)  = CH3OH*0.2 + (PAR + CH3OH)*0.8
@@ -230,16 +235,18 @@ NMVOC_edgar_MOL_WGT_cbmz_mos_orig@E_C2H4	= 28.05
 ;;;;;;; MACCity information ;;;;;;;;;;;;;;;;;;;
 
 ;;; currently the same (as not used for MACCITY) --- change this if needed?
-NMVOC_maccity_MOL_WGT_cbmz_mos_htap = NMVOC_edgar_MOL_WGT_cbmz_mos_htap
+NMVOC_maccity_MOL_WGT_cbmz_mos_orig = NMVOC_edgar_MOL_WGT_cbmz_mos_orig
 
 
 ; Mapping information for NMVOC species
+;;; Note: we are using hc5 for par because of code in
+;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig = True
-NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_PAR	= (/"PRPA","BUTA","PRPE","BUTE","NMVOC"/)
+NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_PAR	= "CO"
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_ISO	= "CO"
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_ETH	= (/"ETHA","NMVOC"/)
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_HC3	= "CO"
-NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_HC5	= "CO"
+NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_HC5	= (/"PRPA","BUTA","PRPE","BUTE","NMVOC"/)
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_HC8	= "CO"
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_XYL	= (/"TARO","NMVOC"/)
 NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_OL2	= (/"ETHE","NMVOC"/)
@@ -258,12 +265,14 @@ NMVOC_maccity_MAP_VAR_cbmz_mos_orig@E_C2H4  = "CO"
 
 
 ; Scaling factors for NMVOC species
+;;; Note: we are using hc5 for par because of code in
+;;;       chem/module_cbmz_addemiss.F (emiss_inpt_opt = 101)
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig = True
-NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_PAR	= (/3.0,5.0,1.0,2.0/)
+NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_PAR	= 0.0
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_ISO	= 0.0
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_ETH	=    1.0
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_HC3	= 0.0
-NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_HC5	= 0.0
+NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_HC5	= (/3.0,5.0,1.0,2.0/)
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_HC8	= 0.0
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_XYL	=    1.0
 NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_OL2	=    1.0
@@ -294,9 +303,7 @@ NMVOC_maccity_MAP_TRN_cbmz_mos_orig@E_C2H4  =    0.0
 
 ;;; speciation for MACCity species to CBMZ emissions
 ; ETHA = ethane, ETH
-; PRPA = propane, 3xPAR(/"VOC01","VOC03","VOC04","VOC05","VOC06","VOC08",\
-												"VOC09","VOC12","VOC13","VOC16","VOC17","VOC19",\
-								
+; PRPA = propane, 3xPAR
 ; BUTA = butanes & higher alkanes, 5xPAR
 ; ETHE = ethene, OL2
 ; PRPE = propene, OLT+PAR
