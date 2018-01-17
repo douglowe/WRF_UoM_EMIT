@@ -816,15 +816,15 @@ begin
 
 		if(nmvoc_scheme .eq. "MACCITY")
 		
-			NMVOC_VAR = NMVOC_maccity_MAP_VAR_cbmz_mos_htap
-			NMVOC_TRN = NMVOC_maccity_MAP_TRN_cbmz_mos_htap
-			NMVOC_WGT = NMVOC_maccity_MOL_WGT_cbmz_mos_htap
+			NMVOC_VAR = NMVOC_maccity_MAP_VAR_cbmz_mos_htap_new
+			NMVOC_TRN = NMVOC_maccity_MAP_TRN_cbmz_mos_htap_new
+			NMVOC_WGT = NMVOC_maccity_MOL_WGT_cbmz_mos_htap_new
 					
 		else if(nmvoc_scheme .eq. "EDGAR")
 		
-			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_htap
-			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_htap
-			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_htap
+			;NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_htap_new
+			;NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_htap_new
+			;NMVOC_WGT = NMVOC_edgar_MOL_WGT_cbmz_mos_htap_new
 			
 			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
 			exit()
