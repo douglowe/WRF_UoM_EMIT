@@ -40,28 +40,6 @@ INORG_MAP_TRN_cbmz_mos_orig@E_NH3 	= 1.0
 ; Note it is assumed that OC emissions have already been converted to Org 
 ; (e.g. Org = 1.4*OC), PM2.5 is the total mass for PM2.5, and PM10 is 
 ; total mass for PM10                   
-;AERO_MAP_VAR_cbmz_mos_orig = True
-;AERO_MAP_VAR_cbmz_mos_orig@E_BC_1		= "BC"
-;AERO_MAP_VAR_cbmz_mos_orig@E_EC_1_25	= "BC"
-;AERO_MAP_VAR_cbmz_mos_orig@E_EC_25_10	= "BC"
-;AERO_MAP_VAR_cbmz_mos_orig@E_OC_DOM		= "OC_DOM"
-;AERO_MAP_VAR_cbmz_mos_orig@E_OC_TRA		= "OC_TRA"
-;AERO_MAP_VAR_cbmz_mos_orig@E_OC_25_10	= "OC"
-;AERO_MAP_VAR_cbmz_mos_orig@E_PM25		= "PM2_5"
-;AERO_MAP_VAR_cbmz_mos_orig@E_OIN_25		= "PM2_5"
-;AERO_MAP_VAR_cbmz_mos_orig@E_OIN_10		= "PM10"
-
-;AERO_MAP_TRN_cbmz_mos_orig = True
-;AERO_MAP_TRN_cbmz_mos_orig@E_BC_1		= 1.0      ; Assume that all BC is in particles < 1 um
-;AERO_MAP_TRN_cbmz_mos_orig@E_EC_1_25	= 0.0
-;AERO_MAP_TRN_cbmz_mos_orig@E_EC_25_10	= 0.0      ; EDGAR emissions assume no BC above PM2.5
-;AERO_MAP_TRN_cbmz_mos_orig@E_OC_DOM		= 1.0
-;AERO_MAP_TRN_cbmz_mos_orig@E_OC_TRA		= 1.0
-;AERO_MAP_TRN_cbmz_mos_orig@E_OC_25_10	= 0.0      ; EDGAR emissions assume no OM above PM2.5
-;AERO_MAP_TRN_cbmz_mos_orig@E_PM25		= 1.0
-;AERO_MAP_TRN_cbmz_mos_orig@E_OIN_25		= -9999.   ; this will be replaced by a calculation from PM2.5, OM and BC 
-;AERO_MAP_TRN_cbmz_mos_orig@E_OIN_10		= -9999.   ; this will be replaced by a calculation from PM10 and PM2.5
-
 
 AERO_MAP_VAR_cbmz_mos_orig = True
 AERO_MAP_VAR_cbmz_mos_orig@E_PM25i		= "PM2_5"	; Unspeciated primary PM2.5 - nuclei mode
@@ -80,16 +58,6 @@ AERO_MAP_VAR_cbmz_mos_orig@E_NO3C		= "PM2_5" ; Nitrate - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ORGC		= "OC" ; Organic Carbon - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= "BC" ; Elemental Carbon - course mode
 
-;AERO_MAP_TRN_cbmz_mos_htap_new = True
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_BC_1		= 1.0      ; Assume that all BC is in particles < 1 um
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_EC_1_25	= 0.0
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_EC_25_10	= 0.0      ; EDGAR emissions assume no BC above PM2.5
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_OC_DOM		= 1.0
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_OC_TRA		= 1.0
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_OC_25_10	= 0.0      ; EDGAR emissions assume no OM above PM2.5
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_PM25		= 1.0
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_OIN_25		= -9999.   ; this will be replaced by a calculation from PM2.5, OM and BC 
-;AERO_MAP_TRN_cbmz_mos_htap_new@E_OIN_10		= -9999.   ; this will be replaced by a calculation from PM10 and PM2.5
 
 
 AERO_MAP_VAR_cbmz_mos_orig = True
