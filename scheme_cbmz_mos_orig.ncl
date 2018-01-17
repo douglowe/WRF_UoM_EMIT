@@ -39,7 +39,10 @@ INORG_MAP_TRN_cbmz_mos_orig@E_NH3 	= 1.0
 ;;;;; aerosol data
 ; Note it is assumed that OC emissions have already been converted to Org 
 ; (e.g. Org = 1.4*OC), PM2.5 is the total mass for PM2.5, and PM10 is 
-; total mass for PM10                   
+; total mass for PM10      
+; e_PM10 and e_PM_10 are different (Found within module_mosaic_addemiss.F)
+; For emiss_opt =4 use e_PM_10
+; For emiss_opt = 5/6 use e_PM10, which is an added variable for GOCART emissions to MOSAIC mapping 
 
 AERO_MAP_VAR_cbmz_mos_orig = True
 AERO_MAP_VAR_cbmz_mos_orig@E_PM25i		= "PM2_5"	; Unspeciated primary PM2.5 - nuclei mode
@@ -52,7 +55,7 @@ AERO_MAP_VAR_cbmz_mos_orig@E_SO4I		= "PM2_5" ; Sulfate PM2.5 - nuclei mode
 AERO_MAP_VAR_cbmz_mos_orig@E_SO4J		= "PM2_5" ; Sulfate PM2.5 - accumulation mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NO3I		= "PM2_5" ; Nitrate PM2.5 - nuclei mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NO3J		= "PM2_5" ; Nitrate PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_PM10		= "PM10" ; Unspeciated PM10 emissions 
+AERO_MAP_VAR_cbmz_mos_orig@E_PM_10		= "PM10" ; Unspeciated PM10 emissions 
 AERO_MAP_VAR_cbmz_mos_orig@E_SO4C		= "PM2_5" ; Sulfate - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NO3C		= "PM2_5" ; Nitrate - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ORGC		= "OC" ; Organic Carbon - course mode
@@ -71,7 +74,7 @@ AERO_MAP_VAR_cbmz_mos_orig@E_SO4I		= 0.0 ; Sulfate PM2.5 - nuclei mode
 AERO_MAP_VAR_cbmz_mos_orig@E_SO4J		= 0.0 ; Sulfate PM2.5 - accumulation mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NO3I		= 0.0 ; Nitrate PM2.5 - nuclei mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NOJ		= 0.0 ; Nitrate PM2.5 - accumulation mode
-AERO_MAP_VAR_cbmz_mos_orig@E_PM10		= 1.0 ; Unspeciated PM10 emissions 
+AERO_MAP_VAR_cbmz_mos_orig@E_PM_10		= 1.0 ; Unspeciated PM10 emissions 
 AERO_MAP_VAR_cbmz_mos_orig@E_SO4C		= 0.0 ; Sulfate - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_NO3C		= 0.0 ; Nitrate - course mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ORGC		= 0.0 ; Organic Carbon - course mode
