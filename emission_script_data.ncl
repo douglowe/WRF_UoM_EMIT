@@ -9,6 +9,8 @@ load "./scheme_cbmz_mos_htap_data.ncl"
 load "./scheme_cbmz_mos_orig_data.ncl"
 load "./scheme_cri_mos_edgar_htap_data.ncl"
 load "./scheme_nmvoc_data.ncl"
+load "./scheme_vertical_dist.ncl"
+
 
 ;*********************************************
 begin

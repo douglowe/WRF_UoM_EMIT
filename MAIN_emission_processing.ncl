@@ -14,6 +14,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
 load "./diurnal_cycle_routines.ncl"
 load "./preprocess_emissions_routines.ncl"
 load "./speciating_emissions_routines.ncl"
+load "./vertical_distribution_routines.ncl"
 ; Hard coded data will be loaded from these scripts
 
 ;*********************************************
@@ -191,12 +192,12 @@ do idom = 0, dimsizes(domains)-1
 
 		;;;;; if applying vertical power emissions
 		if(STEP2_apply_vertical_power_emissions)
-			print("==== Warning: We should be applying a vertical distribution")
-			print("to the emissions, but the routines have not been written yet! ====")
+			print("==== Applying a vertical distribution to the emissions ====")
 
 			;;;;; creating new emission files (with increased vertical layers)
-
-			;;;;; impose a vertical distribution for the power emissions
+			;;;;; and impose a vertical distribution for all inputs
+			apply_vertical_distributions(DIUDIR,VERTDIR,"fname1",wrfchem_scheme,nmvoc_scheme)
+			apply_vertical_distributions(DIUDIR,VERTDIR,"fname2",wrfchem_scheme,nmvoc_scheme)
 
 		end if
 		;;;;; end applying vertical power emissions
