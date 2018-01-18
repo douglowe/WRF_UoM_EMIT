@@ -84,7 +84,7 @@ begin
 								"TNR_Other", "TNR_Ship", "TRF", "TRO" /)
 	; info on how we're grouping these into the HTAP emission sectors
 	edgar_nmvoc_groups = (/ "AGR", "POW", "IND", "IND", "SLV", "IND", "RES", "IND", "AGR", \
-								"IND", "SHP", "IND", "TRA" /)
+								"TRA", "SHP", "IND", "TRA" /)
 
 
 
