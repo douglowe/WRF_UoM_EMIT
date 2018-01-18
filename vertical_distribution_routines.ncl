@@ -167,8 +167,6 @@ begin
 				filevardef(OUTFILE, var_name, typeof(invar_data), Var_Dims)
 				filevarattdef(OUTFILE, var_name, invar_data)
 
-				; impose a vertical distribution on the data, and save to the output file
-				impose_vertical_distribution(OUTFILE,var_name,invar_data,orig_sectors,vert_sectors)
 
 			else 
 				print(" units of "+invar_data@units+" for input variable "+input_vars(ivar)+" not recognised")
@@ -181,10 +179,55 @@ begin
 	
 	end do
 	
-	; tidy up
-	delete(INFILE)
+	; close outfile
 	delete(OUTFILE)
 	
+	
+	;;;;; reopen outfile in write mode
+	; 
+	;   We do this because writing data into the netcdf file while it is in "create"
+	;   mode is *massively* inefficient (taking >100 times longer to run). 
+	;   It is far better to create the file, with all variables inside it, close it, 
+	;   then reopen in write mode to add the required data.
+	;
+	OUTFILE = addfile(OUTDIR+scheme@$fname$+".nc","w")
+	
+
+	;;; loop through the variables in the input file
+	do ivar = 0, var_num-1
+
+		; pull out the variable name
+		var_name := input_vars(ivar)
+	
+		;;; filter for emissions data - assuming that they start with "E_" 
+		if(isStrSubset(var_name,"E_"))
+
+			; load input data
+			invar_data := INFILE->$var_name$
+
+			; check units to double check that this is an emission variable!!!
+			if(invar_data@units .eq. "ug m^-2 s^-1" .or. invar_data@units .eq. "mol km^-2 hr^-1")
+			
+				; impose a vertical distribution on the data, and save to the output file
+				impose_vertical_distribution(OUTFILE,var_name,invar_data,orig_sectors,vert_sectors)
+
+
+			else 
+				print(" units of "+invar_data@units+" for input variable "+input_vars(ivar)+" not recognised")
+				print("          so skipping this variable")
+			end if
+
+	
+	
+		end if ; var_name contains "E_"
+	
+	end do
+
+				
+	;;; rename the created files in order to match WRF-Chem convention
+	system("mv "+OUTDIR+scheme@$fname$+".nc "+OUTDIR+scheme@$fname$)
+	
+
 end
 
 
