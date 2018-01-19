@@ -337,12 +337,16 @@ end ;;;;; modify_emissions
 
 undef("modify_nmvoc_emissions")
 procedure modify_nmvoc_emissions(FILE:file,scaling_arrays:float,start_index:integer,nmvoc_sectors:string,nmvoc_groups:string)
-local var_list, var_num, evar, var_name, sect_name, esec, sect_ind, itime, data_array, emiss_name
+local var_list, var_num, evar, var_name, sect_name, esec, sect_ind, itime, data_array, emiss_name, \
+		missing_variables
 begin
 
 	;;; pull out a list of the variables in the emission file
 	var_list = getfilevarnames(FILE)
 	var_num = dimsizes(var_list)
+	
+	;;; initalise string to record emission variables that we aren't processing
+	missing_variables = ""
 	
 	;;;;; apply the scaling arrays to the emission data
 	
@@ -366,39 +370,47 @@ begin
 					break
 				end if
 			end do
-			;; if we have no emission sector info then skip to next variable
-			if(sect_name .eq. "None")
-				print("No sector information for emission variable "+var_name+" so we're skipping the diurnal cycle application")
-				break
+
+			;; make sure we have emission sector info
+			if(sect_name .ne. "None")
+				
+				;; obtain the emission index
+				sect_ind = emiss_sector_index@$sect_name$
+
+				;; pull the data from the input file
+				data_array = FILE->$var_name$
+
+				;; loop through the time slices in the file (assumed there's 12!)
+				do itime = 0,11
+			
+					;; apply our scaling factor
+					;;    NOTE: we're assuming that there is only 1 vertical layer in this dataset!!!!!!
+					data_array(itime,0,:,:) = data_array(itime,0,:,:) * \
+											scaling_arrays(sect_ind,start_index+itime,:,:)
+				
+				end do ;; time slice loop
+			
+				;; push the data back into the input file
+				FILE->$var_name$ = data_array
+			
+			
+				;; delete our temporary arrays
+				delete([/data_array/])
+
+			else ; let the user know we're not processing this variable
+				missing_variables = missing_variables + var_name + " "
 			end if
-				
-			;; obtain the emission index
-			sect_ind = emiss_sector_index@$sect_name$
-
-			;; pull the data from the input file
-			data_array = FILE->$var_name$
-
-			;; loop through the time slices in the file (assumed there's 12!)
-			do itime = 0,11
-			
-				;; apply our scaling factor
-				;;    NOTE: we're assuming that there is only 1 vertical layer in this dataset!!!!!!
-				data_array(itime,0,:,:) = data_array(itime,0,:,:) * \
-										scaling_arrays(sect_ind,start_index+itime,:,:)
-				
-			end do ;; time slice loop
-			
-			;; push the data back into the input file
-			FILE->$var_name$ = data_array
-			
-			
-			;; delete our temporary arrays
-			delete([/data_array/])
 
 
 		end if ;; if E_VOC variable
 
 	end do ;; emiss var loop
+
+	;;; if we've missed any variables, let the user know
+	if(missing_variables .ne. "")
+		print("No diurnal cycle applied to the following emission variables, because of lack of sector information (was this intended?):")
+		print(str_split(missing_variables, " "))
+	end if
 
 
 end ;;;;; modify_nmvoc_emissions
@@ -478,6 +490,7 @@ begin
 	;;;;; open prev file, and load the utc_offset_map variable
 	OFF_FILE = addfile(DIR+wrfchem_scheme@fname1+".nc","r")
 	utc_offset_map = OFF_FILE->TZ_Offset
+	
 
 	;;;;; open the files for processing
 	FILE1 = addfile(filename_1+".nc","w")

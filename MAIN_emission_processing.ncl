@@ -87,10 +87,10 @@ UTC_offset@daylightsaving = False
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; control what we're going to do ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-STEP1_create_diurnal_cycle_and_prescaling 	= False
+STEP1_create_diurnal_cycle_and_prescaling 	= True
 regional_modification_of_emissions  		= False
-STEP2_apply_vertical_power_emissions 		= False		; always use False
-use_vertical_power_emission_files 			= False		; always use False
+STEP2_apply_vertical_power_emissions 		= True
+use_vertical_power_emission_files 			= True
 STEP3_create_emissions_for_WRF_Chem 		= True
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -215,7 +215,7 @@ do idom = 0, dimsizes(domains)-1
 
 			;;;;; decide which input files we should use
 			if(use_vertical_power_emission_files)
-				print("== Trying to use vertically distributed emission files (this wont work...) ==")
+				print("== Using multi-layered emission files. ==")
 				PROCDIR = VERTDIR
 			else
 				print("== Using single layered emission files. ==")
