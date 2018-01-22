@@ -183,14 +183,14 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@TBUT2ENE_INT	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@BENZENE_INT	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_2_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_3_INT		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@MEK_INT		= 0.33
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@MEK_INT		= 0.4
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ISO_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@APINENE_INT	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@XYL_1_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@TOL_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@HCHO_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ALD_INT		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@KET_INT		= 0.67
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@KET_INT		= 0.6
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ORA2_INT		= (/1.0,1.0/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@CH3OH_INT		= (/0.2,0.8/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H5OH_INT	= (/0.2,0.8/)
@@ -232,14 +232,14 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 ; BENZENE_INT = v13
 ; XYL_2_INT = v16
 ; XYL_3_INT = v17
-; MEK_INT = 0.33 * v23
+; MEK_INT = 0.4 * v23
 ; ISO_INT = v10
 ; APININE_INT = v11
 ; XYL_1_INT = v15
 ; TOL_INT = v14
 ; HCHO_INT = v21
 ; ALD_INT = v22
-; KET_INT = 0.67 * v23
+; KET_INT = 0.6 * v23
 ; ORA2_INT = v18 + v24
 ; CH3OH_INT = 0.2 * v01 + 0.2 * v19
 ; C2H5OH_INT = 0.8 * v01 + 0.8 * v19
@@ -277,7 +277,7 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 ; v20 (chlorinated hydrocarbons - not used for CRI or CBMZ) 
 ; v21 (formaldehyde)    => HCHO (=> HCHO)
 ; v22 (other aldehydes) => ALD (=> ALD)
-; v23 (ketones)         => KET*0.67 + MEK*0.33 (=> KET and => KET + PAR respectively)
+; v23 (ketones)         => KET*0.6 + MEK*0.4 (=> KET and => KET + PAR respectively)
 ; v24 (alkanoic acids)  => ORA2 (=> ORA2)
 ; v25 (other VOC's - not used for CRI or CBMZ)
 
