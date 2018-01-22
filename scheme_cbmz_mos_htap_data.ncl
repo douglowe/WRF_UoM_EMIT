@@ -259,7 +259,7 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H4_INT		= 1.0
 ; v20 (chlorinated hydrocarbons - not used for CRI or CBMZ) 
 ; v21 (formaldehyde)    => HCHO (=> HCHO)
 ; v22 (other aldehydes) => ALD (=> ALD)
-; v23 (ketones)         => KET*0.67 + MEK*0.33 (=> KET and => KET + PAR respectively)
+; v23 (ketones)         => KET*0.6 + MEK*0.4 (=> KET and => KET + PAR respectively)
 ; v24 (alkanoic acids)  => ORA2 (=> ORA2)
 ; v25 (other VOC's - not used for CRI or CBMZ)
 
