@@ -122,8 +122,8 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_C2H2	 = 1.0
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_HCHO	 = 1.0
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_CH3CHO	 = 0.5
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_C2H5CHO = 0.5
-NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_KET	 = 0.67
-NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_MEK	 = 0.33
+NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_KET	 = 0.6
+NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_MEK	 = 0.4
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_CH3OH	 = (/0.2,0.2/)
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_C2H5OH	 = (/0.8,0.8/)
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_HCOOH	 = (/0.5,0.5/)
@@ -132,8 +132,8 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BENZENE = 1.0
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_TOLUENE = 1.0
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_OXYL	 = (/1.0,1.0,1.0/)
 NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_C5H8	 = 1.0
-NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_APINENE = 0.75
-NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.25
+NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_APINENE = 0.5
+NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.5
 
 ; emission formation:
 ; C2H6 = v02
@@ -146,8 +146,8 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.25
 ; HCHO = v21
 ; CH3CHO = v22
 ; C2H5CHO = v22
-; KET = v23*0.67
-; MEK = v23*0.33 
+; KET = v23*0.6
+; MEK = v23*0.4
 ; CH3OH = v01*0.2 + v19*0.2
 ; C2H5OH = v01*0.8 + v19*0.8
 ; HCOOH = v24*0.5 + v18*0.5
@@ -156,8 +156,8 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.25
 ; TOLUENE = v14
 ; OXYL = v15 + v16 + v17
 ; C5H8 = v10
-; APINENE = 0.75
-; BPINENE = 0.25
+; APINENE = 0.5
+; BPINENE = 0.5
 
 ;;; speciation for EDGAR species to CRI emissions
 ; v01 (alcohols)  = CH3OH*0.2 + C2H5OH*0.8
@@ -170,7 +170,7 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.25
 ; v08 (propene)   = C3H6
 ; v09 (ethyne)    = C2H2
 ; v10 (isoprene)  = C5H8
-; v11 (monoterpenes) = APINENE*0.75 + BPINENE*0.25
+; v11 (monoterpenes) = APINENE*0.5 + BPINENE*0.5
 ; v12 (other alkenes)= TBUT2ENE
 ; v13 (benzene)   = BENZENE
 ; v14 (toluene)   = TOLUENE
@@ -182,7 +182,7 @@ NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap@E_BPINENE = 0.25
 ; v20 (chlorinated hydrocarbons - not used for CRI or CBMZ) 
 ; v21 (formaldehyde)    = HCHO
 ; v22 (other aldehydes) = C2H5CHO
-; v23 (ketones)         = KET*0.67 + MEK*0.33
+; v23 (ketones)         = KET*0.6 + MEK*0.4
 ; v24 (alkanoic acids)  = HCOOH*0.5 + CH3CO2H*0.5
 ; v25 (other VOC's - not used for CRI or CBMZ)
 
