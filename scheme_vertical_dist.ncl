@@ -8,6 +8,7 @@ begin
 
 Vert_Dist = True
 Vert_Dist@Number_of_Layers = 6 
+Vert_Dist@WBD = (/0.7, 0.3, 0.0, 0.0, 0.0, 0.0 /)
 Vert_Dist@TRA = (/0.7, 0.3, 0.0, 0.0, 0.0, 0.0 /)
 Vert_Dist@AGR = (/0.7, 0.3, 0.0, 0.0, 0.0, 0.0 /)
 Vert_Dist@SHP = (/0.7, 0.3, 0.0, 0.0, 0.0, 0.0 /)

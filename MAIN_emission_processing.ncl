@@ -48,6 +48,12 @@ oc_om_scale = 1.4
 wrfchem_scheme = "cri_mos_edgar_htap"
 ;wrfchem_scheme = "fail!"
 
+
+; choice of input data to use
+input_scheme = "IITM" 
+
+
+
 ; choice of NMVOC speciation scheme to use
 nmvoc_scheme = "EDGAR"
 ;
@@ -120,6 +126,12 @@ regional_modification_of_emissions@vars_scale = (/0.0,50.0/)
 
 ;;;;; checks to make sure we're not going anything stupid
 
+;; check our input scheme
+if(.not. isStrSubset(available_input_schemes,input_scheme))
+	print("Scheme '"+input_scheme+"' is unsupported - check 'available_input_schemes' in emission_script_data.ncl to see what is supported")
+	exit()
+end if
+
 ;; check our NMVOC scheme
 if(.not. isStrSubset(available_nmvoc_schemes,nmvoc_scheme))
 	print("Scheme '"+nmvoc_scheme+"' is unsupported - check 'available_nmvoc_schemes' in emission_script_data.ncl to see what is supported")
@@ -133,6 +145,8 @@ if(.not. isStrSubset(available_schemes,wrfchem_scheme))
 end if
 
 
+;;; copy the input scheme information
+copy_input_scheme_information(input_scheme)
 
 
 

@@ -41,7 +41,12 @@
 ;            check that the source files exist (and will fail
 ;            gracefully if they are not).
 ;
-
+;        copy_input_scheme_information
+;            This copies the variable attributes which control the 
+;            input sectors which are used for each of our input species.
+;
+;
+;
 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"     ; include standard resources
 load "$NCARG_ROOT/lib/ncarg/nclscripts/wrf/WRFUserARW.ncl"
@@ -286,3 +291,24 @@ begin
 
 
 end ;;;;; emission_file_setup
+
+
+undef("copy_input_scheme_information")
+procedure copy_input_scheme_information(input_scheme:string)
+begin
+
+
+	if(input_scheme.eq."EDGAR")
+		copy_VarAtts(emiss_cat_EDGAR,emiss_cat)
+
+	else if(input_scheme.eq."IITM")
+		copy_VarAtts(emiss_cat_IITM,emiss_cat)
+
+	end if
+	end if
+	
+
+end ;;;;; copy_input_scheme_information
+
+
+

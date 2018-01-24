@@ -10,7 +10,7 @@ load "./scheme_cbmz_mos_orig_data.ncl"
 load "./scheme_cri_mos_edgar_htap_data.ncl"
 load "./scheme_nmvoc_data.ncl"
 load "./scheme_vertical_dist.ncl"
-
+load "./scheme_input_emission_data.ncl"
 
 ;*********************************************
 begin
@@ -43,24 +43,9 @@ begin
     emiss_cat_index@OC_DOM  = 9
     emiss_cat_index@OC_TRA  = 10
 
-	;;;; define the sector indexes for each variable
-	emiss_cat@CO    = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@NOx   = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@SO2   = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@NMVOC = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@BC    = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@OC    = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@PM2_5 = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@PM10  = (/"POW","IND","RES","TRA","SHP"/)
-	emiss_cat@NH3   = (/"IND","RES","TRA","AGR"/)
-	; Definitions for DOM (domestic) and TRA (traffic) are taken from our original speciation for the RONOCO work
-	;           In the long term we need to think about how we want to split these (especially when we're working
-	;           with the individual VBS emission groups)
-	emiss_cat@OC_DOM= (/"RES"/)
-	emiss_cat@OC_TRA= (/"POW","IND","TRA","SHP"/)
 
-	;;; list the emission sectors we will be working with
-	emiss_sector = (/"POW","IND","RES","TRA","AGR","SHP","SLV"/)
+	;;; list the emission sectors we can work with (this covers all input schemes, not everything has to be used)
+	emiss_sector = (/"POW","IND","RES","TRA","AGR","SHP","SLV","WBD"/)
 
 	;;; give our indexes for the emission sectors
 	emiss_sector_index = True
@@ -71,6 +56,7 @@ begin
 	emiss_sector_index@AGR = 4    ; agriculture
 	emiss_sector_index@SHP = 5    ; shipping
 	emiss_sector_index@SLV = 6    ; solvents
+	emiss_sector_index@WBD = 7    ; wind-blown dust
 
 ;;;;; diurnal cycle information
 
@@ -120,8 +106,22 @@ begin
 						1.0,1.0,1.0,1.0,1.0,1.0, \
 						1.0,1.0,1.0,1.0,1.0,1.0/)
 
+	diurnal_cycles@WBD = (/1.0,1.0,1.0,1.0,1.0,1.0, \
+						1.0,1.0,1.0,1.0,1.0,1.0, \
+						1.0,1.0,1.0,1.0,1.0,1.0, \
+						1.0,1.0,1.0,1.0,1.0,1.0/)
+
+
 	;;; We only have data on the hour here - but this will be interpolated
 	;;;   within the scripts for countries which shift their timezones by 30 minutes
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; INPUT schemes setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+available_input_schemes = "EDGAR IITM"   ; this is be a single string, space delimited, listing all the available schemes
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
