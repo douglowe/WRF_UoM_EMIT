@@ -176,8 +176,8 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@HCHO_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@ALD_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@KET_INT		= 0.6
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@ORA2_INT		= (/1.0,1.0/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@CH3OH_INT		= (/0.2,0.8/)
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H5OH_INT	= (/0.2,0.8/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@CH3OH_INT		= (/0.2,0.2/)
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H5OH_INT	= (/0.8,0.8/)
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H4_INT		= 1.0
 
 ; emission formation from intermediates:

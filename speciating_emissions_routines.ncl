@@ -555,81 +555,151 @@ procedure process_nmvoc_emissions_by_fraction(INDIR:string,OUTFILE:file,nmvoc_sc
 												nmvoc_species:string,nmvoc_species_index:logical,\
 												nmvoc_groups:string,nmvoc_sectors:string,\
 												nmvoc_mol_weights:logical)
-local ig, pname, pcount, ename, epname, e_point, ksp, mname, cfac, mwgt, \
+local ig, pname, enum, ename_list, ename, e_point, cfac_list, isp, ecname, cfac, mwgt, \
 		ies, esname, s_point, mfac, emissions 
 begin
 
 	;;;;; calculate the NMVOC fractional values
-	print("== Calculating the NMVOC fractions ==")
+	print("== Calculating the NMVOC fractions (this could take some time) ==")
 	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme,fname,\
 														nmvoc_species,nmvoc_species_index,\
 														nmvoc_groups,nmvoc_sectors)
+
+	;;; get the pointer for the NMVOC emissions we'll be fractionating
+	e_point = emiss_cat_index@NMVOC
+
 
 	do ig = 0, dimsizes(VAR_LIST_NMVOC)-1
 
 		;;; grab the name of the gas we're processing
 		pname = VAR_LIST_NMVOC(ig)
-	
+
+		;;; grab the names of the emission inputs we're using
+		ename_list := NMVOC_MAP_VAR@$pname$
+			
 		;;; count the emission mapping species
-		pcount = dimsizes(NMVOC_MAP_VAR@$pname$)
+		enum = dimsizes(ename_list)
 
-		;;; grab the name of the emission category we're using (this is the last variable in the list)
-		ename = NMVOC_MAP_VAR@$pname$(pcount-1)
-		;print("ename = "+ename)
-		;;; grab the name of the parent emission category (in case this is different)
-		epname = emiss_orig(emiss_cat_index@$ename$)
-		;;; get the pointer for the emissions we'll be converting (using the parent emission category)
-		e_point = emiss_cat_index@$epname$
+		;;; get the sector name
+		ename = ename_list(enum-1)
 
-	
-		;;; check if we are to use NMVOC mapping or not (i.e. there's more than one mapping species)
-		if(pcount .gt. 1)
+		;;; check that the last category is "NMVOC" - if not then skip this species
+		if(ename .eq. "NMVOC")
+
+			;;; get the standard conversion factors
+			cfac_list := NMVOC_MAP_TRN@$pname$
+
 	
 			;;; loop through the mapping species (not using the last species)
-			do ksp = 0, pcount - 2 
+			do isp = 0, enum - 2 
 
-				;;; get the NMVOC source scheme species name
-				mname = NMVOC_MAP_VAR@$pname$(ksp)
-				;print("mname = "+mname)
+				;;; get the input name
+				ecname = ename_list(isp)
+
 				;;; get the NMVOC source to new scheme multiplier
-				cfac = NMVOC_MAP_TRN@$pname$(ksp)
+				cfac = cfac_list(isp)
 				;print("cfac = "+cfac)
-				;;; get the NMVOC molecular weight, choosing either source or final scheme
-				if(nmvoc_scheme@molweights.eq."source")
-					mwgt = nmvoc_mol_weights@$mname$
-				else if(nmvoc_scheme@molweights.eq."destination")
-					mwgt = NMVOC_MOL_WGT@$pname$				
-				end if
-				end if
-				;print("mwgt = "+mwgt)
+				
+				;;; check if we're using intermediate compounds
+				if(nmvoc_scheme@use_intermediates)
+
+					;;; get the list of inputs for this intermediate
+					input_list := NMVOC_MAP_VAR@$ecname$
+					;;; get the conversion factors for the intermediate
+					input_cfac_list := NMVOC_MAP_TRN@$ecname$
+					;;; get number of inputs for the intermediate
+					innum = dimsizes(input_list)
+
+					;;; set the flag for our first step in next loop
+					init_iint = True
+
+					;;; we loop through the intermediates for this nmvoc
+					do iint = 0, innum-1
+
+						;;; get the (original) input name
+						inname = input_list(iint)
+						;;; get the (original) input conversion factor
+						incfac = input_cfac_list(iint)
+
+						;;; get the NMVOC molecular weight - with a choice of using
+						;;;    either the molecular weights from the source scheme,
+						;;;    or molecular weights for the destination scheme
+						if(nmvoc_scheme@molweights .eq. "source")
+							mwgt = nmvoc_mol_weights@$inname$
+						else if(nmvoc_scheme@molweights .eq. "destination")
+							mwgt = NMVOC_MOL_WGT@$ecname$
+						end if
+						end if
+
+						;;; loop through the emission sectors for this gas, summing up the emissions
+						do ies = 0, dimsizes(emiss_cat@$ename$)-1
+
+							;;; get the sector name
+							esname = emiss_cat@$ename$(ies)
+							;;; get the sector pointer
+							s_point = emiss_sector_index@$esname$
+
+							;;; get the MACCity NMVOC mass fraction, for the given sector
+							mfac = nmvoc_mass_fractions(nmvoc_species_index@$inname$,s_point,:,:,:,:)
+							;print("mfac = "+mfac)
+
+							;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+							; NMVOC emissions input is in kg/m2/s --- we multiple this by the mass fraction to
+							;       get the emitted mass of the original NMVOC, then divide by the molecular weight
+							;       of this to get the emission in mol/m2/s. The scheme multipliers (from original to
+							;       intermediate, and intermediate to final) will modify this
+							;       emission (if, for example, there are 2 moles of the scheme NMVOC for every one
+							;       mole of the original NMVOC).
+							if(isp .eq. 0 .and. iint .eq. 0 .and. ies .eq. 0)
+								emissions = emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * incfac * cfac
+							else
+								emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * incfac * cfac	
+							end if		
+
+						end do ;; ies in emiss_cat
+
+					end do ;; iint in iinum
+					
+				else ;;; carry on as normal, without intermediates
+				
+					;;; get the NMVOC molecular weight, choosing either source or final scheme
+					if(nmvoc_scheme@molweights.eq."source")
+						mwgt = nmvoc_mol_weights@$ecname$
+					else if(nmvoc_scheme@molweights.eq."destination")
+						mwgt = NMVOC_MOL_WGT@$pname$				
+					end if
+					end if
+					;print("mwgt = "+mwgt)
 			
 			
-				;;; loop through the emission sectors for this gas, summing up the emissions
-				do ies = 0, dimsizes(emiss_cat@$ename$)-1
+					;;; loop through the emission sectors for this gas, summing up the emissions
+					do ies = 0, dimsizes(emiss_cat@$ename$)-1
 
-					;;; get the sector name
-					esname = emiss_cat@$ename$(ies)
-					;;; get the sector pointer
-					s_point = emiss_sector_index@$esname$
+						;;; get the sector name
+						esname = emiss_cat@$ename$(ies)
+						;;; get the sector pointer
+						s_point = emiss_sector_index@$esname$
 
-					;;; get the MACCity NMVOC mass fraction, for the given sector
-					mfac = nmvoc_mass_fractions(nmvoc_species_index@$mname$,s_point,:,:,:,:)
-					;print("mfac = "+mfac)
+						;;; get the MACCity NMVOC mass fraction, for the given sector
+						mfac = nmvoc_mass_fractions(nmvoc_species_index@$ecname$,s_point,:,:,:,:)
+						;print("mfac = "+mfac)
 				
 	
-					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-					; NMVOC emissions input is in kg/m2/s --- we multiple this by the mass fraction to
-					;       get the emitted mass of the original NMVOC, then divide by the molecular weight
-					;       of this to get the emission in mol/m2/s. The scheme multiplier will modify this
-					;       emission (if, for example, there are 2 moles of the scheme NMVOC for every one
-					;       mole of the original NMVOC).
-					if(ksp .eq. 0 .and. ies .eq. 0)
-						emissions = emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * cfac
-					else
-						emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * cfac			
-					end if		
+						;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+						; NMVOC emissions input is in kg/m2/s --- we multiple this by the mass fraction to
+						;       get the emitted mass of the original NMVOC, then divide by the molecular weight
+						;       of this to get the emission in mol/m2/s. The scheme multiplier will modify this
+						;       emission (if, for example, there are 2 moles of the scheme NMVOC for every one
+						;       mole of the original NMVOC).
+						if(isp .eq. 0 .and. ies .eq. 0)
+							emissions = emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * cfac
+						else
+							emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * (mfac/mwgt) * cfac			
+						end if		
 
-				end do
+					end do
+
+				end if ;;; using intermediates?
 	
 			end do
 	
@@ -676,10 +746,11 @@ procedure process_nmvoc_emissions_direct(INDIR:string,OUTFILE:file,nmvoc_scheme:
 										VAR_LIST_NMVOC:string,NMVOC_MAP_VAR:logical,\
 										NMVOC_MAP_TRN:logical,NMVOC_MOL_WGT:logical,\
 										nmvoc_mol_weights:logical)
-local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, ies, \
+local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, isp, ies, \
 		ecname, cfac, cat_var, icat, emissions, \
-		mwgt, init_ies, init_iint, init_icat, \
-		input_list, input_cfac_list, innum, iint, inname, incfac
+		mwgt, init_isp, init_iint, init_icat, \
+		input_list, input_cfac_list, innum, iint, inname, incfac, \
+		esname, s_point, epname, e_point
 begin
 
 	;;; open the NMVOC emission data file
@@ -705,15 +776,15 @@ begin
 			cfac_list := NMVOC_MAP_TRN@$pname$
 
 			;;; set the flag for our first step in next loop
-			init_ies = True
+			init_isp = True
 
 			;;; loop through the emission inputs for this nmvoc, summing up the emissions
-			do ies = 0, enum-2		;; last in list is "NMVOC", so we ignore this
+			do isp = 0, enum-2		;; last in list is "NMVOC", so we ignore this
 			
 				;;; get the input name
-				ecname = ename_list(ies)
+				ecname = ename_list(isp)
 				;;; get the input conversion factor (ratio of nmvoc to the input)
-				cfac = cfac_list(ies)
+				cfac = cfac_list(isp)
 			
 				;;; check if we are using intermediate compounds
 				if(nmvoc_scheme@use_intermediates)
@@ -771,9 +842,9 @@ begin
 							;;; once we've collected all emissions in the intermediate then transfer them
 							;;;    to the final emission variable
 							
-							if(init_ies)
+							if(init_isp)
 								emissions = emissions_int * cfac
-								init_ies = False
+								init_isp = False
 							else
 								emissions = emissions + emissions_int * cfac							
 							end if
@@ -807,9 +878,9 @@ begin
 						;;; loop through emission inputs, collecting them in the emission variable
 						do icat = 0, dimsizes(cat_var)-1
 					
-							if(init_ies .and. init_icat)
+							if(init_isp .and. init_icat)
 								emissions = (/INFILE->$cat_var(icat)$/) * cfac / mwgt
-								init_ies  = False
+								init_isp  = False
 								init_icat = False
 							else
 								emissions = emissions + ( (/INFILE->$cat_var(icat)$/) * cfac / mwgt )
@@ -821,10 +892,10 @@ begin
 
 				end if ;;; use_intermediates check
 	
-			end do ;;; ies in ename_list
+			end do ;;; isp in ename_list
 
 			;;; make sure that we found some emissions (don't write to output if we didn't)
-			if(.not.init_ies) 
+			if(.not.init_isp) 
 				;;; push the emissions data to the outfile
 				OUTFILE->$pname$ = (/emissions/)
 				;;; tidy up
@@ -833,7 +904,6 @@ begin
 				print("no emissions data found for "+pname+"!")
 			end if
 	
-
 		end if ;;; category is "NMVOC"
 			
 	end do ;;; ig in VAR_LIST_NMVOC
@@ -856,10 +926,7 @@ procedure generate_scheme_emissions(INDIR:string, OUTDIR:string, fname:string, \
 			nmvoc_species:string,nmvoc_species_index:logical, \
 			nmvoc_groups:string,nmvoc_sectors:string, \
 			nmvoc_mol_weights:logical)
-local INFILE, emissions_data, OUTFILE, VAR_LIST_GAS, VAR_LIST_AERO, VAR_LIST_NMVOC, \
-		ig, ies, pname, ename, epname, e_point, \
-		esname, s_point, cfac, emissions, e_point_bc, e_point_oc, e_point_pm, e_point_pm25, \
-		ksp, mname, mfac, mwgt
+local INFILE, emissions_data, OUTFILE, VAR_LIST_GAS, VAR_LIST_AERO, VAR_LIST_NMVOC
 begin
 
 
@@ -1061,11 +1128,11 @@ begin
 	end if
 	
 	;;; check to make sure we aren't using intermediates when we're also using fractional apportionment
-	if(nmvoc_scheme@use_intermediates .and. nmvoc_scheme@method .eq. "fraction")
-		print("the use of NMVOC intermediates and fractional apportionment is not supported at this time")
-		print("please set nmvoc_scheme@method = 'direct' instead")
-		exit()
-	end if
+	;if(nmvoc_scheme@use_intermediates .and. nmvoc_scheme@method .eq. "fraction")
+	;	print("the use of NMVOC intermediates and fractional apportionment is not supported at this time")
+	;	print("please set nmvoc_scheme@method = 'direct' instead")
+	;	exit()
+	;end if
 	
 	generate_scheme_emissions(INDIR, OUTDIR, fname, wrfchem_scheme, nmvoc_scheme, nox_frac, \
 					INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, NMVOC_VAR, NMVOC_TRN, NMVOC_WGT, \
