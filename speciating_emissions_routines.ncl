@@ -29,11 +29,10 @@
 ;
 ;        nmvoc_fraction_calculations
 ;            This routine is called from "process_nmvoc_emissions_by_fraction".
-;            It calculates the *mass* fraction values
-;            of the (EDGAR HTAP) NMVOC emissions from the MACCity
+;            It calculates the *mass* fraction values for the 
+;            unspeciated NMVOC emissions from the MACCITY (or alternative)
 ;            speciated NMVOC emission data. These are calculated
 ;            from the summed emissions across the whole model domain.
-;            (this needs rewriting to work with any NMVOC speciated data)
 ;
 ;
 ;        process_nmvoc_emissions_by_fraction
@@ -435,8 +434,12 @@ function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string,fname:stri
 										nmvoc_species:string,nmvoc_species_index:logical,\
 										nmvoc_groups:string,nmvoc_sectors:string)
 local FILE, total_emissions, im, js, sector_pointer, species_pointer, emiss_data, total_mass, \
-		var_list, var_num, emiss_name, cat_var
+		var_list, var_num, emiss_name, cat_var, \
+		first_time, ia, ib, ic, id
 begin
+
+	;;; set flag to control creation of data array
+	first_time = True
 
 	;;; open the NMVOC data file
 	FILE = addfile(INDIR+nmvoc_scheme@$fname$+".nc","r")
@@ -444,25 +447,15 @@ begin
 	;;; pull out a list of the variables in the emission file
 	var_list = getfilevarnames(FILE)
 	var_num = dimsizes(var_list)
-
-
-	;;; create data array for storing the summed emission data
-	; 2 dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector
-	total_emissions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
-	; initialise all the data to zero
-	total_emissions = 0.0
 	
-	;;; create data array for storing the generated information
-	; 2 dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector
-	nmvoc_mass_fractions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector)/),float)
 
 	;;; extract the emission data
-	; loop through the MACCity emission sectors
+	; loop through the input NMVOC emission sectors
 	do im = 0, dimsizes(nmvoc_sectors)-1
 		; determine our pointer for the standard emission sector we will populate
 		sector_pointer = emiss_sector_index@$nmvoc_groups(im)$
 		
-		; loop through the MACCity emission species for each sector
+		; loop through the input NMVOC emission species for each sector
 		do js = 0, dimsizes(nmvoc_species)-1
 			
 			; determine our pointer for the emission species
@@ -477,22 +470,38 @@ begin
 			
 				; load data
 				emiss_data = FILE->$emiss_name$
+
+
+				;;; first time through create our storage array
+				if(first_time)
+					first_time = False
+					edim = dimsizes(emiss_data)
+					;; NOTE: we're assuming that the input data is 4 dimensional
+					;;       if this is not the case then this script will break!!!
+
+					;;; create data array for storing the generated information
+					; 2 + 4 dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector; last 4 are model domain info
+					nmvoc_mass_fractions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector), edim(0), edim(1), edim(2), edim(3) /),\
+											float)
+
+					;;; create data array for storing the summed emission data
+					;  2 + 4  dimensions: 1st is input NMVOC Species; 2nd is standard (output) emission sector; last 4 are model domain info
+					total_emissions = new((/dimsizes(nmvoc_species),dimsizes(emiss_sector), edim(0), edim(1), edim(2), edim(3) /),\
+											float)
+					; initialise all the data to zero
+					total_emissions = 0.0
+
+
+				end if
+
 			
 				; sum up the data, and add the result to our storage array
 				;  Note: we add, not replace, because a single (final) emission sector
 				;        could contain multiple NMVOC input emission sectors 
-				total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + sum(emiss_data)
+				total_emissions(species_pointer,sector_pointer,:,:,:,:) = total_emissions(species_pointer,sector_pointer,:,:,:,:) + emiss_data
 			
 				; delete data array
 				delete(emiss_data)
-
-			else
-			
-				; add a zero value to the storage array (to ensure there is something there)
-				;  Note: we add, not replace, because a single (final) emission sector
-				;        could contain multiple NMVOC input emission sectors 
-				total_emissions(species_pointer,sector_pointer) = total_emissions(species_pointer,sector_pointer) + 0.0
-			
 			
 			end if
 
@@ -507,20 +516,28 @@ begin
 	;;; calculate the emission mass fractionation for each species by sector
 	; loop through sectors
 	do ies = 0, dimsizes(emiss_sector)-1
+	do ia  = 0, edim(0)-1
+	do ib  = 0, edim(1)-1
+	do ic  = 0, edim(2)-1
+	do id  = 0, edim(3)-1
 	
 		; calculate the total NMVOC emitted mass for this sector
-		total_mass = sum(total_emissions(:,ies))
+		total_mass = sum(total_emissions(:,ies,ia,ib,ic,id))
 	
 		; divide species mass by total to get fraction (unless there's nothing, then set all to zero)
 		if(total_mass .le. 0.0)
-			nmvoc_mass_fractions(:,ies) = 0.0
+			nmvoc_mass_fractions(:,ies,ia,ib,ic,id) = 0.0
 		else
-			nmvoc_mass_fractions(:,ies) = total_emissions(:,ies) / total_mass
+			nmvoc_mass_fractions(:,ies,ia,ib,ic,id) = total_emissions(:,ies,ia,ib,ic,id) / total_mass
 		end if	
 
 		; delete temp data
 		delete(total_mass)
 
+	end do
+	end do
+	end do
+	end do
 	end do
 
 	;;; return the fractionation data
@@ -596,7 +613,7 @@ begin
 					s_point = emiss_sector_index@$esname$
 
 					;;; get the MACCity NMVOC mass fraction, for the given sector
-					mfac = nmvoc_mass_fractions(nmvoc_species_index@$mname$,s_point)
+					mfac = nmvoc_mass_fractions(nmvoc_species_index@$mname$,s_point,:,:,:,:)
 					;print("mfac = "+mfac)
 				
 	
