@@ -126,10 +126,12 @@ begin
 	dim_sizes = getfiledimsizes(INFILE)
 	dim_names = getvardims(INFILE)
 
-	;;; assume that the last dimension (usually Time) is unlimited
+	;;; set all dimensions as Limited
 	dim_Unlim = new(dimsizes(dim_sizes),logical)
-	dim_Unlim(0:dimsizes(dim_sizes)-2) = False
-	dim_Unlim(dimsizes(dim_sizes)-1)   = True
+	dim_Unlim(:) = False
+	;;; now find the Time dimension, and set that to Unlimited
+	dim_Unlim(ind(dim_names.eq."Time"))   = True
+
 
 	;;; apply these dimensions to the output files
 	filedimdef( OUTFILE, dim_names, dim_sizes, dim_Unlim )

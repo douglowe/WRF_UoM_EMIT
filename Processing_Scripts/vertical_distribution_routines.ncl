@@ -107,14 +107,15 @@ begin
 	dim_sizes = getfiledimsizes(INFILE)
 	dim_names = getvardims(INFILE)
 
-	;;; assume that the last dimension (usually Time) is unlimited
+	;;; set all dimensions as Limited
 	dim_Unlim = new(dimsizes(dim_sizes),logical)
-	dim_Unlim(0:dimsizes(dim_sizes)-2) = False
-	dim_Unlim(dimsizes(dim_sizes)-1)   = True
+	dim_Unlim(:) = False
+	;;; now find the Time dimension, and set that to Unlimited
+	dim_Unlim(ind(dim_names.eq."Time"))   = True
 
 	;;; replace the size of the zdim variable with our chosen emission grid size
 	dim_new_sizes = dim_sizes
-	dim_new_sizes(2) = Vert_Dist@Number_of_Layers
+	dim_new_sizes(ind(dim_names.eq."emissions_zdim_stag")) = Vert_Dist@Number_of_Layers
 
 	;;; apply these dimensions to the output files
 	filedimdef( OUTFILE, dim_names, dim_new_sizes, dim_Unlim )
