@@ -747,7 +747,7 @@ undef("process_nmvoc_emissions_direct")
 procedure process_nmvoc_emissions_direct(INDIR:string,OUTFILE:file,nmvoc_scheme:string,fname:string,\
 										VAR_LIST_NMVOC:string,NMVOC_MAP_VAR:logical,\
 										NMVOC_MAP_TRN:logical,NMVOC_MOL_WGT:logical,\
-										nmvoc_mol_weights:logical)
+										nmvoc_mol_weights:logical,emissions_data:float)
 local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, isp, ies, \
 		ecname, cfac, cat_var, icat, emissions, \
 		mwgt, init_isp, init_iint, init_icat, \
@@ -905,7 +905,37 @@ begin
 			else
 				print("no emissions data found for "+pname+"!")
 			end if
+
+		;;; if not then map straight from the emission species (usually setting to zero)
+		else  
 	
+			;;; get the standard conversion factor
+			cfac = NMVOC_MAP_TRN@$pname$
+	
+			;;; loop through the emission sectors for this gas, summing up the emissions
+			do ies = 0, dimsizes(emiss_cat@$ename_list(enum-1)$)-1
+				;;; get the sector name
+				esname = emiss_cat@$ename_list(enum-1)$(ies)
+				;;; get the sector pointer
+				s_point = emiss_sector_index@$esname$
+				;;; get the pointer for the NMVOC emissions we'll be fractionating
+				e_point = emiss_cat_index@NMVOC
+	
+				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+				if(ies .eq. 0)
+					emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
+				else
+					emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
+				end if		
+
+			end do
+		
+			;;; push the emissions data to the outfile
+			OUTFILE->$pname$ = (/emissions/)
+			;;; tidy up
+			delete(emissions)
+		
+		
 		end if ;;; category is "NMVOC"
 			
 	end do ;;; ig in VAR_LIST_NMVOC
@@ -973,7 +1003,7 @@ begin
 
 		process_nmvoc_emissions_direct(INDIR,OUTFILE,nmvoc_scheme,fname,VAR_LIST_NMVOC, \
 												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT, \
-												nmvoc_mol_weights)
+												nmvoc_mol_weights,emissions_data)
 
 
 	else if(nmvoc_scheme@method .eq. "fraction")
