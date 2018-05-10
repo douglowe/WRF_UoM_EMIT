@@ -85,15 +85,15 @@ AERO_MAP_TRN_cbmz_mos_htap@E_OIN_10		= -9999.   ; this will be replaced by a cal
 ; Mapping information for NMVOC species
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap = True
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ETH		= (/"ETH_INT","NMVOC"/)
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_PAR		= (/"C3H8_INT","NC4H10_4_INT","NC4H10_5_INT",\
-												"NC4H10_6_INT","C3H6_INT","C2H2_INT",\
-												"TBUT2ENE_INT","BENZENE_INT","XYL_2_INT",\
-												"XYL_3_INT","MEK_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_PAR		= (/"C3H8_INT","NC4H10_INT","C6H12_INT",\
+												"C8H14_INT","C3H6_INT","C2H2_INT",\
+												"TBUT2ENE_INT","BENZENE_INT","TMBEN_INT",\
+												"TMBEN_A_INT","MEK_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_ISO		= (/"ISO_INT","APINENE_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC3		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC5		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_HC8		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_XYL		= (/"XYL_1_INT","XYL_2_INT","XYL_3_INT","NMVOC"/)
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_XYL		= (/"XYL_INT","TMBEN_INT","TMBEN_A_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OL2		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OLT		= (/"C3H6_INT","TBUT2ENE_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_OLI		= (/"TBUT2ENE_INT","NMVOC"/)
@@ -109,19 +109,19 @@ NMVOC_edgar_MAP_VAR_cbmz_mos_htap@E_C2H4    = (/"C2H4_INT","NMVOC"/)
 
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@ETH_INT		= "VOC02"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@C3H8_INT		= "VOC03"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@NC4H10_4_INT	= "VOC04"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@NC4H10_5_INT	= "VOC05"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@NC4H10_6_INT	= "VOC06"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@NC4H10_INT	= "VOC04"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@C6H12_INT		= "VOC05"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@C8H14_INT		= "VOC06"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@C3H6_INT		= "VOC08"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@C2H2_INT		= "VOC09"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@TBUT2ENE_INT	= "VOC12"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@BENZENE_INT	= "VOC13"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@XYL_2_INT		= "VOC16"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@XYL_3_INT		= "VOC17"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@TMBEN_INT		= "VOC16"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@TMBEN_A_INT	= "VOC17"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@MEK_INT		= "VOC23"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@ISO_INT		= "VOC10"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@APINENE_INT	= "VOC11"
-NMVOC_edgar_MAP_VAR_cbmz_mos_htap@XYL_1_INT		= "VOC15"
+NMVOC_edgar_MAP_VAR_cbmz_mos_htap@XYL_INT		= "VOC15"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@TOL_INT		= "VOC14"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@HCHO_INT		= "VOC21"
 NMVOC_edgar_MAP_VAR_cbmz_mos_htap@ALD_INT		= "VOC22"
@@ -158,19 +158,19 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@E_C2H4    = 1.0
 
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@ETH_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C3H8_INT		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@NC4H10_4_INT	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@NC4H10_5_INT	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@NC4H10_6_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@NC4H10_INT	= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C6H12_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C8H14_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C3H6_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H2_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@TBUT2ENE_INT	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@BENZENE_INT	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@XYL_2_INT		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@XYL_3_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@TMBEN_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@TMBEN_A_INT	= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@MEK_INT		= 0.4
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@ISO_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@APINENE_INT	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_htap@XYL_1_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_htap@XYL_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@TOL_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@HCHO_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_htap@ALD_INT		= 1.0
@@ -182,13 +182,13 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H4_INT		= 1.0
 
 ; emission formation from intermediates:
 ; ETH = ETH_INT
-; PAR = 3.0*C3H8_INT + 4.0*NC4H10_4_INT + 5.0*NC4H10_5_INT + 6.0*NC4H10_6_INT + C3H6_INT 
-;		+ 2.0*C2H2_INT + TBUT2ENE_INT + (-1.0)*BENZENE_INT + XYL_2_INT + XYL_3_INT + MEK_INT
+; PAR = 3.0*C3H8_INT + 4.0*NC4H10_INT + 5.0*C6H12_INT + 6.0*C8H14_INT + C3H6_INT 
+;		+ 2.0*C2H2_INT + TBUT2ENE_INT + (-1.0)*BENZENE_INT + TMBEN_INT + TMBEN_A_INT + MEK_INT
 ; ISO = ISO_INT + 2.0*APINENE_INT
 ; HC3 = 0.0 
 ; HC5 = 0.0
 ; HC8 = 0.0
-; XYL = XYL_1_INT + XYL_2_INT + XYL_3_INT
+; XYL = XYL_INT + TMBEN_INT + TMBEN_A_INT
 ; OL2 = 0.0
 ; OLT = C3H6_INT + TBUT2ENE_INT ?
 ; OLI = TBUT2ENE_INT ?
@@ -205,19 +205,19 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H4_INT		= 1.0
 ; intermediate formation from sources
 ; ETH_INT  = v02
 ; C3H8_INT = v03
-; NC4H10_4_INT = v04
-; NC4H10_5_INT = v05
-; NC4H10_6_INT = v06
+; NC4H10_INT = v04
+; C6H12_INT = v05
+; C8H14_INT = v06
 ; C3H6_INT = v08
 ; C2H2_INT = v09
 ; TBUT2ENE_INT = v12
 ; BENZENE_INT = v13
-; XYL_2_INT = v16
-; XYL_3_INT = v17
+; TMBEN_INT = v16
+; TMBEN_A_INT = v17
 ; MEK_INT = 0.4 * v23
 ; ISO_INT = v10
 ; APININE_INT = v11
-; XYL_1_INT = v15
+; XYL_INT = v15
 ; TOL_INT = v14
 ; HCHO_INT = v21
 ; ALD_INT = v22
@@ -240,20 +240,20 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_htap@C2H4_INT		= 1.0
 ; v01 (alcohols)  => CH3OH*0.2 + C2H5OH*0.8 (=> CH3OH and => C2H5OH respectively)
 ; v02 (ethane)    => ETH (=> ETH)
 ; v03 (propane)   => C3H8 => PAR * 3.0 
-; v04 (butane)    => NC4H10_4 => PAR * 4.0
-; v05 (pentane)   => NC4H10_5 => PAR * 5.0
-; v06 (hexanes)   => NC4H10_6 => PAR * 6.0
+; v04 (butane)    => NC4H10 => PAR * 4.0
+; v05 (pentane)   => C6H12 => PAR * 5.0  (intermediate is not a CRI species) 
+; v06 (hexanes)   => C8H14 => PAR * 6.0  (intermediate is not a CRI species)
 ; v07 (ethene)    => C2H4 (=> C2H4)
 ; v08 (propene)   => C3H6 => OLT + PAR
-; v09 (ethyne)    => C2H2 => PAR * 2.0    (needs checking????)
+; v09 (ethyne)    => C2H2 => PAR * 2.0
 ; v10 (isoprene)  => ISO  (=> ISO)
 ; v11 (monoterpenes) => APINENE => ISO * 2.0
-; v12 (other alkenes)=> TBUT2ENE => OLI + OLT + PAR  (needs checking????)
+; v12 (other alkenes)=> TBUT2ENE => 0.5*OLI + 0.5*OLT + 2*PAR               (needs checking????)
 ; v13 (benzene)   => BENZENE => TOL - PAR
 ; v14 (toluene)   => TOL (=> TOL)
-; v15 (xylene)    => XYL_1 (=> XYL)
-; v16 (trimethylbenzenes) => XYL_2 => XYL + PAR
-; v17 (other aromatics)   => XYL_3 => XYL + PAR    (needs checking????)
+; v15 (xylene)    => XYL (=> XYL)
+; v16 (trimethylbenzenes) => TMBEN => XYL + PAR   (intermediate is not a CRI species)
+; v17 (other aromatics)   => TMBEN_A => XYL + PAR   (will treat as v16)
 ; v18 (esters)    => ORA2 (=> ORA2)
 ; v19 (ethers)    => CH3OH*0.2 + C2H5OH*0.8 (=> CH3OH and => C2H5OH respectively)
 ; v20 (chlorinated hydrocarbons - not used for CRI or CBMZ) 
@@ -269,9 +269,9 @@ NMVOC_edgar_MOL_WGT_cbmz_mos_htap@CH3OH_INT	 	= 32.0419
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C2H5OH_INT	= 46.0684
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@ETH_INT		= 30.07
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C3H8_INT	 	= 44.1
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@NC4H10_4_INT 	= 58.12
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@NC4H10_5_INT 	= 58.12
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@NC4H10_6_INT 	= 58.12
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@NC4H10_INT 	= 58.12
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C6H12_INT 	= 72.15
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C8H14_INT 	= 86.18
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C2H4_INT	 	= 28.05
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C3H6_INT	 	= 42.08
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@C2H2_INT	 	= 26.04
@@ -280,15 +280,16 @@ NMVOC_edgar_MOL_WGT_cbmz_mos_htap@APINENE_INT  	= 136.234
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@TBUT2ENE_INT 	= 56.11
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@BENZENE_INT  	= 78.1118
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@TOL_INT		= 92.1384
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@XYL_1_INT	 	= 106.165
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@XYL_2_INT	 	= 106.165
-NMVOC_edgar_MOL_WGT_cbmz_mos_htap@XYL_3_INT	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@XYL_INT	 	= 106.165
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@TMBEN_INT	 	= 120.19
+NMVOC_edgar_MOL_WGT_cbmz_mos_htap@TMBEN_A_INT	= 120.19
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@CH3CO2H_INT  	= 60.052
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@HCHO_INT	 	= 30.03
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@ALD_INT		= 44.05
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@KET_INT	 	= 58.08
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@MEK_INT	 	= 72.11
 NMVOC_edgar_MOL_WGT_cbmz_mos_htap@ORA2_INT	 	= 60.05 ;;; using CH3COOH (acetic acid) molar mass 
+
 
 
 
