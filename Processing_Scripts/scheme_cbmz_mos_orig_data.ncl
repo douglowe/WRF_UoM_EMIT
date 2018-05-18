@@ -104,8 +104,8 @@ NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ETH		= (/"ETH_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_PAR		= "CO"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_ISO		= (/"ISO_INT","APINENE_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC3		= "CO"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC5		= (/"C3H8_INT","NC4H10_INT","C6H12_INT",\
-												"C8H14_INT","C3H6_INT","C2H2_INT",\
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC5		= (/"C3H8_INT","NC4H10_INT","C5H12_INT",\
+												"C6H14_INT","C3H6_INT","C2H2_INT",\
 												"TBUT2ENE_INT","BENZENE_INT","TMBEN_INT",\
 												"TMBEN_A_INT","MEK_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_HC8		= "CO"
@@ -126,8 +126,8 @@ NMVOC_edgar_MAP_VAR_cbmz_mos_orig@E_C2H4    = (/"C2H4_INT","NMVOC"/)
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@ETH_INT		= "VOC02"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C3H8_INT		= "VOC03"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@NC4H10_INT	= "VOC04"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C6H12_INT		= "VOC05"
-NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C8H14_INT		= "VOC06"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C5H12_INT		= "VOC05"
+NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C6H14_INT		= "VOC06"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C3H6_INT		= "VOC08"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@C2H2_INT		= "VOC09"
 NMVOC_edgar_MAP_VAR_cbmz_mos_orig@TBUT2ENE_INT	= "VOC12"
@@ -175,8 +175,8 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@E_C2H4    = 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@ETH_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C3H8_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@NC4H10_INT	= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C6H12_INT		= 1.0
-NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C8H14_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C5H12_INT		= 1.0
+NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C6H14_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C3H6_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H2_INT		= 1.0
 NMVOC_edgar_MAP_TRN_cbmz_mos_orig@TBUT2ENE_INT	= 1.0
@@ -203,7 +203,7 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 ; PAR = 0.0
 ; ISO = ISO_INT + 2.0*APINENE_INT
 ; HC3 = 0.0 
-; HC5 = 3.0*C3H8_INT + 4.0*NC4H10_INT + 5.0*C6H12_INT + 6.0*NC8H14_INT + C3H6_INT 
+; HC5 = 3.0*C3H8_INT + 4.0*NC4H10_INT + 5.0*C5H12_INT + 6.0*C6H14_INT + C3H6_INT 
 ;		+ 2.0*C2H2_INT + TBUT2ENE_INT + (-1.0)*BENZENE_INT + TMBEN_INT + TMBEN_A_INT + MEK_INT
 ; HC8 = 0.0
 ; XYL = XYL_INT + TMBEN_INT + TMBEN_A_INT
@@ -224,8 +224,8 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 ; ETH_INT  = v02
 ; C3H8_INT = v03
 ; NC4H10_INT = v04
-; C6H12_INT = v05
-; C8H14_INT = v06
+; C5H12_INT = v05
+; C6H14_INT = v06
 ; C3H6_INT = v08
 ; C2H2_INT = v09
 ; TBUT2ENE_INT = v12
@@ -259,8 +259,8 @@ NMVOC_edgar_MAP_TRN_cbmz_mos_orig@C2H4_INT		= 1.0
 ; v02 (ethane)    => ETH (=> ETH)
 ; v03 (propane)   => C3H8 => PAR * 3.0 
 ; v04 (butane)    => NC4H10 => PAR * 4.0
-; v05 (pentane)   => C6H12 => PAR * 5.0  (intermediate is not a CRI species) 
-; v06 (hexanes)   => C8H14 => PAR * 6.0  (intermediate is not a CRI species)
+; v05 (pentane)   => C5H12 => PAR * 5.0  (intermediate is not a CRI species) 
+; v06 (hexanes)   => C6H14 => PAR * 6.0  (intermediate is not a CRI species)
 ; v07 (ethene)    => C2H4 (=> C2H4)
 ; v08 (propene)   => C3H6 => OLT + PAR
 ; v09 (ethyne)    => C2H2 => PAR * 2.0
@@ -288,8 +288,8 @@ NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H5OH_INT	= 46.0684
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@ETH_INT		= 30.07
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C3H8_INT	 	= 44.1
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@NC4H10_INT 	= 58.12
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C6H12_INT 	= 72.15
-NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C8H14_INT 	= 86.18
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C5H12_INT 	= 72.15
+NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C6H14_INT 	= 86.18
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H4_INT	 	= 28.05
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C3H6_INT	 	= 42.08
 NMVOC_edgar_MOL_WGT_cbmz_mos_orig@C2H2_INT	 	= 26.04
