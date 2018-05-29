@@ -176,7 +176,7 @@ variable_lists@GAS_cbmz_mos_orig = (/"E_CO", "E_NO", "E_NO2",  "E_SO2", "E_NH3"/
 variable_lists@NMVOC_cbmz_mos_orig = (/"E_PAR","E_ISO","E_ETH","E_HC3","E_HC5","E_HC8","E_XYL", \
 										"E_OL2","E_OLT","E_OLI","E_TOL","E_CSL","E_HCHO", \
 										"E_ALD","E_KET","E_ORA2","E_CH3OH","E_C2H5OH", "E_C2H4" /)
-variable_lists@AERO_cbmz_mos_orig = (/"E_PM25i","E_PM25j","E_ECI","E_ECJ","E_ORGI", \
+variable_lists@AERO_cbmz_mos_orig = (/"E_PM25I","E_PM25J","E_ECI","E_ECJ","E_ORGI", \
 										"E_ORGJ","E_SO4I","E_SO4J","E_NO3I","E_NO3J", \
 										"E_PM_10","E_SO4C","E_NO3C","E_ORGC","E_ECC"/)
 

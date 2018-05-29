@@ -45,8 +45,8 @@ INORG_MAP_TRN_cbmz_mos_orig@E_NH3 	= 1.0
 ; For emiss_opt = 5/6 use e_PM10, which is an added variable for GOCART emissions to MOSAIC mapping 
 
 AERO_MAP_VAR_cbmz_mos_orig = True
-AERO_MAP_VAR_cbmz_mos_orig@E_PM25i		= "PM2_5"	; Unspeciated primary PM2.5 - nuclei mode
-AERO_MAP_VAR_cbmz_mos_orig@E_PM25j  	= "PM2_5" ; Unspeciated primary PM2.5 - accumulation mode
+AERO_MAP_VAR_cbmz_mos_orig@E_PM25I		= "PM2_5"	; Unspeciated primary PM2.5 - nuclei mode
+AERO_MAP_VAR_cbmz_mos_orig@E_PM25J  	= "PM2_5" ; Unspeciated primary PM2.5 - accumulation mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ECI    	= "BC" ; Elemental Carbon PM2.5 - nuclei mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ECJ		= "BC" ; Elemental Carbon PM2.5 - accumulation mode
 AERO_MAP_VAR_cbmz_mos_orig@E_ORGI		= "OC" ; Organic Carbon PM2.5 - nuclei mode
@@ -64,8 +64,8 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= "BC" ; Elemental Carbon - course mode
 
 
 AERO_MAP_TRN_cbmz_mos_orig = True
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25i		= 0.2 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25j  	= 0.8 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25I		= 0.2 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25J  	= 0.8 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
 AERO_MAP_TRN_cbmz_mos_orig@E_ECI    	= 0.2 ; Elemental Carbon PM2.5 - nuclei mode
 AERO_MAP_TRN_cbmz_mos_orig@E_ECJ		= 0.8 ; Elemental Carbon PM2.5 - accumulation mode
 AERO_MAP_TRN_cbmz_mos_orig@E_ORGI		= 0.2 ; Organic Carbon PM2.5 - nuclei mode

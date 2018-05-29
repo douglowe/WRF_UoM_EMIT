@@ -334,7 +334,7 @@ begin
 		e_point = emiss_cat_index@$epname$
 		
 		;;; check if we're processing special data, if so follow the required rules
-		if(pname .eq. "E_OIN_25" .or. pname .eq. "E_PM25i" .or. pname .eq. "E_PM25j") ; OIN (other inorganics) for CBMZ_MOS_TNO
+		if(pname .eq. "E_OIN_25" .or. pname .eq. "E_PM25I" .or. pname .eq. "E_PM25J") ; OIN (other inorganics) for CBMZ_MOS_TNO
 			
 			;;; get the BC & OC pointers
 			e_point_bc = emiss_cat_index@BC
