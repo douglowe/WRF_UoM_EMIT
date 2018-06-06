@@ -41,8 +41,13 @@ INORG_MAP_TRN_cbmz_mos_orig@E_NH3 	= 1.0
 ; (e.g. Org = 1.4*OC), PM2.5 is the total mass for PM2.5, and PM10 is 
 ; total mass for PM10      
 ; e_PM10 and e_PM_10 are different (Found within module_mosaic_addemiss.F)
-; For emiss_opt =4 use e_PM_10
+; For emiss_opt = 4 use e_PM_10
 ; For emiss_opt = 5/6 use e_PM10, which is an added variable for GOCART emissions to MOSAIC mapping 
+
+; Note: the fractionation between PM25I and PM25J is set up to work with emiss_inpt_opt = 101 (emiss_inpt_pnnl_cm),
+;   which only reads in PM25J. If you are using emiss_inpt_opt = 102 (emiss_inpt_pnnl_rs) then you'll need to change
+;   the fractionation of these to be PM25I = 0.2 and PM25J = 0.8 (same for ECI and ECJ, and ORGI and ORGJ).
+
 
 AERO_MAP_VAR_cbmz_mos_orig = True
 AERO_MAP_VAR_cbmz_mos_orig@E_PM25I		= "PM2_5"	; Unspeciated primary PM2.5 - nuclei mode
@@ -64,12 +69,12 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= "BC" ; Elemental Carbon - course mode
 
 
 AERO_MAP_TRN_cbmz_mos_orig = True
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25I		= 0.2 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25J  	= 0.8 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
-AERO_MAP_TRN_cbmz_mos_orig@E_ECI    	= 0.2 ; Elemental Carbon PM2.5 - nuclei mode
-AERO_MAP_TRN_cbmz_mos_orig@E_ECJ		= 0.8 ; Elemental Carbon PM2.5 - accumulation mode
-AERO_MAP_TRN_cbmz_mos_orig@E_ORGI		= 0.2 ; Organic Carbon PM2.5 - nuclei mode
-AERO_MAP_TRN_cbmz_mos_orig@E_ORGJ   	= 0.8 ; Organic Carbon PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25I		= 0.0 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25J  	= 1.0 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_ECI    	= 0.0 ; Elemental Carbon PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ECJ		= 1.0 ; Elemental Carbon PM2.5 - accumulation mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGI		= 0.0 ; Organic Carbon PM2.5 - nuclei mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGJ   	= 1.0 ; Organic Carbon PM2.5 - accumulation mode
 AERO_MAP_TRN_cbmz_mos_orig@E_SO4I		= 0.0 ; Sulfate PM2.5 - nuclei mode
 AERO_MAP_TRN_cbmz_mos_orig@E_SO4J		= 0.0 ; Sulfate PM2.5 - accumulation mode
 AERO_MAP_TRN_cbmz_mos_orig@E_NO3I		= 0.0 ; Nitrate PM2.5 - nuclei mode
