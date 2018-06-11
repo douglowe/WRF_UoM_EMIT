@@ -8,11 +8,12 @@ This project is licensed under the terms of the GNU General Public License v3.0,
 1. [Overview](#Overview)
 1. [Dependencies](#Dependencies)
 2. [Inputs](#Inputs)
-3. [Run-time Options](#Run-time-Options)
-4. [Methodology](#Methodology)
+3. [Outputs](#Outputs)
+4. [Run-time Options](#Run-time-Options)
+5. [Methodology](#Methodology)
    1. [Diurnal Cycle](#Diurnal-cycle) 
    2. [Mapping VOC emissions](#VOC-mapping)
-5. [Contributing](#contributing)
+6. [Contributing](#contributing)
 
 ## Overview<a name="Overview"></a>
 
@@ -45,23 +46,53 @@ The NMVOC input datasets supported are:
 
 These lists will be amended as more options are added.
 
+## Outputs<a name="Outputs"></a>
+
+WRF_UoM_EMIT creates a single set of input files, containing WRF-Chem emission scheme specific inputs. The naming convention followed is the same as that for the input files: `wrfchemi_[HH]z_[domain]_[YYYY]_[MM]`.
+
+The WRF-Chem input schemes that are supported are:
+* `cbmz_mos_orig`:
+  * Emissions for CBM-Z gas-phase, and MOSAIC aerosol, schemes
+  * WRF-Chem namelist options: `emiss_opt = 4` (ecbmz_mosaic) and `emiss_inpt_opt = 101` (emiss_inpt_pnnl_cm)
+  * config option: `wrfchem_scheme = "cbmz_mos_orig"`
+* `cri_mos_edgar_htap`:
+  * Emissions for CRIv2R5 gas-phase, and MOSAIC aerosol, schemes
+  * WRF-Chem namelist options: `emiss_opt = 20` (ecrimechtno) and `emiss_inpt_opt = 121` (emiss_inpt_tno)
+  * config option: `wrfchem_scheme = "cri_mos_edgar_htap"`
+* `cbmz_mos_htap`:
+  * Emissions for CBM-Z gas-phase, and MOSAIC aerosol, schemes
+  * only usable with WRF-Chem code inluding local UoM modifications - ask for more information 
+  * WRF-Chem namelist options: `emiss_opt = 25` (ecbmz_mos_htap) and `emiss_inpt_opt = 122` (emiss_inpt_htap)
+  * config option: `wrfchem_scheme = "cbmz_mos_htap"`
+
+
+This list will be amended as more options are added.
+
 ## Run-time Options<a name="Run-time-Options"></a>
 
 * Time and domain controls:
-  * `month`
-  * `year`
-  * `domains`
+  * `month`: single string value (2 digits long)
+  * `year`: single string value (4 digits long)
+  * `domains`: array of string identifiers for domains to be processed (of style "dNN")
 * Chemical scaling factors:
-  * `nox_frac`
-  * `oc_om_scale`
+  * `nox_frac`: fraction of NOx emissions which are NO (real value between 0-1)
+  * `oc_om_scale`: scaling factor for calculating organic matter (OM) emitted mass from the input organic carbon (OC) emitted mass 
 * Input scheme controls:
-  * `input_scheme`
-  * `nmvoc_scheme`
+  * `input_scheme`: identifier string for the emission dataset used
+  * `nmvoc_scheme`: identifier string for the speciated NMVOC emission dataset used
+    * `nmvoc_scheme@method`: controls how the NMVOC emissions are used
+      * `direct`: create emissions directly from the NMVOC dataset
+      * `fraction`: use the NMVOC dataset to speciate lumped NMVOC variables in the main emission dataset
 * Output scheme control:
-  * `wrfchem_scheme`
-* UTC time offset, for diurnal cycle calculations:
-  * `UTC_offset` True|False
-* Process control flags:
+  * `wrfchem_scheme`: identifier string for the emission scheme generated, see [Outputs](#Outputs)
+* Diurnal cycle controls:
+  * `UTC_offset`: logical controller, to determine if local offsets from UTC should be calculated or not
+    * `UTC_offset@method`: controls how the offset is calculated
+      * `fixed`: use a single fixed offset from UTC, defined in this script
+      * `timezones`: use timezone information to calculate the offset from UTC
+    * `UTC_offset@fixed_offset`: offset from UTC for fixed method
+    * `UTC_offset@daylightsaving`: logical controller, to determine if local daylight saving shifts need to be included in the UTC offset calculation
+* Process logical controllers:
   * `STEP1_create_diurnal_cycle_and_prescaling`
   * `regional_modification_of_emissions`
   * `STEP2_apply_vertical_power_emissions`
