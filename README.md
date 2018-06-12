@@ -92,25 +92,31 @@ This list will be amended as more options are added.
       * `timezones`: use timezone information to calculate the offset from UTC
     * `UTC_offset@fixed_offset`: offset from UTC for fixed method
     * `UTC_offset@daylightsaving`: logical controller, to determine if local daylight saving shifts need to be included in the UTC offset calculation
-* Process logical controllers:
+* Process logical controllers: these allow for different stages of the main tool to be run independently, and for optional processing steps to be included
   * `STEP1_create_diurnal_cycle_and_prescaling`
-  * `regional_modification_of_emissions`
+  * `regional_modification_of_emissions`: optional modification of emission inputs
   * `STEP2_apply_vertical_power_emissions`
-  * `use_vertical_power_emission_files`
+  * `use_vertical_power_emission_files`: set to True if STEP2 (vertical distribution of emissions) is used
   * `STEP3_create_emissions_for_WRF_Chem`
-* Regional modification of emissions:
+* Regional modification of emissions: this enables the modification of emissions within a defined region by sector and species (not for nmvoc inputs though). 
   * `regional_modification_of_emissions@latitude_limits`
   * `regional_modification_of_emissions@longitude_limits`
-  * `regional_modification_of_emissions@vars_mask`
-  * `regional_modification_of_emissions@vars_scale`
+  * `regional_modification_of_emissions@vars_mask`: list of variable names to be modified
+  * `regional_modification_of_emissions@vars_scale`: list of scaling factors to be applied, same length as `vars_mask`
 
 
 ## Methodology<a name="Methodology"></a>
 
+Emissions processing is divided (roughly) into three steps, corresponding to the process logical controllers listed in [Run-time Options](Run-time-Options): 1) preprocessing of input emissions to add diurnal cycles, ensure conformity of aerosol emissions, and the regional modification of emission inputs (if needed); 2) distribution of emissions vertically; 3) mapping of input emissions to the desired WRF-Chem scheme (including VOC mapping, and NOx fractionation). Below the key features of these processes will be described, while more information on the wiki.
 
-### Diurnal Cycle<a name="Diurnal-cycle"></a>
+### Diurnal Cycle and UTC Offset<a name="Diurnal-cycle"></a>
 
-### Mapping VOC emissions<a name="VOC-mapping"></a>
+Diurnal cycle information is taken from the 
+
+
+### Vertical Distribution of Emissions<a name="Vertical-distribution"></a>
+
+### Mapping to WRF-Chem scheme, including VOC mapping<a name="VOC-mapping"></a>
 
 
 ## Contributing<a name="Contributing"></a>
