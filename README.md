@@ -15,6 +15,7 @@ This project is licensed under the terms of the GNU General Public License v3.0,
    2. [Conforming Aerosol Emissions](#Conforming-aerosols)
    3. [Regional Modification of Emissions](Regional-modification)
    4. [Vertical Distribution of Emissions](Vertical-distribution)
+   5. [Mapping to WRF-Chem Scheme](#WRF-mapping)
    5. [Mapping VOC emissions](#VOC-mapping)
 6. [Contributing](#contributing)
 
@@ -138,7 +139,13 @@ Emission variables can be modified within a defined rectangular region using rou
 
 Vertical distributions for each emission variable are applied using routines in the `vertical_distribution_routines.ncl` module. These simply apportion emissions across a number of emission levels according to fractional distributions for each sector, using definitions stored in the `scheme_vertical_dist.ncl` file. The provided example vertical distributions add predominately area emissions to the lowest 2 model levels, but treat industrial (IND) and power station (POW) emissions as small and large point sources (respectively), which should be emitted at higher elevations (roughly estimated to be about 300m above ground level for large point sources) (after the EPRES tool, personal communication, Yafang Cheng). Because emissions are mapped directly to WRF-Chem model levels, the exact elevation of these emissions will depend on the setup of your model domain. Users are strongly encouraged to check the vertical distribution of their model levels, to decide if the given vertical distributions are suitable or not.
 
-### Mapping to WRF-Chem scheme, including VOC mapping<a name="VOC-mapping"></a>
+### Mapping to WRF-Chem scheme<a name="WRF-mapping"</a>
+
+The combining of input emissions from different sectors, and mapping of these to specified WRF-Chem compatible emission variables, is carried out by routines within the `speciating_emissions_routines.ncl` module. Lists of the WRF-Chem gas, NMVOC, and aerosol emission variables for each supported scheme are given in `emission_script_data.ncl`, while specific mapping information for these are given scheme specific modules (named `scheme_[schemeID]_data.ncl`). Within the scheme specific modules
+
+
+
+### VOC mapping<a name="VOC-mapping"></a>
 
 
 ## Contributing<a name="Contributing"></a>
