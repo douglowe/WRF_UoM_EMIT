@@ -12,7 +12,10 @@ This project is licensed under the terms of the GNU General Public License v3.0,
 4. [Run-time Options](#Run-time-Options)
 5. [Methodology](#Methodology)
    1. [Diurnal Cycle](#Diurnal-cycle) 
-   2. [Mapping VOC emissions](#VOC-mapping)
+   2. [Conforming Aerosol Emissions](#Conforming-aerosols)
+   3. [Regional Modification of Emissions](Regional-modification)
+   4. [Vertical Distribution of Emissions](Vertical-distribution)
+   5. [Mapping VOC emissions](#VOC-mapping)
 6. [Contributing](#contributing)
 
 ## Overview<a name="Overview"></a>
@@ -99,8 +102,8 @@ This list will be amended as more options are added.
   * `use_vertical_power_emission_files`: set to True if STEP2 (vertical distribution of emissions) is used
   * `STEP3_create_emissions_for_WRF_Chem`
 * Regional modification of emissions: this enables the modification of emissions within a defined region by sector and species (not for nmvoc inputs though). 
-  * `regional_modification_of_emissions@latitude_limits`
-  * `regional_modification_of_emissions@longitude_limits`
+  * `regional_modification_of_emissions@latitude_limits`: array of two latitude values, first is minimum, second is maximum
+  * `regional_modification_of_emissions@longitude_limits`: array of two longitude values, first is minimum, second is maximum
   * `regional_modification_of_emissions@vars_mask`: list of variable names to be modified
   * `regional_modification_of_emissions@vars_scale`: list of scaling factors to be applied, same length as `vars_mask`
 
@@ -121,15 +124,19 @@ Timezones are defined using shapefiles which have been downloaded from [http://e
 
 The final UTC offset values are stored to the intermediate emission datafiles in the `TZ_Offset` variable, so can be checked after this process to ensure they are correct. It should be noted that the timezone offset method relies on the land/sea boundaries in the timezone shapefiles and in the emissions data to roughly match. Where these do not (as can happen with coarse resolution emission datasets mapped onto high resolution model domains), then emissions along the coastline can be left without a UTC offset of zero. For these high resolution domains it is recommended, for the moment, to use a fixed UTC offset value.
 
-
-
 Olivier, J., J. Peters, C. Granier, G. Pétron, J.F. Müller, and S. Wallens, Present and future surface emissions of atmospheric compounds, POET Report #2, EU project EVK2-1999-00011, 2003.
 
 ### Conforming Aerosol Emissions<a name="Conforming-aerosols"></a>
 
+Aerosol emissions for each sector are conformed in a three stage process, using routines in the `preprocess_emissions_routines.ncl` module. Firstly the organic carbon (OC) emissions data provided is scaled by the `oc_om_scale` factor, to give a mass value for organic matter (OM) emissions (which is what WRF-Chem expects). Currently one scaling factor is used for all emission sectors. Secondly the PM2.5 emissions for each sector are compared with the summed black carbon (BC) and OM emissions, and increased to match the BC+OM sum if they are lower. Finally the PM10 emissions for each sector are compared with the PM2.5 emissions, and again increased to match this if they are lower.
 
+### Regional Modification of Emissions<a name="Regional-modification"></a>
+
+Emission variables can be modified within a defined rectangular region using routines in the `preprocess_emissions_routines.ncl` module. To do this the `regional_modification_of_emissions` flag needs to be set to True. The limits of the region are defined by maximum and minimum latitude and longitude values, and matching lists of the names of the variables to be modified, and the scaling factor to be applied, must be supplied as attributes for the `regional_modification_of_emissions` variable.
 
 ### Vertical Distribution of Emissions<a name="Vertical-distribution"></a>
+
+Vertical distributions for each emission variable are applied using routines in the `vertical_distribution_routines.ncl` module. These simply apportion emissions across a number of emission levels according to fractional distributions for each sector, using definitions stored in the `scheme_vertical_dist.ncl` file. The provided example vertical distributions add predominately area emissions to the lowest 2 model levels, but treat industrial (IND) and power station (POW) emissions as small and large point sources (respectively), which should be emitted at higher elevations (roughly estimated to be about 300m above ground level for large point sources) (after the EPRES tool, personal communication, Yafang Cheng). Because emissions are mapped directly to WRF-Chem model levels, the exact elevation of these emissions will depend on the setup of your model domain. Users are strongly encouraged to check the vertical distribution of their model levels, to decide if the given vertical distributions are suitable or not.
 
 ### Mapping to WRF-Chem scheme, including VOC mapping<a name="VOC-mapping"></a>
 
