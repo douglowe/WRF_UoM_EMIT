@@ -107,11 +107,26 @@ This list will be amended as more options are added.
 
 ## Methodology<a name="Methodology"></a>
 
-Emissions processing is divided (roughly) into three steps, corresponding to the process logical controllers listed in [Run-time Options](Run-time-Options): 1) preprocessing of input emissions to add diurnal cycles, ensure conformity of aerosol emissions, and the regional modification of emission inputs (if needed); 2) distribution of emissions vertically; 3) mapping of input emissions to the desired WRF-Chem scheme (including VOC mapping, and NOx fractionation). Below the key features of these processes will be described, while more information on the wiki.
+Emissions processing is divided (roughly) into three steps, corresponding to the process logical controllers listed in [Run-time Options](Run-time-Options): 1) preprocessing of input emissions to add diurnal cycles, ensure conformity of aerosol emissions, and the regional modification of emission inputs (if needed); 2) distribution of emissions vertically; 3) mapping of input emissions to the desired WRF-Chem scheme (including VOC mapping, and NOx fractionation). Below the key features of these processes will be described, while more detailed information will be given on the [wiki](https://github.com/douglowe/WRF_UoM_EMIT/wiki).
+
+The script takes input files from the directory defined by `SOURCEDIR`, stores intermediate files after step 1 in the `DIUDIR` directory, then can store intermediate files after step 2 in the `VERTDIR` directory, and outputs the final WRF-Chem input files in the `OUTDIR` directory.
 
 ### Diurnal Cycle and UTC Offset<a name="Diurnal-cycle"></a>
 
-Diurnal cycle information is taken from the 
+Diurnal cycle information is taken from Olivier et al. (2003), based on Western European data, for the following sectors: power, industrial, residential, solvent use, traffic, and agriculture. The representativity of these cycles for activity in other regions is highly uncertain. These factors are stored as hourly scaling factors within the `diurnal_cycles` arrays in `emission_script_data.ncl` - change these arrays if you wish to use diurnal cycle information that is more suitable for your region of interest.
+
+Diurnal cycles are superimposed using the routines within `diurnal_cycle_routines.ncl`. The first step is determining whether any offsets from UTC are needed (by setting the `UTC_offset` logical operation); then if so whether a single fixed offset for the whole domain (by setting `UTC_offset@method = fixed` and defining a value for `UTC_offset@fixed_offset`) is to be used, or if the offset should be calculated for each grid cell using timezone information (by setting `UTC_offset@method = timezones`).
+
+Timezones are defined using shapefiles which have been downloaded from [http://efele.net/maps/tz/world/](http://efele.net/maps/tz/world/), and are stored in the `shape_files` directory. These shapefiles cover timezones on land only, sea zones will be assumed to be in UTC (which is okay at the moment, as no diurnal variation is given for ship emissions). The timezone that each grid square is in is determined using the routines in `shapefiles_manipulate.ncl` (adapted from [https://www.ncl.ucar.edu/Applications/Scripts/shapefile_utils.ncl](https://www.ncl.ucar.edu/Applications/Scripts/shapefile_utils.ncl)), and then the UTC offset is determined using data stored in `timezone_data.ncl`, which includes both summer and daylight saving time offsets for each timezone region. The choice of which to use is controlled using the `UTC_offset@daylightsaving` logical operator - currently this has to be hardset by the user as the changeover date varies from region to region, and year to year, so this calculation has not been included in the model routines.
+
+The final UTC offset values are stored to the intermediate emission datafiles in the `TZ_Offset` variable, so can be checked after this process to ensure they are correct. It should be noted that the timezone offset method relies on the land/sea boundaries in the timezone shapefiles and in the emissions data to roughly match. Where these do not (as can happen with coarse resolution emission datasets mapped onto high resolution model domains), then emissions along the coastline can be left without a UTC offset of zero. For these high resolution domains it is recommended, for the moment, to use a fixed UTC offset value.
+
+
+
+Olivier, J., J. Peters, C. Granier, G. Pétron, J.F. Müller, and S. Wallens, Present and future surface emissions of atmospheric compounds, POET Report #2, EU project EVK2-1999-00011, 2003.
+
+### Conforming Aerosol Emissions<a name="Conforming-aerosols"></a>
+
 
 
 ### Vertical Distribution of Emissions<a name="Vertical-distribution"></a>
