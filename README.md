@@ -139,15 +139,28 @@ Emission variables can be modified within a defined rectangular region using rou
 
 Vertical distributions for each emission variable are applied using routines in the `vertical_distribution_routines.ncl` module. These simply apportion emissions across a number of emission levels according to fractional distributions for each sector, using definitions stored in the `scheme_vertical_dist.ncl` file. The provided example vertical distributions add predominately area emissions to the lowest 2 model levels, but treat industrial (IND) and power station (POW) emissions as small and large point sources (respectively), which should be emitted at higher elevations (roughly estimated to be about 300m above ground level for large point sources) (after the EPRES tool, personal communication, Yafang Cheng). Because emissions are mapped directly to WRF-Chem model levels, the exact elevation of these emissions will depend on the setup of your model domain. Users are strongly encouraged to check the vertical distribution of their model levels, to decide if the given vertical distributions are suitable or not.
 
-### Mapping to WRF-Chem scheme<a name="WRF-mapping"</a>
+### Mapping to WRF-Chem scheme<a name="WRF-mapping"></a>
 
-The combining of input emissions from different sectors, and mapping of these to specified WRF-Chem compatible emission variables, is carried out by routines within the `speciating_emissions_routines.ncl` module. Lists of the WRF-Chem gas, NMVOC, and aerosol emission variables for each supported scheme are given in `emission_script_data.ncl`, while specific mapping information for these are given scheme specific modules (named `scheme_[schemeID]_data.ncl`). Within the scheme specific modules
+The combining of input emissions from different sectors, and mapping of these to specified WRF-Chem compatible emission variables, is carried out by routines within the `speciating_emissions_routines.ncl` module. Lists of the WRF-Chem gas, NMVOC, and aerosol emission variables for each supported scheme are given in `emission_script_data.ncl`, while specific mapping information for these are given scheme specific modules (named `scheme_[schemeID]_data.ncl`). Within these scheme specific modules information on mapping inorganic gas-phase species from emission sources are stored as attributes for the `INORG_MAP_VAR_[schemeID]` and `INORG_MAP_TRN_[schemeID]` variables. The same information for aerosol species are stored as attributes for the `AERO_MAP_VAR_[schemeID]` and `AERO_MAP_TRN_[schemeID]` variables. `INORG_MAP_VAR_[schemeID]` and `AERO_MAP_VAR_[schemeID]` list the relationship between WRF-Chem and source emission variables, while `INORG_MAP_TRN_[schemeID]` and `AERO_MAP_TRN_[schemeID]` list the transformation factor to go from input to WRF-Chem variable (often this will be 1.0, for a direct translation, or 0.0, for just creating an empty emission variable). 
 
+There are two special cases to this:
+
+1. The calculation of NO and NO2 emissions from NOx are controlled by the `nox_frac` variable, not the values stored in `INORG_MAP_TRN_[schemeID]@E_NO` and `INORG_MAP_TRN_[schemeID]@E_NO2`.
+2. PM2.5 and PM10 emission inputs for WRF-Chem (for MOSAIC aerosol, at least) are treated as simply other inorganic (OIN) emissions (e.g. dust) for these size ranges (the PM10 size range is 2.5 to 10 um). Most emission databases treat PM2.5 and PM10 emissions as total emitted mass (including OIN, BC, OM, etc). To convert to the WRF-Chem definition this tool subtracts BC and OM mass from PM2.5 mass, and then PM2.5 mass from PM10 mass.
+
+If you wish to change these special cases, or to add your own, then you will need to edit the routines in `speciating_emissions_routines.ncl`.
 
 
 ### VOC mapping<a name="VOC-mapping"></a>
 
+Two options are available for VOC mapping, chosen using the `nmvoc_scheme@method` control variable. Direct mapping will apportion emissions from the input NMVOC dataset to the relevant WRF-Chem emission variables. The fraction method uses the input NMVOC emissions to calculate the fractional breakdown of the bulk NMVOC emissions (for each grid cell) in the main emission dataset into the WRF-Chem emission variables. The latter method is useful where the spatial distribution of the NMVOC dataset is coarser than that of the main emission dataset.
+
+The mapping information for NMVOC emissions are given in the scheme specific modules, as attributes for the `NMVOC_[nmvocID]_MAP_VAR_[schemeID]` and `NMVOC_[nmvocID]_MAP_TRN_[schemeID]` variables (as described above for the gas and aerosol species). The NMVOC molar masses are also defined, as attributes for the `NMVOC_[nmvocID]_MOL_WGT_[schemeID]` variable.
+
+More detail on VOC mapping (particularly on multi-step mapping) can be found on the [wiki](https://github.com/douglowe/WRF_UoM_EMIT/wiki).
 
 ## Contributing<a name="Contributing"></a>
 
+
+## Acknowledgements<a name="Acknowledgements"></a>
 
