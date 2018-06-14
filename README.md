@@ -164,3 +164,12 @@ More detail on VOC mapping (particularly on multi-step mapping) can be found on 
 
 ## Acknowledgements<a name="Acknowledgements"></a>
 
+Rajash Kumar sharing the diurnal cycle information with me, as well as his IDL code which inspired the first version of this tool.
+
+Scott Archer-Nicholls, Alex Archibald, and Gordon McFiggans, for the provision of MACCITY and EDGAR NMVOC mapping schemes.
+
+Eric Muller for the provision of the timezone maps provided at [http://efele.net/maps/tz/world/](http://efele.net/maps/tz/world/).
+
+Chris Webber and Ying Chen for the mapping of `cbmz_mos_orig` emissions.
+
+
