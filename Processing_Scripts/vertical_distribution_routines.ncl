@@ -24,8 +24,8 @@ load "./emission_script_data.ncl"
 
 undef("impose_vertical_distribution")
 procedure impose_vertical_distribution(OUTFILE:file, var_name:string, invar_data:numeric, \
-											orig_sectors:string, vert_sectors:string)
-local outvar, vs, vdist
+											orig_sectors:string)
+local outvar, vs, vdist, ii
 begin
 
 	; get the variable, to use as a template for processing
@@ -35,7 +35,8 @@ begin
 	vs = ""
 	do ii = 0, dimsizes(orig_sectors)-1
 		if(isStrSubset(var_name,orig_sectors(ii)))
-			vs = vert_sectors(ii)
+			vs = orig_sectors@$orig_sectors(ii)$
+			break
 		end if
 	end do ; ii in orig_sectors	
 	
@@ -71,7 +72,7 @@ end
 undef("create_vertical_emission_files")
 procedure create_vertical_emission_files(INDIR:string, OUTDIR:string, \
 										fname:string, scheme:string, \
-										orig_sectors:string, vert_sectors:string)
+										orig_sectors:string)
 local INFILE, OUTFILE, dim_sizes, dim_names, dim_Unlim, dim_new_sizes, \
 		input_var, var_num
 begin
@@ -210,7 +211,7 @@ begin
 			if(invar_data@units .eq. "ug m^-2 s^-1" .or. invar_data@units .eq. "mol km^-2 hr^-1")
 			
 				; impose a vertical distribution on the data, and save to the output file
-				impose_vertical_distribution(OUTFILE,var_name,invar_data,orig_sectors,vert_sectors)
+				impose_vertical_distribution(OUTFILE,var_name,invar_data,orig_sectors)
 
 
 			else 
@@ -233,30 +234,38 @@ end
 
 
 undef("apply_vertical_distributions")
-procedure apply_vertical_distributions(INDIR:string,OUTDIR:string,fname:string,wrfchem_scheme:string,nmvoc_scheme:string)
+procedure apply_vertical_distributions(INDIR:string,OUTDIR:string,fname:string,wrfchem_scheme:string,input_scheme:string,nmvoc_scheme:string)
 local orig_sectors, vert_sectors
 begin
 
+	;;; setup processing the standard emission data
+	if(input_scheme.eq."EDGAR_HTAP")
+		emission_sectors = emiss_cycle_EDGAR_HTAP_sectors
+	else if(input_scheme.eq."EDGAR_AP_V432")
+		emission_sectors = emiss_cycle_EDGAR_AP_V432_sectors
+	else if(input_scheme.eq."IITM")
+		emission_sectors = emiss_cycle_IITM_sectors
+	else
+		print("scheme "+input_scheme+" is not supported, failing in apply_vertical_distributions")
+		exit()
+	end if
+	end if
+	end if
+
 	;;; processing the standard emission data
-	create_vertical_emission_files(INDIR, OUTDIR, fname, wrfchem_scheme, emiss_sector, emiss_sector)
+	create_vertical_emission_files(INDIR,OUTDIR,fname,wrfchem_scheme,emission_sectors)
 
 
 	;;; setup processing the nmvoc emission data
-	if(nmvoc_scheme.eq."MACCITY")
-	
+	if(nmvoc_scheme.eq."MACCITY_NMVOC")	
 		orig_sectors = maccity_sectors
-		vert_sectors = maccity_groups
-
-	else if(nmvoc_scheme.eq."EDGAR")
-
+	else if(nmvoc_scheme.eq."EDGAR_NMVOC_V432")
 		orig_sectors = edgar_nmvoc_sectors
-		vert_sectors = edgar_nmvoc_groups
-
 	end if
 	end if
 
 	;;; processing the nmvoc emission data
-	create_vertical_emission_files(INDIR,OUTDIR,fname,nmvoc_scheme,orig_sectors,vert_sectors)
+	create_vertical_emission_files(INDIR,OUTDIR,fname,nmvoc_scheme,orig_sectors)
 
 
 end

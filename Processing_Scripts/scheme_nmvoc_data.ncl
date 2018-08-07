@@ -8,7 +8,7 @@ begin
 
 
 
-;;;;;;;;;; NMVOC EDGAR emissions information
+;;;;;;;;;; NMVOC EDGAR v432 emissions information
 
 	; list of NMVOC species/groups
 	; voc1 = Alcohols
@@ -79,12 +79,26 @@ begin
 	
 
 
-	; list of emission sectors for EDGAR NMVOC
+	; list of emission sectors for EDGAR NMVOC v432
 	edgar_nmvoc_sectors = (/ "AWB", "ENE", "FFF", "IND", "PPA", "PRO", "RCO", "REF", "SWD", \
 								"TNR_Other", "TNR_Ship", "TRF", "TRO" /)
-	; info on how we're grouping these into the HTAP emission sectors
-	edgar_nmvoc_groups = (/ "AGR", "POW", "IND", "IND", "SLV", "IND", "RES", "IND", "AGR", \
-								"TRA", "SHP", "IND", "TRA" /)
+	
+	; info on how we're grouping these into the EDGAR-HTAP emission sectors
+	edgar_nmvoc_sectors@AWB = "AGR"
+	edgar_nmvoc_sectors@ENE = "POW"
+	edgar_nmvoc_sectors@FFF = "IND"
+	edgar_nmvoc_sectors@IND = "IND"
+	edgar_nmvoc_sectors@PPA = "SLV"
+	edgar_nmvoc_sectors@PRO = "IND"
+	edgar_nmvoc_sectors@RCO = "RES"
+	edgar_nmvoc_sectors@REF = "IND"
+	edgar_nmvoc_sectors@SWD = "AGR"
+	edgar_nmvoc_sectors@TNR_Other = "TRA"
+	edgar_nmvoc_sectors@TNR_Ship = "SHP"
+	edgar_nmvoc_sectors@TRF = "IND"
+	edgar_nmvoc_sectors@TRO = "TRA"
+;	edgar_nmvoc_groups = (/ "AGR", "POW", "IND", "IND", "SLV", "IND", "RES", "IND", "AGR", \
+;								"TRA", "SHP", "IND", "TRA" /)
 
 
 
@@ -145,8 +159,17 @@ begin
 
 	; list of emission sectors for MACCity
 	maccity_sectors = (/ "AGRBURN", "AGRPROD", "ENERGY", "IND", "RES", "SHPS", "SOLV", "TRANS", "WASTE" /)
-	; info on how we're grouping these into the HTAP emission sectors
-	maccity_groups = (/ "AGR", "AGR", "POW", "IND", "RES", "SHP", "IND", "TRA", "IND" /)
+	; info on how we're grouping these into the EDGAR-HTAP emission sectors
+	maccity_sectors@AGRBURN = "AGR"
+	maccity_sectors@AGRPROD = "AGR"
+	maccity_sectors@ENERGY  = "POW"
+	maccity_sectors@IND     = "IND"
+	maccity_sectors@RES     = "RES"
+	maccity_sectors@SHPS    = "SHP"
+	maccity_sectors@SOLV    = "IND"
+	maccity_sectors@TRANS   = "TRA"
+	maccity_sectors@WASTE   = "IND"
+;	maccity_groups = (/ "AGR", "AGR", "POW", "IND", "RES", "SHP", "IND", "TRA", "IND" /)
 
 
 

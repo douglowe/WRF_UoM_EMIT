@@ -206,8 +206,17 @@ end ;;;;; create_emission_files
 
 undef("load_emissions_data")
 function load_emissions_data(INFILE:file)
-local ic, ie, ecat, ecat_pointer, esect, esect_pointer, emiss_temp, edim, emission_data
+local missing_variables, storage_created, ic, ie, \
+			ecat, ecat_pointer, esect, esect_pointer, \
+			var_name, emiss_temp, edim, emission_data
 begin
+
+	;;; initalise string to record emission variables that we aren't processing
+	missing_variables = ""
+
+
+	;;; flag to control storage array creation
+	storage_created = False
 
 	;;; loop through the original emission categories
 	do ic = 0,number_original_emission_variables-1
@@ -228,27 +237,46 @@ begin
 			; determine our pointer for the emission sector
 			esect_pointer = emiss_sector_index@$esect$
 			
-			;;; pull out emission variable from datafile (using the "parent" category name)
-			emiss_temp = INFILE->$(/"E_"+ecat+"_ANT_"+esect/)$
+			; variable name
+			var_name = (/"E_"+ecat+"_ANT_"+esect/)
+			
+			;;; check variable exists in input file
+			if(isfilevar(INFILE,var_name))
 
-			;;; first time through create our storage array
-			if(ic.eq.0 .and. ie.eq.0)
-				edim = dimsizes(emiss_temp)
-				;; NOTE: we're assuming that the input data is 4 dimensional
-				;;       if this is not the case then this script will break!!!
-				emission_data = new( (/ dimsizes(emiss_cat), dimsizes(emiss_sector), edim(0), edim(1), edim(2), edim(3) /) ,\
-										typeof(emiss_temp),emiss_temp@_FillValue)
-			end if
+				;;; pull out emission variable from datafile (using the "parent" category name)
+				emiss_temp = INFILE->$var_name$
+
+				;;; first time through create our storage array
+				if(.not.storage_created)
+					edim = dimsizes(emiss_temp)
+					;; NOTE: we're assuming that the input data is 4 dimensional
+					;;       if this is not the case then this script will break!!!
+					emission_data = new( (/ dimsizes(emiss_cat), dimsizes(emiss_sector), edim(0), edim(1), edim(2), edim(3) /) ,\
+											typeof(emiss_temp),emiss_temp@_FillValue)
+					storage_created = True
+				end if
 			
-			;;; copy the data into the storage array
-			emission_data(ecat_pointer,esect_pointer,:,:,:,:) = emiss_temp
+				;;; copy the data into the storage array
+				emission_data(ecat_pointer,esect_pointer,:,:,:,:) = emiss_temp
 			
-			;;; delete the temporary file
-			delete(emiss_temp)
+				;;; delete the temporary file
+				delete(emiss_temp)
+
+			else
+				missing_variables = missing_variables + var_name + " "
+			end if ;; checking variable exists in input array
+
 		
 		end do ; ie = dim(emiss_cat@ecat)
 
 	end do ; ic = number_original_emission_variables
+
+	;;; if we've missed any variables, let the user know
+	if(missing_variables .ne. "")
+		print("The following expected emission variables have not been loaded, because they do not exist in the input file:")
+		print(str_split(missing_variables, " "))
+	end if
+
 
 	;;; return the temporary emission array
 	return(emission_data)
@@ -262,7 +290,7 @@ end ;;;;; load_emissions_data
 undef("process_inorganic_gas_emissions")
 procedure process_inorganic_gas_emissions(OUTFILE:file,VAR_LIST_GAS:string,INORG_MAP_VAR:logical,\
 											INORG_MAP_TRN:logical,nox_frac:float,emissions_data:float)
-local ig, pname, ename, epname, e_point, cfac, ies, esname, s_point, emissions
+local ig, pname, ename, epname, e_point, cfac, ies, esname, s_point, emissions, start_emiss_array
 begin
 
 	do ig = 0, dimsizes(VAR_LIST_GAS)-1
@@ -286,6 +314,9 @@ begin
 		end if
 		end if
 		
+		;; set flag for creation of emissions array
+		start_emiss_array = True
+		
 		;;; loop through the emission sectors for this gas, summing up the emissions
 		do ies = 0, dimsizes(emiss_cat@$ename$)-1
 			;;; get the sector name
@@ -293,20 +324,34 @@ begin
 			;;; get the sector pointer
 			s_point = emiss_sector_index@$esname$
 			
-			;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-			if(ies .eq. 0)
-				emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
+			;;; make sure there is some data being loaded
+			if(.not. all(ismissing(emissions_data(e_point,s_point,:,:,:,:))))
+			
+				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+				if(start_emiss_array)
+					emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
+					start_emiss_array = False
+				else
+					emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
+				end if		
+		
 			else
-				emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
-			end if		
+			
+				print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
+			
+			end if
 		
 		end do
 		
-		;;; push the emissions data to the outfile
-		OUTFILE->$pname$ = (/emissions/)
+		;;; push the emissions data to the outfile (checking to make sure it exists)
+		if(.not.start_emiss_array)
+			OUTFILE->$pname$ = (/emissions/)
+			;;; tidy up
+			delete(emissions)
+		else
+			print("No emissions created for variable '"+pname+"' as all inputs are empty")
+		end if
 		
-		;;; tidy up
-		delete(emissions)
 	
 	end do
 
@@ -321,7 +366,7 @@ undef("process_aerosol_emissions")
 procedure process_aerosol_emissions(OUTFILE:file,VAR_LIST_AERO:string,AERO_MAP_VAR:logical,\
 										AERO_MAP_TRN:logical,emissions_data:float)
 local ig, pname, ename, epname, e_point, e_point_bc, e_point_oc, e_point_pm, \
-		ies, esname, s_point, emissions, e_point_pm25, cfac 
+		ies, esname, s_point, emissions, e_point_pm25, cfac, start_emiss_array
 begin
 	do ig = 0, dimsizes(VAR_LIST_AERO)-1
 		;;; grab the name of the aerosol variable we're processing
@@ -346,26 +391,60 @@ begin
 			;;; get the standard conversion factor (giving the split between modes i and j)
 			cfac = AERO_MAP_TRN@$pname$
 
-			;;; loop through the emission sectors for this gas, summing up the emissions
+			;; set flag for creation of emissions array
+			start_emiss_array = True
+
+			;;; loop through the emission sectors for this aerosol, summing up the emissions
 			do ies = 0, dimsizes(emiss_cat@$ename$)-1
 				;;; get the sector name
 				esname = emiss_cat@$ename$(ies)
 				;;; get the sector pointer
 				s_point = emiss_sector_index@$esname$
 			
-				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-				;;; This will be PM_2.5 - ( BC + OC ), OC is really OM (scaling factor already applied)
-				;;; All BC & OM is assumed to be in PM2.5
-				if(ies .eq. 0)
-					emissions = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-								  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \
-								) * cfac
-				else
-					emissions = emissions + \
-								( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-								  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \	
-							    ) * cfac
+				;;; make sure there is some data being loaded
+				if(.not. all(ismissing(emissions_data(e_point_pm,s_point,:,:,:,:))))
+			
+					;;; use BC+OM if they both exist
+					if(.not. all(ismissing(emissions_data(e_point_bc,s_point,:,:,:,:))) .and. \
+							.not. all(ismissing(emissions_data(e_point_oc,s_point,:,:,:,:))) )
+						;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+						;;; This will be PM_2.5 - ( BC + OC ), OC is really OM (scaling factor already applied)
+						;;; All BC & OM is assumed to be in PM2.5
+						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
+										  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \
+										) * cfac							
+					;;; or use BC only if it exists 
+					else if (.not. all(ismissing(emissions_data(e_point_bc,s_point,:,:,:,:))))
+						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
+									  emissions_data(e_point_bc,s_point,:,:,:,:) \
+									) * cfac
+					;;; or use OM only if it exists 
+					else if (.not. all(ismissing(emissions_data(e_point_oc,s_point,:,:,:,:))))
+						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
+									  emissions_data(e_point_oc,s_point,:,:,:,:) \
+									) * cfac
+					;;; or use full PM2.5 data
+					else
+						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) ) * cfac
+					end if
+					end if
+					end if
+					
+					;;; initialise the emissions array, if needed
+					if(start_emiss_array)
+						emissions = emiss_temp
+						start_emiss_array = False
+					else
+						emissions = emissions + emiss_temp
+					end if
+					delete(emiss_temp)
+
+				else ;;; if not data loaded, skip
+
+					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
+
 				end if
+
 		
 			end do
 			
@@ -377,6 +456,8 @@ begin
 			;;; get the PM pointer
 			e_point_pm = emiss_cat_index@PM10
 
+			;; set flag for creation of emissions array
+			start_emiss_array = True
 
 			;;; loop through the emission sectors for this gas, summing up the emissions
 			do ies = 0, dimsizes(emiss_cat@$ename$)-1
@@ -385,13 +466,31 @@ begin
 				;;; get the sector pointer
 				s_point = emiss_sector_index@$esname$
 			
-				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-				;;; This will be PM_10 - PM_2.5
-				if(ies .eq. 0)
-					emissions = emissions_data(e_point_pm,s_point,:,:,:,:) - emissions_data(e_point_pm25,s_point,:,:,:,:)
-				else
-					emissions = emissions + emissions_data(e_point_pm,s_point,:,:,:,:) - emissions_data(e_point_pm25,s_point,:,:,:,:)	
-				end if		
+				;;; make sure there is some data being loaded
+				if(.not. all(ismissing(emissions_data(e_point_pm,s_point,:,:,:,:))))
+
+					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+					;;; This will be PM_10 - PM_2.5
+					if(.not. all(ismissing(emissions_data(e_point_pm25,s_point,:,:,:,:))))
+						emiss_temp = emissions_data(e_point_pm,s_point,:,:,:,:) - emissions_data(e_point_pm25,s_point,:,:,:,:)
+					else
+						emiss_temp = emissions_data(e_point_pm,s_point,:,:,:,:)				
+					end if
+					
+					;;; initialise the emissions array, if needed
+					if(start_emiss_array)
+						emissions = emiss_temp
+						start_emiss_array = False
+					else
+						emissions = emissions + emiss_temp
+					end if
+					delete(emiss_temp)
+
+				else ;;; if not data loaded, skip
+
+					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
+
+				end if
 		
 			end do
 		
@@ -400,6 +499,9 @@ begin
 			;;; get the standard conversion factor
 			cfac = AERO_MAP_TRN@$pname$
 
+			;; set flag for creation of emissions array
+			start_emiss_array = True
+
 			;;; loop through the emission sectors for this gas, summing up the emissions
 			do ies = 0, dimsizes(emiss_cat@$ename$)-1
 				;;; get the sector name
@@ -407,12 +509,23 @@ begin
 				;;; get the sector pointer
 				s_point = emiss_sector_index@$esname$
 		
-				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-				if(ies .eq. 0)
-					emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
-				else
-					emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
-				end if		
+				;;; make sure there is some data being loaded
+				if(.not. all(ismissing(emissions_data(e_point,s_point,:,:,:,:))))
+
+					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+					if(start_emiss_array)
+						emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
+						start_emiss_array = False
+					else
+						emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
+					end if		
+
+				else ;;; if not data loaded, skip
+
+					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
+
+				end if
+				
 	
 			end do
 
@@ -434,7 +547,7 @@ end ;;; process_aerosol_emissions
 undef("nmvoc_fraction_calculations")
 function nmvoc_fraction_calculations(INDIR:string,nmvoc_scheme:string,fname:string,\
 										nmvoc_species:string,nmvoc_species_index:logical,\
-										nmvoc_groups:string,nmvoc_sectors:string)
+										nmvoc_sectors:string)
 local FILE, total_emissions, im, js, sector_pointer, species_pointer, emiss_data, total_mass, \
 		var_list, var_num, emiss_name, cat_var, \
 		first_time, ia, ib, ic, id
@@ -455,7 +568,7 @@ begin
 	; loop through the input NMVOC emission sectors
 	do im = 0, dimsizes(nmvoc_sectors)-1
 		; determine our pointer for the standard emission sector we will populate
-		sector_pointer = emiss_sector_index@$nmvoc_groups(im)$
+		sector_pointer = emiss_sector_index@$nmvoc_sectors@$nmvoc_sectors(im)$$
 		
 		; loop through the input NMVOC emission species for each sector
 		do js = 0, dimsizes(nmvoc_species)-1
@@ -555,8 +668,7 @@ procedure process_nmvoc_emissions_by_fraction(INDIR:string,OUTFILE:file,nmvoc_sc
 												NMVOC_MAP_TRN:logical, NMVOC_MOL_WGT:logical,\
 												emissions_data:float,\
 												nmvoc_species:string,nmvoc_species_index:logical,\
-												nmvoc_groups:string,nmvoc_sectors:string,\
-												nmvoc_mol_weights:logical)
+												nmvoc_sectors:string,nmvoc_mol_weights:logical)
 local ig, pname, enum, ename_list, ename, e_point, cfac_list, isp, ecname, cfac, mwgt, \
 		ies, esname, s_point, mfac, emissions 
 begin
@@ -565,7 +677,7 @@ begin
 	print("== Calculating the NMVOC fractions (this could take some time) ==")
 	nmvoc_mass_fractions = nmvoc_fraction_calculations(INDIR,nmvoc_scheme,fname,\
 														nmvoc_species,nmvoc_species_index,\
-														nmvoc_groups,nmvoc_sectors)
+														nmvoc_sectors)
 
 	;;; get the pointer for the NMVOC emissions we'll be fractionating
 	e_point = emiss_cat_index@NMVOC
@@ -956,8 +1068,7 @@ procedure generate_scheme_emissions(INDIR:string, OUTDIR:string, fname:string, \
 			AERO_MAP_VAR:logical, AERO_MAP_TRN:logical, NMVOC_MAP_VAR:logical, \
 			NMVOC_MAP_TRN:logical, NMVOC_MOL_WGT:logical, \
 			nmvoc_species:string,nmvoc_species_index:logical, \
-			nmvoc_groups:string,nmvoc_sectors:string, \
-			nmvoc_mol_weights:logical)
+			nmvoc_sectors:string, nmvoc_mol_weights:logical)
 local INFILE, emissions_data, OUTFILE, VAR_LIST_GAS, VAR_LIST_AERO, VAR_LIST_NMVOC
 begin
 
@@ -1011,7 +1122,7 @@ begin
 		process_nmvoc_emissions_by_fraction(INDIR,OUTFILE,nmvoc_scheme,fname,VAR_LIST_NMVOC,\
 												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT,\
 												emissions_data,nmvoc_species,nmvoc_species_index,\
-												nmvoc_groups,nmvoc_sectors,nmvoc_mol_weights)
+												nmvoc_sectors,nmvoc_mol_weights)
 
 	end if  ;;; nmvoc_scheme@method selection
 	end if
@@ -1059,13 +1170,13 @@ begin
 		AERO_VAR  = AERO_MAP_VAR_cbmz_mos_htap
 		AERO_TRN  = AERO_MAP_TRN_cbmz_mos_htap
 
-		if(nmvoc_scheme .eq. "MACCITY")
+		if(nmvoc_scheme .eq. "MACCITY_NMVOC")
 		
 			NMVOC_VAR = NMVOC_maccity_MAP_VAR_cbmz_mos_htap
 			NMVOC_TRN = NMVOC_maccity_MAP_TRN_cbmz_mos_htap
 			NMVOC_WGT = NMVOC_maccity_MOL_WGT_cbmz_mos_htap
 					
-		else if(nmvoc_scheme .eq. "EDGAR")
+		else if(nmvoc_scheme .eq. "EDGAR_NMVOC_V432")
 		
 			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_htap
 			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_htap
@@ -1083,7 +1194,7 @@ begin
 		AERO_TRN  = AERO_MAP_TRN_cri_mos_edgar_htap
 
 
-		if(nmvoc_scheme .eq. "MACCITY")
+		if(nmvoc_scheme .eq. "MACCITY_NMVOC")
 		
 			;NMVOC_VAR = NMVOC_maccity_MAP_VAR_cri_mos_edgar_htap
 			;NMVOC_TRN = NMVOC_maccity_MAP_TRN_cri_mos_edgar_htap
@@ -1092,7 +1203,7 @@ begin
 			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
 			exit()
 
-		else if(nmvoc_scheme .eq. "EDGAR")
+		else if(nmvoc_scheme .eq. "EDGAR_NMVOC_V432")
 		
 			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cri_mos_edgar_htap
 			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cri_mos_edgar_htap
@@ -1108,13 +1219,13 @@ begin
 		AERO_VAR  = AERO_MAP_VAR_cbmz_mos_orig
 		AERO_TRN  = AERO_MAP_TRN_cbmz_mos_orig
 
-		if(nmvoc_scheme .eq. "MACCITY")
+		if(nmvoc_scheme .eq. "MACCITY_NMVOC")
 		
 			NMVOC_VAR = NMVOC_maccity_MAP_VAR_cbmz_mos_orig
 			NMVOC_TRN = NMVOC_maccity_MAP_TRN_cbmz_mos_orig
 			NMVOC_WGT = NMVOC_maccity_MOL_WGT_cbmz_mos_orig
 					
-		else if(nmvoc_scheme .eq. "EDGAR")
+		else if(nmvoc_scheme .eq. "EDGAR_NMVOC_V432")
 		
 			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cbmz_mos_orig
 			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cbmz_mos_orig
@@ -1135,22 +1246,22 @@ begin
     end if
     
 	;;; load the NMVOC information which is generic for all chemical schemes
-	if(nmvoc_scheme .eq. "MACCITY")
+	if(nmvoc_scheme .eq. "MACCITY_NMVOC")
 
 			nmvoc_species       = maccity_species
 			nmvoc_species_index = maccity_species_index
-			nmvoc_groups        = maccity_groups
+			;nmvoc_groups        = maccity_groups
 			nmvoc_sectors       = maccity_sectors
 			nmvoc_mol_weights   = maccity_mol_weights
 
 			nmvoc_scheme@molweights = "source"			;;; set flag to use MACCITY molecular weights for NMVOC calculations
 
 
-	else if(nmvoc_scheme .eq. "EDGAR")
+	else if(nmvoc_scheme .eq. "EDGAR_NMVOC_V432")
 
 			nmvoc_species       = edgar_nmvoc_species
 			nmvoc_species_index = edgar_nmvoc_species_index
-			nmvoc_groups        = edgar_nmvoc_groups
+			;nmvoc_groups        = edgar_nmvoc_groups
 			nmvoc_sectors       = edgar_nmvoc_sectors
 			nmvoc_mol_weights   = edgar_nmvoc_mol_weights
 
@@ -1168,7 +1279,7 @@ begin
 	
 	generate_scheme_emissions(INDIR, OUTDIR, fname, wrfchem_scheme, nmvoc_scheme, nox_frac, \
 					INORG_VAR, INORG_TRN, AERO_VAR, AERO_TRN, NMVOC_VAR, NMVOC_TRN, NMVOC_WGT, \
-					nmvoc_species, nmvoc_species_index, nmvoc_groups, nmvoc_sectors, nmvoc_mol_weights)
+					nmvoc_species, nmvoc_species_index, nmvoc_sectors, nmvoc_mol_weights)
 
 
 

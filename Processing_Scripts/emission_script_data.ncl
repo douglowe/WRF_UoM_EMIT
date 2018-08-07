@@ -45,18 +45,45 @@ begin
 
 
 	;;; list the emission sectors we can work with (this covers all input schemes, not everything has to be used)
-	emiss_sector = (/"POW","IND","RES","TRA","AGR","SHP","SLV","WBD"/)
+	emiss_sector = (/"POW","IND","RES","TRA","AGR","SHP","SLV","WBD",\
+					"ENE","REF_TRF","TRO","TNR_Other","TNR_SHIP","RCO",\
+					"PRO","NMM","CHE","IRO","NFE","FOO_PAP","NEU","PRU_SOL",\
+					"MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC","FFF"/)
 
 	;;; give our indexes for the emission sectors
 	emiss_sector_index = True
 	emiss_sector_index@POW = 0    ; power
-	emiss_sector_index@IND = 1    ; industry
+	emiss_sector_index@IND = 1    ; industry    (EDGAR AP V432: Combustion for manufacturing)
 	emiss_sector_index@RES = 2    ; residential
 	emiss_sector_index@TRA = 3    ; traffic
 	emiss_sector_index@AGR = 4    ; agriculture
 	emiss_sector_index@SHP = 5    ; shipping
 	emiss_sector_index@SLV = 6    ; solvents
 	emiss_sector_index@WBD = 7    ; wind-blown dust
+	
+	;;; extra indexes for EDGAR AP V432 emission sectors
+	emiss_sector_index@ENE 		= 8		; Power Industry
+	emiss_sector_index@REF_TRF 	= 9		; Oil refineries and Transformation industry
+	emiss_sector_index@TRO 		= 10	; Road transportation
+	emiss_sector_index@TNR_Other= 11	; Railways, pipelines, off-road transport
+	emiss_sector_index@TNR_Ship = 12	; Shipping
+	emiss_sector_index@RCO 		= 13	; Energy for buildings
+	emiss_sector_index@PRO 		= 14	; Fuel exploitation
+	emiss_sector_index@NMM 		= 15	; Non-metallic minerals production
+	emiss_sector_index@CHE 		= 16	; Chemical processes
+	emiss_sector_index@IRO 		= 17	; Iron and steel production
+	emiss_sector_index@NFE 		= 18	; Non-ferrous metals production
+	emiss_sector_index@FOO_PAP 	= 19	; Food and Paper
+	emiss_sector_index@NEU 		= 20	; Non energy use of fuels
+	emiss_sector_index@PRU_SOL 	= 21	; Solvents and products use
+	emiss_sector_index@MNM 		= 22	; Manure management
+	emiss_sector_index@AGS 		= 23	; Agricultural soils
+	emiss_sector_index@AWB 		= 24	; Agricultural waste burning
+	emiss_sector_index@SWD_LDF 	= 25	; Solid waste landfills
+	emiss_sector_index@WWT 		= 26	; Waste water handling
+	emiss_sector_index@SWD_INC 	= 27	; Solid waste incineration
+	emiss_sector_index@FFF		= 28	; Fossil Fuel Fires
+
 
 ;;;;; diurnal cycle information
 
@@ -68,7 +95,7 @@ begin
 	;         Present and future surface emissions of atmospheric compounds, POET Report #2, 
 	;         EU project EVK2-1999-00011, 2003. 
 	;
-	diurnal_cycles = True 
+	diurnal_cycles = (/"POW","IND","RES","TRA","AGR","SHP","SLV","WBD"/) 
 	
 	diurnal_cycles@POW = (/0.925,0.839,0.755,0.713,0.707,0.717,0.765, \
 						0.859,1.001,1.136,1.207,1.221,1.217, \
@@ -116,11 +143,13 @@ begin
 	;;;   within the scripts for countries which shift their timezones by 30 minutes
 
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; INPUT schemes setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-available_input_schemes = "EDGAR IITM"   ; this is be a single string, space delimited, listing all the available schemes
+available_input_schemes = (/"EDGAR_HTAP","EDGAR_AP_V432","IITM"/)   ; this is be a single string, space delimited, listing all the available schemes
 
 
 
@@ -128,7 +157,7 @@ available_input_schemes = "EDGAR IITM"   ; this is be a single string, space del
 ;;;;; NMVOC schemes setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-available_nmvoc_schemes = "EDGAR MACCITY"   ; this is be a single string, space delimited, listing all the available schemes
+available_nmvoc_schemes = (/"EDGAR_NMVOC_V432","MACCITY_NMVOC"/)   ; this is be a single string, space delimited, listing all the available schemes
 
 
 
@@ -138,7 +167,7 @@ available_nmvoc_schemes = "EDGAR MACCITY"   ; this is be a single string, space 
 ;;;;; OUTPUT schemes setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-available_schemes = "mozm_vbs4_pnnl cbmz_mos_htap cri_mos_edgar_htap cbmz_mos_orig"   ; this is be a single string, space delimited, listing all the available schemes
+available_schemes = (/"mozm_vbs4_pnnl","cbmz_mos_htap","cri_mos_edgar_htap","cbmz_mos_orig"/)   ; this is be a single string, space delimited, listing all the available schemes
 
 ;;; These lists of variables for each scheme
 ;;;    are used for creating the empty output files.

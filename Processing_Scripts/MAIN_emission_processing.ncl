@@ -55,7 +55,7 @@ input_scheme = "IITM"
 
 
 ; choice of NMVOC speciation scheme to use
-nmvoc_scheme = "EDGAR"
+nmvoc_scheme = "EDGAR_NMVOC_V432"
 ;
 ;     method --- decides on the use of the scheme
 ;              "fraction" = use the chemical species to determine mass 
@@ -127,19 +127,19 @@ regional_modification_of_emissions@vars_scale = (/0.0,50.0/)
 ;;;;; checks to make sure we're not going anything stupid
 
 ;; check our input scheme
-if(.not. isStrSubset(available_input_schemes,input_scheme))
+if(.not. any(available_input_schemes.eq.input_scheme))
 	print("Scheme '"+input_scheme+"' is unsupported - check 'available_input_schemes' in emission_script_data.ncl to see what is supported")
 	exit()
 end if
 
 ;; check our NMVOC scheme
-if(.not. isStrSubset(available_nmvoc_schemes,nmvoc_scheme))
+if(.not. any(available_nmvoc_schemes.eq.nmvoc_scheme))
 	print("Scheme '"+nmvoc_scheme+"' is unsupported - check 'available_nmvoc_schemes' in emission_script_data.ncl to see what is supported")
 	exit()
 end if
 
 ;; check scheme we're going to produce
-if(.not. isStrSubset(available_schemes,wrfchem_scheme))
+if(.not. any(available_schemes.eq.wrfchem_scheme))
 	print("Scheme '"+wrfchem_scheme+"' is unsupported - check 'available_schemes' in emission_script_data.ncl to see what is supported")
 	exit()
 end if
@@ -165,8 +165,8 @@ do idom = 0, dimsizes(domains)-1
 		wrfchem_scheme@fname2 = "wrfchemi_12z_"+dom+"_"+year+"_"+month
 		
 		;;;;; NMVOC input file(s) - kept in SOURCEDIR 
-		nmvoc_scheme@fname1 = "wrfchemi_00z_NMVOC_"+nmvoc_scheme+"_"+dom+"_"+year+"_"+month
-		nmvoc_scheme@fname2 = "wrfchemi_12z_NMVOC_"+nmvoc_scheme+"_"+dom+"_"+year+"_"+month
+		nmvoc_scheme@fname1 = "wrfchemi_00z_"+nmvoc_scheme+"_"+dom+"_"+year+"_"+month
+		nmvoc_scheme@fname2 = "wrfchemi_12z_"+nmvoc_scheme+"_"+dom+"_"+year+"_"+month
 
 		;;;;; creating diurnal cycle data and preprocess some emissions (OC->OM, and checking PM emissions)
 		if(STEP1_create_diurnal_cycle_and_prescaling)
@@ -176,7 +176,7 @@ do idom = 0, dimsizes(domains)-1
 
 			;;;;; impose a diurnal cycle onto the data
 			print("== Imposing diurnal cycle information onto emissions ==")
-			impose_diurnal_cycle(DIUDIR,wrfchem_scheme,UTC_offset)
+			impose_diurnal_cycle(DIUDIR,UTC_offset,wrfchem_scheme,input_scheme)
 			
 			;;;;; preprocess the required emissions
 			print("== Preprocessing emissions ==")
@@ -185,6 +185,7 @@ do idom = 0, dimsizes(domains)-1
 			
 			;;;;; working on the NMVOC data files ;;;;;;
 			
+			print("==== Preparing the NMVOC emission files ====")
 			;;;;; copy the NMVOC emission source files into place
 			emission_file_setup(SOURCEDIR,DIUDIR,nmvoc_scheme)
 
@@ -210,8 +211,8 @@ do idom = 0, dimsizes(domains)-1
 
 			;;;;; creating new emission files (with increased vertical layers)
 			;;;;; and impose a vertical distribution for all inputs
-			apply_vertical_distributions(DIUDIR,VERTDIR,"fname1",wrfchem_scheme,nmvoc_scheme)
-			apply_vertical_distributions(DIUDIR,VERTDIR,"fname2",wrfchem_scheme,nmvoc_scheme)
+			apply_vertical_distributions(DIUDIR,VERTDIR,"fname1",wrfchem_scheme,input_scheme,nmvoc_scheme)
+			apply_vertical_distributions(DIUDIR,VERTDIR,"fname2",wrfchem_scheme,input_scheme,nmvoc_scheme)
 
 		end if
 		;;;;; end applying vertical power emissions

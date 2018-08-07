@@ -98,24 +98,17 @@ end ;;;;; process_oc_om_emissions
 
 undef("conform_pm_emissions")
 procedure conform_pm_emissions(FILE:file)
-local esec, sect_name, sect_ind, pm10_name, pm25_name, om_name, bc_name, \
+local esec, sect_name, pm10_name, pm25_name, om_name, bc_name, \
+	flag_om_bc, data_om_bc, flag_pm25, flag_pm10, \
 	data_pm10, data_pm25, data_om, data_bc
 begin
 
-	;; define OC as the emission variable to process
-	;; (need to be sure that all aerosol variables used here exist for
-	;;  all of the same sectors)
-	emiss_name = "OC"
 
-
-	;; loop through the emission sectors
-	do esec=0,dimsizes(emiss_cat@$emiss_name$)-1
+	;; loop through *all* emission sectors
+	do esec=0,dimsizes(emiss_sector)-1
 
 		;; grab the emission sector name
-		sect_name = emiss_cat@$emiss_name$(esec)
-
-		;; obtain the emission index
-		sect_ind = emiss_sector_index@$sect_name$
+		sect_name = emiss_sector(esec)
 
 		;; create the variable names
 		;;    naming style is: E_SO2_ANT_IND 
@@ -124,28 +117,71 @@ begin
 		om_name   = "E_"+"OC"+"_ANT_"+sect_name
 		bc_name   = "E_"+"BC"+"_ANT_"+sect_name
 		
-		;; pull the data from the input file
-		data_pm10 = FILE->$pm10_name$
-		data_pm25 = FILE->$pm25_name$
-		data_om   = FILE->$om_name$
-		data_bc   = FILE->$bc_name$
+		;; how we check conformation depends on existence of emission variables
+	
+		;; sum up the OM & BC masses, *if* they exist
+		if(isfilevar(FILE,om_name) .and. isfilevar(FILE,bc_name))
+			flag_om_bc = True
+			data_om    = FILE->$om_name$
+			data_bc    = FILE->$bc_name$
+			data_om_bc = data_om + data_bc
+			delete([/data_om,data_bc/])
+		else if(isfilevar(FILE,om_name))
+			flag_om_bc = True
+			data_om_bc = FILE->$om_name$
+		else if(isfilevar(FILE,bc_name))
+			flag_om_bc = True
+			data_om_bc = FILE->$bc_name$
+		else
+			flag_om_bc = False
+		end if
+		end if
+		end if
 		
-		;; sum up the OM & BC masses
-		data_om_bc = data_om + data_bc
+		;; load and conform PM2.5 masses, *if* they exist
+		if(isfilevar(FILE,pm25_name))
+			flag_pm25 = True
+			data_pm25 = FILE->$pm25_name$
+			
+			if(flag_om_bc)
+				;; perform the check for PM2.5 (we assume that all OM & BC is within this size range)
+				data_pm25 = where(data_pm25.lt.data_om_bc, data_om_bc, data_pm25)
+			end if
+		else
+			flag_pm25 = False
+		end if
 		
-		;; perform the check for PM2.5 (we assume that all OM & BC is within this size range)
-		data_pm25 = where(data_pm25.lt.data_om_bc, data_om_bc, data_pm25)
+		;; load and conform PM10 masses, *if* they exist
+		if(isfilevar(FILE,pm10_name))
+			flag_pm10 = True
+			data_pm10 = FILE->$pm10_name$
 		
-		;; now check that PM10 isn't smaller than PM2.5
-		data_pm10 = where(data_pm10.lt.data_pm25, data_pm25, data_pm10)
+			if(flag_pm25)
+				;; now check that PM10 isn't smaller than PM2.5
+				data_pm10 = where(data_pm10.lt.data_pm25, data_pm25, data_pm10)
+			else if(flag_om_bc)
+				;; now check that PM10 isn't smaller than PM2.5
+				data_pm10 = where(data_pm10.lt.data_om_bc, data_om_bc, data_pm10)
+			end if
+			end if
+		else
+			flag_pm10 = False
+		end if
+		
 
-		;; write the PM10 and PM2.5 data back to the file
-		FILE->$pm10_name$ = data_pm10
-		FILE->$pm25_name$ = data_pm25
-		
-		;; delete the temporary data arrays
-		delete([/data_pm10,data_pm25,data_om,data_bc/])
-		
+		;; write the PM10 and PM2.5 data back to the file, and delete temporary arrays
+		if(flag_pm10)
+			FILE->$pm10_name$ = data_pm10
+			delete(data_pm10)
+		end if
+		if(flag_pm25)
+			FILE->$pm25_name$ = data_pm25
+			delete(data_pm25)
+		end if
+		if(flag_om_bc)
+			delete(data_om_bc)
+		end if
+				
 	end do ;; emission sector loop
 
 
@@ -279,7 +315,7 @@ begin
 	end if
 	;;; check if the source files exist, fail if not
 	if(.not.all(isfilepresent(SOURCEDIR+(/scheme@fname1,scheme@fname2/))))
-		print("== Emission source files not accessible, check these paths:")
+		print("== Emission source files not accessible, failure in emission_file_setup, check these paths:")
 		print(SOURCEDIR+scheme@fname1)
 		print(SOURCEDIR+scheme@fname2)
 		exit()
@@ -298,12 +334,16 @@ procedure copy_input_scheme_information(input_scheme:string)
 begin
 
 
-	if(input_scheme.eq."EDGAR")
-		copy_VarAtts(emiss_cat_EDGAR,emiss_cat)
+	if(input_scheme.eq."EDGAR_HTAP")
+		copy_VarAtts(emiss_cat_EDGAR_HTAP,emiss_cat)
 
 	else if(input_scheme.eq."IITM")
 		copy_VarAtts(emiss_cat_IITM,emiss_cat)
 
+	else if(input_scheme.eq."EDGAR_AP_V432")
+		copy_VarAtts(emiss_cat_EDGAR_VP_V432,emiss_cat)
+
+	end if
 	end if
 	end if
 	

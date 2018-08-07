@@ -175,15 +175,16 @@ end ;;;;; utc_offset_calculation
 
 undef("create_timezone_scaling_arrays")
 function create_timezone_scaling_arrays(utc_offset_map:float,lat_data:float)
-local ii, kk, ll, grid_dim, time_dim, offset, offset_down, offset_up, hour_frac, dc_ind, dc_ind_up
+local ii, kk, ll, grid_dim, time_dim, emis_dim, scaling_arrays, unique_offsets, \
+		offset, hour_frac, dc_ind, offset_down, offset_up, dc_ind_up
 begin
 
 	;;;; get the dimensions of the model grid
 	grid_dim = dimsizes(lat_data)
 	;;;; get the dimensions of the diurnal cycle
-	time_dim = dimsizes(diurnal_cycles@$emiss_sector(0)$)
-	;;;; get the dimensions of the emission factors
-	emis_dim = dimsizes(emiss_sector)
+	time_dim = dimsizes(diurnal_cycles@$diurnal_cycles(0)$)
+	;;;; get the number of diurnal cycle sectors
+	emis_dim = dimsizes(diurnal_cycles)
 
 	;;;; create the data arrays, one for each emission sector
 	scaling_arrays = new((/emis_dim,time_dim,grid_dim(0),grid_dim(1)/),float)
@@ -221,7 +222,7 @@ begin
 				;;;; loop through the emission sectors, and add the scaling factor
 				do ll=0,emis_dim-1
 					scaling_arrays(ll,kk,:,:) = where(utc_offset_map.eq.offset,\
-													diurnal_cycles@$emiss_sector(ll)$(dc_ind),\
+													diurnal_cycles@$diurnal_cycles(ll)$(dc_ind),\
 													scaling_arrays(ll,kk,:,:))	
 				end do ; ll = emis_dim
 		
@@ -258,8 +259,8 @@ begin
 				;;;; loop through the emission sectors, and add the scaling factor
 				do ll=0,emis_dim-1
 					scaling_arrays(ll,kk,:,:) = where(utc_offset_map.eq.offset,\
-													diurnal_cycles@$emiss_sector(ll)$(dc_ind)*hour_frac \
-														+ diurnal_cycles@$emiss_sector(ll)$(dc_ind_up)*(1.0-hour_frac),\
+													diurnal_cycles@$diurnal_cycles(ll)$(dc_ind)*hour_frac \
+														+ diurnal_cycles@$diurnal_cycles(ll)$(dc_ind_up)*(1.0-hour_frac),\
 													scaling_arrays(ll,kk,:,:))	
 				end do ; ll = emis_dim
 		
@@ -280,63 +281,8 @@ end ;;;;; creat_timezone_scaling_arrays
 
 
 
-undef("modify_emissions")
-procedure modify_emissions(FILE:file,scaling_arrays:float,start_index:integer)
-local evar, esec, itime, var_name, data_array, emiss_name, sect_name, sect_ind
-begin
-
-	;;;;; apply the scaling arrays to the emission data
-	
-	;; loop through (original only) emission variables
-	do evar=0,number_original_emission_variables-1
-	
-		;; grab the emission variable name
-		emiss_name = emiss_cat(evar)
-	
-		;; loop through the emission sectors for that variable
-		do esec=0,dimsizes(emiss_cat@$emiss_name$)-1
-
-			;; grab the emission sector name
-			sect_name = emiss_cat@$emiss_cat(evar)$(esec)
-
-			;; obtain the emission index
-			sect_ind = emiss_sector_index@$sect_name$
-
-			;; create the variable name
-			;;    naming style is: E_SO2_ANT_IND 
-			var_name = "E_"+emiss_name+"_ANT_"+sect_name
-
-			;; pull the data from the input file
-			data_array = FILE->$var_name$
-
-			;; loop through the time slices in the file (assumed there's 12!)
-			do itime = 0,11
-				
-				;; apply our scaling factor
-				;;    NOTE: we're assuming that there is only 1 vertical layer in this dataset!!!!!!
-				data_array(itime,0,:,:) = data_array(itime,0,:,:) * \
-										scaling_arrays(sect_ind,start_index+itime,:,:)
-					
-			end do ;; time slice loop
-			
-			;; push the data back into the input file
-			FILE->$var_name$ = data_array
-			
-			
-			;; delete our temporary arrays
-			delete([/sect_name,var_name,data_array/])
-
-		end do ;; emission sector loop
-
-	end do ;; emiss var loop
-
-
-end ;;;;; modify_emissions
-
-
-
-undef("modify_nmvoc_emissions")
-procedure modify_nmvoc_emissions(FILE:file,scaling_arrays:float,start_index:integer,nmvoc_sectors:string,nmvoc_groups:string)
+undef("modify_emissions_diurnal_cycle")
+procedure modify_emissions_diurnal_cycle(FILE:file,scaling_arrays:float,start_index:integer,emission_sectors:string,id_string:string)
 local var_list, var_num, evar, var_name, sect_name, esec, sect_ind, itime, data_array, emiss_name, \
 		missing_variables
 begin
@@ -358,15 +304,15 @@ begin
 		var_name = var_list(evar)
 	
 		;; check that this is an emission variable
-		if(isStrSubset(var_name,"E_VOC"))
+		if(isStrSubset(var_name,id_string))
 	
 			;; obtain the emission sector info
 			sect_name = "None"
-			do esec = 0,dimsizes(nmvoc_sectors)-1
+			do esec = 0,dimsizes(emission_sectors)-1
 				;; checking for the NMVOC group
-				if(isStrSubset(var_name,nmvoc_sectors(esec)))
+				if(isStrSubset(var_name,emission_sectors(esec)))
 					;; pulling out the matching standard emission sector name
-					sect_name = nmvoc_groups(esec)
+					sect_name = emission_sectors@$emission_sectors(esec)$
 					break
 				end if
 			end do
@@ -413,20 +359,34 @@ begin
 	end if
 
 
-end ;;;;; modify_nmvoc_emissions
+end ;;;;; modify_emissions_diurnal_cycle
 
 
 
 
 
 undef("impose_diurnal_cycle")
-procedure impose_diurnal_cycle(DIR:string,scheme:string,UTC_offset:logical)
-local start_index, FILE1, FILE2, lat_data, lon_data, utc_offset_map, scaling_arrays
+procedure impose_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,input_scheme:string)
+local emission_sectors, start_index, FILE1, FILE2, lat_data, lon_data, utc_offset_map, scaling_arrays
 begin
 
+	;;;;; get the diurnal cycle settings for the emission scheme we are using
+	if(input_scheme.eq."EDGAR_HTAP")
+		emission_sectors = emiss_cycle_EDGAR_HTAP_sectors
+	else if(input_scheme.eq."EDGAR_AP_V432")
+		emission_sectors = emiss_cycle_EDGAR_AP_V432_sectors
+	else if(input_scheme.eq."IITM")
+		emission_sectors = emiss_cycle_IITM_sectors
+	else
+		print("scheme "+input_scheme+" is not supported, failing in impose_diurnal_cycle")
+		exit()
+	end if
+	end if
+	end if
+
 	;;;;; open the files for processing
-	FILE1 = addfile(DIR+scheme@fname1+".nc","w")
-	FILE2 = addfile(DIR+scheme@fname2+".nc","w")
+	FILE1 = addfile(DIR+wrfchem_scheme@fname1+".nc","w")
+	FILE2 = addfile(DIR+wrfchem_scheme@fname2+".nc","w")
 	
 	;;;;; pull out the latitude and longitude data
 	lat_data = FILE1->XLAT
@@ -452,11 +412,11 @@ begin
 
 	;;;;; modify emissions in file 1
 	start_index = 0
-	modify_emissions(FILE1,scaling_arrays,start_index)
+	modify_emissions_diurnal_cycle(FILE1,scaling_arrays,start_index,emission_sectors,"_ANT_")
 
 	;;;;; modify emissions in file 2
 	start_index = 12
-	modify_emissions(FILE2,scaling_arrays,start_index)
+	modify_emissions_diurnal_cycle(FILE2,scaling_arrays,start_index,emission_sectors,"_ANT_")
 	
 	;;;;; close the files again
 	delete([/FILE1,FILE2/])
@@ -470,20 +430,18 @@ end ;;;;; impose_diurnal_cycle
 undef("impose_nmvoc_diurnal_cycle")
 procedure impose_nmvoc_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,nmvoc_scheme:string)
 local filename_1, filename_2, \
-	nmvoc_sectors, nmvoc_groups, start_index, OFF_FILE, FILE1, FILE2, \
+	nmvoc_sectors, start_index, OFF_FILE, FILE1, FILE2, \
 	lat_data, lon_data, utc_offset_map, scaling_arrays
 begin
 
 	filename_1 = DIR + nmvoc_scheme@fname1
 	filename_2 = DIR + nmvoc_scheme@fname2
 
-	;;;;; get the settings for the NMVOC scheme we are using
-	if(nmvoc_scheme.eq."EDGAR")
+	;;;;; get the diurnal settings for the NMVOC scheme we are using
+	if(nmvoc_scheme.eq."EDGAR_NMVOC_V432")
 		nmvoc_sectors = edgar_nmvoc_sectors
-		nmvoc_groups  = edgar_nmvoc_groups
-	else if(nmvoc_scheme.eq."MACCITY")
+	else if(nmvoc_scheme.eq."MACCITY_NMVOC")
 		nmvoc_sectors = maccity_sectors
-		nmvoc_groups  = maccity_groups
 	end if
 	end if
 
@@ -505,11 +463,11 @@ begin
 
 	;;;;; modify emissions in file 1
 	start_index = 0
-	modify_nmvoc_emissions(FILE1,scaling_arrays,start_index,nmvoc_sectors,nmvoc_groups)
+	modify_emissions_diurnal_cycle(FILE1,scaling_arrays,start_index,nmvoc_sectors,"E_VOC")
 
 	;;;;; modify emissions in file 2
 	start_index = 12
-	modify_nmvoc_emissions(FILE2,scaling_arrays,start_index,nmvoc_sectors,nmvoc_groups)
+	modify_emissions_diurnal_cycle(FILE2,scaling_arrays,start_index,nmvoc_sectors,"E_VOC")
 	
 	;;;;; close the files again
 	delete([/FILE1,FILE2/])
