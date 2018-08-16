@@ -40,6 +40,11 @@
 ;            distribution to lumped NMVOC emissions data,
 ;            to give the scheme specific emissions.
 ;
+;		 determine_variable_list
+;			 Given a list of emission source variables, a species of interest,
+;            and a list of appropriate sectors, this function will return a 
+;            list of emission source variables for processing.
+;            
 ;        process_nmvoc_emissions_direct
 ;            This routine takes a set of NMVOC emissions data,
 ;            combines sectors and compounds according to the 
@@ -734,11 +739,47 @@ begin
 end ;;; process_nmvoc_emissions_by_fraction
 
 
+undef("determine_variable_list")
+function determine_variable_list(file_list:string,sector_list:string,var_name:string)
+local	cat_var, init_list, temp_list, temp_list_2, isect
+begin
+
+	;;; obtain a list of nmvoc variables for that input (covering all emission categories)
+	cat_var := str_match(file_list,var_name)
+	
+	;;; ensure that only emission categories we are interested in are processed
+	;;;    (this will be messy, because NCL has a function to check single substring 
+	;;;     in a list of strings, but not a list of substrings for a single string)
+	if(.not. any(ismissing(cat_var)))
+		init_list = True
+		do isect = 0, dimsizes(sector_list)-1
+			temp_list_2 := str_match(cat_var,sector_list(isect))
+			if(.not. any(ismissing(temp_list_2)))
+				if(init_list)
+					temp_list := temp_list_2
+					init_list = False
+				else
+					temp_list := array_append_record(temp_list,temp_list_2,0)
+				end if
+			end if
+		end do
+		cat_var := temp_list
+		delete([/temp_list_2,temp_list/])
+	end if			
+
+	return(cat_var)
+
+end
+
+
+
+
 undef("process_nmvoc_emissions_direct")
 procedure process_nmvoc_emissions_direct(INDIR:string,OUTFILE:file,nmvoc_scheme:string,fname:string,\
 										VAR_LIST_NMVOC:string,NMVOC_MAP_VAR:logical,\
 										NMVOC_MAP_TRN:logical,NMVOC_MOL_WGT:logical,\
-										nmvoc_mol_weights:logical,emissions_data:float)
+										nmvoc_sectors:string,nmvoc_mol_weights:logical,\
+										emissions_data:float)
 local INFILE, var_list, var_num, ig, pname, ename_list, enum, cfac_list, isp, ies, \
 		ecname, cfac, cat_var, icat, emissions, \
 		mwgt, init_isp, init_iint, init_icat, \
@@ -811,7 +852,8 @@ begin
 						end if
 					
 						;;; obtain a list of nmvoc variables for that input (covering different emission categories)
-						cat_var := str_match(var_list,inname)
+						cat_var := determine_variable_list(var_list,nmvoc_sectors,inname)
+						
 
 						;;; proceed if the list isn't empty
 						if(.not. any(ismissing(cat_var)))
@@ -860,7 +902,8 @@ begin
 					end if
 
 					;;; obtain a list of nmvoc variables for that input (covering different emission categories)
-					cat_var := str_match(var_list,ecname)
+					cat_var := determine_variable_list(var_list,nmvoc_sectors,ecname)
+
 			
 					;;; proceed if the list isn't empty
 					if(.not. any(ismissing(cat_var)))
@@ -993,7 +1036,7 @@ begin
 
 		process_nmvoc_emissions_direct(INDIR,OUTFILE,nmvoc_scheme,fname,VAR_LIST_NMVOC, \
 												NMVOC_MAP_VAR,NMVOC_MAP_TRN,NMVOC_MOL_WGT, \
-												nmvoc_mol_weights,emissions_data)
+												nmvoc_sectors,nmvoc_mol_weights,emissions_data)
 
 
 	else if(nmvoc_scheme@method .eq. "fraction")
