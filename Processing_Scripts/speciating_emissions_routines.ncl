@@ -910,7 +910,7 @@ begin
 				;;; get the sector pointer
 				s_point = emiss_sector_index@$esname$
 				;;; get the pointer for the NMVOC emissions we'll be fractionating
-				e_point = emiss_cat_index@NMVOC
+				e_point = emiss_cat_index@$ename_list(enum-1)$
 	
 				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
 				if(ies .eq. 0)
