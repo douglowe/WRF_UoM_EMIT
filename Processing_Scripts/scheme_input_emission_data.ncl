@@ -105,7 +105,7 @@ begin
 
 
 	; list of diurnal cycle matching emission sectors for EDGAR AP v432
-	emiss_cycle_EDGAR_AP_V432_sectors = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_SHIP","RCO",\
+	emiss_cycle_EDGAR_AP_V432_sectors = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO",\
 											"PRO","NMM","CHE","IRO","NFE","FOO_PAP","NEU","PRU_SOL",\
 											"MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC","FFF"/)
 	emiss_cycle_EDGAR_AP_V432_sectors@ENE 		= "POW"
