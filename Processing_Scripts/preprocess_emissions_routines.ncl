@@ -12,11 +12,15 @@
 ;            more nuanced routine.
 ;
 ;        conform_pm_emissions
-;            This routine ensures that the PM2.5 and PM10 masses
-;            are not smaller than the combined BC+OM mass in any
-;            given grid cell. We apply this check to each emission
-;            sector (so we don't balance emissions from different
-;            sectors) before we combine them later.
+;            This calculates the "unspeciated" (i.e. none OM or BC)
+;            particulate masses, using PM2.5, PM10, BC and OM masses.
+;            We assume that all OM and BC is in the PM2.5 size range.
+;            PM2.5 becomes PM2.5 - (OM+BC)
+;            PM10 becomes PM10 - PM2.5
+;            (any negative values are set to 0.0) 
+;            We apply this check to each emission sector (so we don't 
+;            balance emissions from different sectors) before we combine 
+;            them later.
 ;
 ;        regional_mod_emissions
 ;            This routine takes minimum and maximum Latitude and 
@@ -145,7 +149,7 @@ begin
 			
 			if(flag_om_bc)
 				;; perform the check for PM2.5 (we assume that all OM & BC is within this size range)
-				data_pm25 = where(data_pm25.lt.data_om_bc, data_om_bc, data_pm25)
+				data_pm25 = where(data_pm25.gt.data_om_bc, data_pm25 - data_om_bc, 0.0)
 			end if
 		else
 			flag_pm25 = False
@@ -158,10 +162,10 @@ begin
 		
 			if(flag_pm25)
 				;; now check that PM10 isn't smaller than PM2.5
-				data_pm10 = where(data_pm10.lt.data_pm25, data_pm25, data_pm10)
+				data_pm10 = where(data_pm10.gt.data_pm25, data_pm10 - data_pm25, 0.0)
 			else if(flag_om_bc)
 				;; now check that PM10 isn't smaller than PM2.5
-				data_pm10 = where(data_pm10.lt.data_om_bc, data_om_bc, data_pm10)
+				data_pm10 = where(data_pm10.gt.data_om_bc, data_pm10 - data_om_bc, 0.0)
 			end if
 			end if
 		else
@@ -341,7 +345,7 @@ begin
 		copy_VarAtts(emiss_cat_IITM,emiss_cat)
 
 	else if(input_scheme.eq."EDGAR_AP_V432")
-		copy_VarAtts(emiss_cat_EDGAR_VP_V432,emiss_cat)
+		copy_VarAtts(emiss_cat_EDGAR_AP_V432,emiss_cat)
 
 	end if
 	end if

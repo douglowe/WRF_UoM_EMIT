@@ -22,10 +22,10 @@
 ;
 ;        process_aerosol_emissions
 ;            Processing routines specific to aerosol emissions. This includes
-;            creating the OIN emission variables:
-;                    OIN_25 = PM2_5 - (BC+OC)   (assuming OC is now OM)
-;                    OIN_10 = PM10 - PM2_5
-;            and the combining of emission sectors.
+;            only the combining of emission sectors. The calculation of the 
+;            partitioning of PM mass between OM+BC and OIN is done in preprocessing.
+;            Here we assume that PM2.5 is actually PM2.5-(OM+BC), and that 
+;            PM10 is actually PM10-PM2.5. 
 ;
 ;        nmvoc_fraction_calculations
 ;            This routine is called from "process_nmvoc_emissions_by_fraction".
@@ -378,159 +378,38 @@ begin
 		;;; get the pointer for the emissions we'll be converting (using the parent emission category)
 		e_point = emiss_cat_index@$epname$
 		
-		;;; check if we're processing special data, if so follow the required rules
-		if(pname .eq. "E_OIN_25" .or. pname .eq. "E_PM25I" .or. pname .eq. "E_PM25J") ; OIN (other inorganics) for CBMZ_MOS_TNO
-			
-			;;; get the BC & OC pointers
-			e_point_bc = emiss_cat_index@BC
-			e_point_oc = emiss_cat_index@OC
-			
-			;;; get the PM pointer
-			e_point_pm = emiss_cat_index@PM2_5
 
-			;;; get the standard conversion factor (giving the split between modes i and j)
-			cfac = AERO_MAP_TRN@$pname$
+		;;; get the standard conversion factor
+		cfac = AERO_MAP_TRN@$pname$
 
-			;; set flag for creation of emissions array
-			start_emiss_array = True
+		;; set flag for creation of emissions array
+		start_emiss_array = True
 
-			;;; loop through the emission sectors for this aerosol, summing up the emissions
-			do ies = 0, dimsizes(emiss_cat@$ename$)-1
-				;;; get the sector name
-				esname = emiss_cat@$ename$(ies)
-				;;; get the sector pointer
-				s_point = emiss_sector_index@$esname$
-			
-				;;; make sure there is some data being loaded
-				if(.not. all(ismissing(emissions_data(e_point_pm,s_point,:,:,:,:))))
-			
-					;;; use BC+OM if they both exist
-					if(.not. all(ismissing(emissions_data(e_point_bc,s_point,:,:,:,:))) .and. \
-							.not. all(ismissing(emissions_data(e_point_oc,s_point,:,:,:,:))) )
-						;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-						;;; This will be PM_2.5 - ( BC + OC ), OC is really OM (scaling factor already applied)
-						;;; All BC & OM is assumed to be in PM2.5
-						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-										  ( emissions_data(e_point_bc,s_point,:,:,:,:) + emissions_data(e_point_oc,s_point,:,:,:,:) ) \
-										) * cfac							
-					;;; or use BC only if it exists 
-					else if (.not. all(ismissing(emissions_data(e_point_bc,s_point,:,:,:,:))))
-						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-									  emissions_data(e_point_bc,s_point,:,:,:,:) \
-									) * cfac
-					;;; or use OM only if it exists 
-					else if (.not. all(ismissing(emissions_data(e_point_oc,s_point,:,:,:,:))))
-						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) - \ 
-									  emissions_data(e_point_oc,s_point,:,:,:,:) \
-									) * cfac
-					;;; or use full PM2.5 data
-					else
-						emiss_temp = ( emissions_data(e_point_pm,s_point,:,:,:,:) ) * cfac
-					end if
-					end if
-					end if
-					
-					;;; initialise the emissions array, if needed
-					if(start_emiss_array)
-						emissions = emiss_temp
-						start_emiss_array = False
-					else
-						emissions = emissions + emiss_temp
-					end if
-					delete(emiss_temp)
-
-				else ;;; if not data loaded, skip
-
-					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
-
-				end if
-
-		
-			end do
-			
-		else if(pname .eq. "E_OIN_10" .or. pname .eq. "E_PM_10")
-
-			;;; get the PM2.5 pointer (and assume that we made sure earlier that PM2.5 > (BC + OM)!!!!)
-			e_point_pm25 = emiss_cat_index@PM2_5
-
-			;;; get the PM pointer
-			e_point_pm = emiss_cat_index@PM10
-
-			;; set flag for creation of emissions array
-			start_emiss_array = True
-
-			;;; loop through the emission sectors for this gas, summing up the emissions
-			do ies = 0, dimsizes(emiss_cat@$ename$)-1
-				;;; get the sector name
-				esname = emiss_cat@$ename$(ies)
-				;;; get the sector pointer
-				s_point = emiss_sector_index@$esname$
-			
-				;;; make sure there is some data being loaded
-				if(.not. all(ismissing(emissions_data(e_point_pm,s_point,:,:,:,:))))
-
-					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-					;;; This will be PM_10 - PM_2.5
-					if(.not. all(ismissing(emissions_data(e_point_pm25,s_point,:,:,:,:))))
-						emiss_temp = emissions_data(e_point_pm,s_point,:,:,:,:) - emissions_data(e_point_pm25,s_point,:,:,:,:)
-					else
-						emiss_temp = emissions_data(e_point_pm,s_point,:,:,:,:)				
-					end if
-					
-					;;; initialise the emissions array, if needed
-					if(start_emiss_array)
-						emissions = emiss_temp
-						start_emiss_array = False
-					else
-						emissions = emissions + emiss_temp
-					end if
-					delete(emiss_temp)
-
-				else ;;; if not data loaded, skip
-
-					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
-
-				end if
-		
-			end do
-		
-		else ; standard data
-
-			;;; get the standard conversion factor
-			cfac = AERO_MAP_TRN@$pname$
-
-			;; set flag for creation of emissions array
-			start_emiss_array = True
-
-			;;; loop through the emission sectors for this gas, summing up the emissions
-			do ies = 0, dimsizes(emiss_cat@$ename$)-1
-				;;; get the sector name
-				esname = emiss_cat@$ename$(ies)
-				;;; get the sector pointer
-				s_point = emiss_sector_index@$esname$
-		
-				;;; make sure there is some data being loaded
-				if(.not. all(ismissing(emissions_data(e_point,s_point,:,:,:,:))))
-
-					;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
-					if(start_emiss_array)
-						emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
-						start_emiss_array = False
-					else
-						emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
-					end if		
-
-				else ;;; if not data loaded, skip
-
-					print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
-
-				end if
-				
+		;;; loop through the emission sectors for this gas, summing up the emissions
+		do ies = 0, dimsizes(emiss_cat@$ename$)-1
+			;;; get the sector name
+			esname = emiss_cat@$ename$(ies)
+			;;; get the sector pointer
+			s_point = emiss_sector_index@$esname$
 	
-			end do
+			;;; make sure there is some data being loaded
+			if(.not. all(ismissing(emissions_data(e_point,s_point,:,:,:,:))))
 
-		end if
-		end if
+				;;; create the temporary emission dataset (assuming 4D datasets - this will break if they aren't!!!!)
+				if(start_emiss_array)
+					emissions = emissions_data(e_point,s_point,:,:,:,:) * cfac
+					start_emiss_array = False
+				else
+					emissions = emissions + emissions_data(e_point,s_point,:,:,:,:) * cfac			
+				end if		
+
+			else ;;; if not data loaded, skip
+
+				print("Emission sector '"+esname+"' for category '"+ename+"' is empty")
+
+			end if
+			
+		end do ; ies = 0, dimsizes(emiss_cat@$ename$)-1
 		
 		;;; push the emissions data to the outfile
 		OUTFILE->$pname$ = (/emissions/)

@@ -60,8 +60,8 @@ AERO_MAP_TRN_cbmz_mos_htap@E_OC_DOM		= 1.0
 AERO_MAP_TRN_cbmz_mos_htap@E_OC_TRA		= 1.0
 AERO_MAP_TRN_cbmz_mos_htap@E_OC_25_10	= 0.0      ; EDGAR emissions assume no OM above PM2.5
 AERO_MAP_TRN_cbmz_mos_htap@E_PM25		= 1.0
-AERO_MAP_TRN_cbmz_mos_htap@E_OIN_25		= 1.0   ; this will be modified by a calculation from PM2.5, OM and BC 
-AERO_MAP_TRN_cbmz_mos_htap@E_OIN_10		= -9999.   ; this will be replaced by a calculation from PM10 and PM2.5
+AERO_MAP_TRN_cbmz_mos_htap@E_OIN_25		= 1.0    
+AERO_MAP_TRN_cbmz_mos_htap@E_OIN_10		= 1.0   
 
 
 ;;;;; organic gas-phase data

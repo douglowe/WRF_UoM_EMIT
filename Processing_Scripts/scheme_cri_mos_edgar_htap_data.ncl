@@ -42,26 +42,26 @@ INORG_MAP_TRN_cri_mos_edgar_htap@E_NH3 	= 1.0
 ; total mass for PM10                   
 AERO_MAP_VAR_cri_mos_edgar_htap = True
 AERO_MAP_VAR_cri_mos_edgar_htap@E_BC_1		= "BC"
-AERO_MAP_VAR_cri_mos_edgar_htap@E_EC_1_25		= "BC"
+AERO_MAP_VAR_cri_mos_edgar_htap@E_EC_1_25	= "BC"
 AERO_MAP_VAR_cri_mos_edgar_htap@E_EC_25_10	= "BC"
-AERO_MAP_VAR_cri_mos_edgar_htap@E_OC_DOM		= "OC_DOM"
-AERO_MAP_VAR_cri_mos_edgar_htap@E_OC_TRA		= "OC_TRA"
+AERO_MAP_VAR_cri_mos_edgar_htap@E_OC_DOM	= "OC_DOM"
+AERO_MAP_VAR_cri_mos_edgar_htap@E_OC_TRA	= "OC_TRA"
 AERO_MAP_VAR_cri_mos_edgar_htap@E_OC_25_10	= "OC"
 AERO_MAP_VAR_cri_mos_edgar_htap@E_PM25		= "PM2_5"
-AERO_MAP_VAR_cri_mos_edgar_htap@E_OIN_25		= "PM2_5"
-AERO_MAP_VAR_cri_mos_edgar_htap@E_OIN_10		= "PM10"
+AERO_MAP_VAR_cri_mos_edgar_htap@E_OIN_25	= "PM2_5"
+AERO_MAP_VAR_cri_mos_edgar_htap@E_OIN_10	= "PM10"
 
 
 AERO_MAP_TRN_cri_mos_edgar_htap = True
 AERO_MAP_TRN_cri_mos_edgar_htap@E_BC_1		= 1.0      ; Assume that all BC is in particles < 1 um
-AERO_MAP_TRN_cri_mos_edgar_htap@E_EC_1_25		= 0.0
+AERO_MAP_TRN_cri_mos_edgar_htap@E_EC_1_25	= 0.0
 AERO_MAP_TRN_cri_mos_edgar_htap@E_EC_25_10	= 0.0      ; EDGAR emissions assume no BC above PM2.5
-AERO_MAP_TRN_cri_mos_edgar_htap@E_OC_DOM		= 1.0
-AERO_MAP_TRN_cri_mos_edgar_htap@E_OC_TRA		= 1.0
+AERO_MAP_TRN_cri_mos_edgar_htap@E_OC_DOM	= 1.0
+AERO_MAP_TRN_cri_mos_edgar_htap@E_OC_TRA	= 1.0
 AERO_MAP_TRN_cri_mos_edgar_htap@E_OC_25_10	= 0.0      ; EDGAR emissions assume no OM above PM2.5
 AERO_MAP_TRN_cri_mos_edgar_htap@E_PM25		= 1.0
-AERO_MAP_TRN_cri_mos_edgar_htap@E_OIN_25		= 1.0   ; this will be modified by a calculation from PM2.5, OM and BC 
-AERO_MAP_TRN_cri_mos_edgar_htap@E_OIN_10		= -9999.   ; this will be replaced by a calculation from PM10 and PM2.5
+AERO_MAP_TRN_cri_mos_edgar_htap@E_OIN_25	= 1.0   
+AERO_MAP_TRN_cri_mos_edgar_htap@E_OIN_10	= 1.0   
 
 
 

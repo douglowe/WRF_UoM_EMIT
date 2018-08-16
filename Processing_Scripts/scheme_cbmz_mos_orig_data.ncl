@@ -69,8 +69,8 @@ AERO_MAP_VAR_cbmz_mos_orig@E_ECC		= "BC" ; Elemental Carbon - course mode
 
 
 AERO_MAP_TRN_cbmz_mos_orig = True
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25I		= 0.0 ; OIN PM2.5 - nuclei mode - this will modify a calculation from PM2.5, OM and BC
-AERO_MAP_TRN_cbmz_mos_orig@E_PM25J  	= 1.0 ; OIN PM2.5 - accumulation mode - this will modify a calculation from PM2.5, OM and BC
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25I		= 0.0 ; OIN PM2.5 - nuclei mode 
+AERO_MAP_TRN_cbmz_mos_orig@E_PM25J  	= 1.0 ; OIN PM2.5 - accumulation mode 
 AERO_MAP_TRN_cbmz_mos_orig@E_ECI    	= 0.0 ; Elemental Carbon PM2.5 - nuclei mode
 AERO_MAP_TRN_cbmz_mos_orig@E_ECJ		= 1.0 ; Elemental Carbon PM2.5 - accumulation mode
 AERO_MAP_TRN_cbmz_mos_orig@E_ORGI		= 0.0 ; Organic Carbon PM2.5 - nuclei mode
@@ -79,11 +79,11 @@ AERO_MAP_TRN_cbmz_mos_orig@E_SO4I		= 0.0 ; Sulfate PM2.5 - nuclei mode
 AERO_MAP_TRN_cbmz_mos_orig@E_SO4J		= 0.0 ; Sulfate PM2.5 - accumulation mode
 AERO_MAP_TRN_cbmz_mos_orig@E_NO3I		= 0.0 ; Nitrate PM2.5 - nuclei mode
 AERO_MAP_TRN_cbmz_mos_orig@E_NO3J		= 0.0 ; Nitrate PM2.5 - accumulation mode
-AERO_MAP_TRN_cbmz_mos_orig@E_PM_10		= -9999.0 ; OIN PM10 emissions - this will be replaced by a calculation from PM10 and PM2.5
-AERO_MAP_TRN_cbmz_mos_orig@E_SO4C		= 0.0 ; Sulfate - course mode
-AERO_MAP_TRN_cbmz_mos_orig@E_NO3C		= 0.0 ; Nitrate - course mode
-AERO_MAP_TRN_cbmz_mos_orig@E_ORGC		= 0.0 ; Organic Carbon - course mode
-AERO_MAP_TRN_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - course mode
+AERO_MAP_TRN_cbmz_mos_orig@E_PM_10		= 1.0 ; OIN PM10 (coarse mode) emissions
+AERO_MAP_TRN_cbmz_mos_orig@E_SO4C		= 0.0 ; Sulfate - coarse mode
+AERO_MAP_TRN_cbmz_mos_orig@E_NO3C		= 0.0 ; Nitrate - coarse mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ORGC		= 0.0 ; Organic Carbon - coarse mode
+AERO_MAP_TRN_cbmz_mos_orig@E_ECC		= 0.0 ; Elemental Carbon - coarse mode
 
 ;;;;; organic gas-phase data
 ;
