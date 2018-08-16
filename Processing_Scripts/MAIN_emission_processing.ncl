@@ -145,8 +145,9 @@ if(.not. any(available_schemes.eq.wrfchem_scheme))
 end if
 
 
-;;; copy the input scheme information
-copy_input_scheme_information(input_scheme)
+;;; copy the input and nmvoc scheme information
+information_input_scheme = copy_input_scheme_information(input_scheme)
+information_nmvoc_scheme = copy_input_scheme_information(nmvoc_scheme)
 
 
 
@@ -176,7 +177,7 @@ do idom = 0, dimsizes(domains)-1
 
 			;;;;; impose a diurnal cycle onto the data
 			print("== Imposing diurnal cycle information onto emissions ==")
-			impose_diurnal_cycle(DIUDIR,UTC_offset,wrfchem_scheme,input_scheme)
+			impose_diurnal_cycle(DIUDIR,UTC_offset,wrfchem_scheme,input_scheme,information_input_scheme)
 			
 			;;;;; preprocess the required emissions
 			print("== Preprocessing emissions ==")
@@ -193,7 +194,7 @@ do idom = 0, dimsizes(domains)-1
 			if(nmvoc_scheme@method .eq. "direct")			
 				;;;;; impose a diurnal cycle onto the data
 				print("== Imposing diurnal cycle information onto NMVOC emissions ==")
-				impose_nmvoc_diurnal_cycle(DIUDIR,UTC_offset,wrfchem_scheme,nmvoc_scheme)
+				impose_nmvoc_diurnal_cycle(DIUDIR,UTC_offset,wrfchem_scheme,nmvoc_scheme,information_nmvoc_scheme)
 
 				;;;;; preprocess the required emissions
 				print("== Preprocessing NMVOC emissions ==")
@@ -211,8 +212,14 @@ do idom = 0, dimsizes(domains)-1
 
 			;;;;; creating new emission files (with increased vertical layers)
 			;;;;; and impose a vertical distribution for all inputs
-			apply_vertical_distributions(DIUDIR,VERTDIR,"fname1",wrfchem_scheme,input_scheme,nmvoc_scheme)
-			apply_vertical_distributions(DIUDIR,VERTDIR,"fname2",wrfchem_scheme,input_scheme,nmvoc_scheme)
+
+			;;; processing the standard emission data
+			create_vertical_emission_files(DIUDIR,VERTDIR,"fname1",wrfchem_scheme,information_input_scheme)
+			create_vertical_emission_files(DIUDIR,VERTDIR,"fname2",wrfchem_scheme,information_input_scheme)
+			;;; processing the nmvoc emission data
+			create_vertical_emission_files(DIUDIR,VERTDIR,"fname1",nmvoc_scheme,information_nmvoc_scheme)
+			create_vertical_emission_files(DIUDIR,VERTDIR,"fname2",nmvoc_scheme,information_nmvoc_scheme)
+
 
 		end if
 		;;;;; end applying vertical power emissions

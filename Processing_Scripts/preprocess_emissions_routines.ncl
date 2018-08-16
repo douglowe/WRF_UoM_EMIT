@@ -334,25 +334,45 @@ end ;;;;; emission_file_setup
 
 
 undef("copy_input_scheme_information")
-procedure copy_input_scheme_information(input_scheme:string)
+function copy_input_scheme_information(input_scheme:string)
+local emission_sectors
 begin
 
-
+	;;; Main Emission Schemes
 	if(input_scheme.eq."EDGAR_HTAP")
 		copy_VarAtts(emiss_cat_EDGAR_HTAP,emiss_cat)
+		emission_sectors = emiss_cycle_EDGAR_HTAP_sectors
 
 	else if(input_scheme.eq."IITM")
 		copy_VarAtts(emiss_cat_IITM,emiss_cat)
+		emission_sectors = emiss_cycle_IITM_sectors
 
 	else if(input_scheme.eq."EDGAR_AP_V432")
 		copy_VarAtts(emiss_cat_EDGAR_AP_V432,emiss_cat)
+		emission_sectors = emiss_cycle_EDGAR_AP_V432_sectors
 
+	;;; NMVOC Emission Schemes (note: don't need to copy attributes to emiss_cat for these)
+	else if(input_scheme.eq."EDGAR_NMVOC_V432")
+		emission_sectors = edgar_nmvoc_sectors
+
+	else if(input_scheme.eq."MACCITY_NMVOC")
+		emission_sectors = maccity_sectors
+
+	else
+		print("scheme "+input_scheme+" is not supported, failing in copy_input_scheme_information")
+		exit()
 	end if
 	end if
 	end if
-	
+	end if
+	end if
+
+
+	return(emission_sectors)
 
 end ;;;;; copy_input_scheme_information
+
+
 
 
 

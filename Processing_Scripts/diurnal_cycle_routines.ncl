@@ -366,23 +366,9 @@ end ;;;;; modify_emissions_diurnal_cycle
 
 
 undef("impose_diurnal_cycle")
-procedure impose_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,input_scheme:string)
-local emission_sectors, start_index, FILE1, FILE2, lat_data, lon_data, utc_offset_map, scaling_arrays
+procedure impose_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,input_scheme:string,emission_sectors:string)
+local start_index, FILE1, FILE2, lat_data, lon_data, utc_offset_map, scaling_arrays
 begin
-
-	;;;;; get the diurnal cycle settings for the emission scheme we are using
-	if(input_scheme.eq."EDGAR_HTAP")
-		emission_sectors = emiss_cycle_EDGAR_HTAP_sectors
-	else if(input_scheme.eq."EDGAR_AP_V432")
-		emission_sectors = emiss_cycle_EDGAR_AP_V432_sectors
-	else if(input_scheme.eq."IITM")
-		emission_sectors = emiss_cycle_IITM_sectors
-	else
-		print("scheme "+input_scheme+" is not supported, failing in impose_diurnal_cycle")
-		exit()
-	end if
-	end if
-	end if
 
 	;;;;; open the files for processing
 	FILE1 = addfile(DIR+wrfchem_scheme@fname1+".nc","w")
@@ -428,22 +414,14 @@ end ;;;;; impose_diurnal_cycle
 
 
 undef("impose_nmvoc_diurnal_cycle")
-procedure impose_nmvoc_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,nmvoc_scheme:string)
+procedure impose_nmvoc_diurnal_cycle(DIR:string,UTC_offset:logical,wrfchem_scheme:string,nmvoc_scheme:string,nmvoc_sectors:string)
 local filename_1, filename_2, \
-	nmvoc_sectors, start_index, OFF_FILE, FILE1, FILE2, \
+	start_index, OFF_FILE, FILE1, FILE2, \
 	lat_data, lon_data, utc_offset_map, scaling_arrays
 begin
 
 	filename_1 = DIR + nmvoc_scheme@fname1
 	filename_2 = DIR + nmvoc_scheme@fname2
-
-	;;;;; get the diurnal settings for the NMVOC scheme we are using
-	if(nmvoc_scheme.eq."EDGAR_NMVOC_V432")
-		nmvoc_sectors = edgar_nmvoc_sectors
-	else if(nmvoc_scheme.eq."MACCITY_NMVOC")
-		nmvoc_sectors = maccity_sectors
-	end if
-	end if
 
 	;;;;; open prev file, and load the utc_offset_map variable
 	OFF_FILE = addfile(DIR+wrfchem_scheme@fname1+".nc","r")
