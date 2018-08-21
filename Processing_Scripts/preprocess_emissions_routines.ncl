@@ -148,7 +148,7 @@ begin
 			data_pm25 = FILE->$pm25_name$
 			
 			if(flag_om_bc)
-				;; perform the check for PM2.5 (we assume that all OM & BC is within this size range)
+				;; convert PM2.5 from total to OIN (by removing BC+OM) (we assume that all OM & BC is within this size range)
 				data_pm25 = where(data_pm25.gt.data_om_bc, data_pm25 - data_om_bc, 0.0)
 			end if
 		else
@@ -160,12 +160,16 @@ begin
 			flag_pm10 = True
 			data_pm10 = FILE->$pm10_name$
 		
-			if(flag_pm25)
-				;; now check that PM10 isn't smaller than PM2.5
+			if(flag_pm25 .and. flag_om_bc)
+				;; PM10 OIN = PM10 - PM2.5(OIN) - BC - OM
+				data_pm10 = where(data_pm10.gt.(data_pm25+data_om_bc), data_pm10 - (data_pm25+data_om_bc), 0.0)
+			else if(flag_pm25)
+				;; PM10 OIN = PM10 - PM2.5
 				data_pm10 = where(data_pm10.gt.data_pm25, data_pm10 - data_pm25, 0.0)
 			else if(flag_om_bc)
-				;; now check that PM10 isn't smaller than PM2.5
+				;; PM10 OIN - PM10 - BC - OM
 				data_pm10 = where(data_pm10.gt.data_om_bc, data_pm10 - data_om_bc, 0.0)
+			end if
 			end if
 			end if
 		else
