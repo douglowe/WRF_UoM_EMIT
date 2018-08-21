@@ -45,6 +45,7 @@ wrfchemi\_[HH]z\_NMVOC\_[domain]\_[YYYY]\_[MM]
 The standard input datasets supported are:
 * EDGAR-HTAP
 * SAFAR
+* EDGAR AP v4.3.2
 
 The NMVOC input datasets supported are:
 * MACCity
@@ -135,7 +136,7 @@ PM2.5 and PM10 emission inputs for WRF-Chem (for MOSAIC aerosol, at least) are t
 
 Aerosol emissions for each sector are conformed in a three stage process, using routines in the `preprocess_emissions_routines.ncl` module. Firstly the organic carbon (OC) emissions data provided is scaled by the `oc_om_scale` factor, to give a mass value for organic matter (OM) emissions (which is what WRF-Chem expects). Currently one scaling factor is used for all emission sectors. Secondly the the summed black carbon (BC) and OM emissions are subtracted from the PM2.5 emissions for each sector, to give the remainder PM2.5 mass (setting this to zero if PM2.5 < OM+BC). Finally the sum of the remainder PM2.5 and BC and OM is subtracted from the PM10 emissions for each sector, to give the remainder PM10 mass (again, setting this to zero if it is less than the sum of BC, OM and PM2.5). Subsequentually, the remainder PM2.5 and PM10 mass can be split between OIN and other non-carbon components, if desired.
 
-If the assumptions made here do not fit with the modelling system you use, then this routine will need adapting.
+If the assumptions made here do not fit with the modelling system you use, then this routine will need adapting. Please raise an issue (see Contributing, below) to request the modification (or contribute your own to the project).
 
 ### Regional Modification of Emissions<a name="Regional-modification"></a>
 
@@ -149,11 +150,7 @@ Vertical distributions for each emission variable are applied using routines in 
 
 The combining of input emissions from different sectors, and mapping of these to specified WRF-Chem compatible emission variables, is carried out by routines within the `speciating_emissions_routines.ncl` module. Lists of the WRF-Chem gas, NMVOC, and aerosol emission variables for each supported scheme are given in `emission_script_data.ncl`, while specific mapping information for these are given scheme specific modules (named `scheme_[schemeID]_data.ncl`). Within these scheme specific modules information on mapping inorganic gas-phase species from emission sources are stored as attributes for the `INORG_MAP_VAR_[schemeID]` and `INORG_MAP_TRN_[schemeID]` variables. The same information for aerosol species are stored as attributes for the `AERO_MAP_VAR_[schemeID]` and `AERO_MAP_TRN_[schemeID]` variables. `INORG_MAP_VAR_[schemeID]` and `AERO_MAP_VAR_[schemeID]` list the relationship between WRF-Chem and source emission variables, while `INORG_MAP_TRN_[schemeID]` and `AERO_MAP_TRN_[schemeID]` list the transformation factor to go from input to WRF-Chem variable (often this will be 1.0, for a direct translation, or 0.0, for just creating an empty emission variable). 
 
-There are two special cases to this:
-
-1. The calculation of NO and NO2 emissions from NOx are controlled by the `nox_frac` variable, not the values stored in `INORG_MAP_TRN_[schemeID]@E_NO` and `INORG_MAP_TRN_[schemeID]@E_NO2`.
-
-If you wish to change these special cases, or to add your own, then you will need to edit the routines in `speciating_emissions_routines.ncl`.
+There is special case to this. The calculation of NO and NO2 emissions from NOx are controlled by the `nox_frac` variable, not the values stored in `INORG_MAP_TRN_[schemeID]@E_NO` and `INORG_MAP_TRN_[schemeID]@E_NO2`. If you wish to change this special case, or to add your own, then you will need to edit the routines in `speciating_emissions_routines.ncl`.
 
 
 ### VOC mapping<a name="VOC-mapping"></a>
@@ -166,11 +163,12 @@ More detail on VOC mapping (particularly on multi-step mapping) can be found on 
 
 ## Contributing<a name="Contributing"></a>
 
+So far this code has been written to work only with datasets / models that I use regularly. To broaden the usefulness of these scripts contributions are very welcome, both to the core code and functionality of these scripts, and also to the scheme settings for working with other emission schemes and outputs. For any bug or issue reports, or feature requests, please use the issue tracker at https://github.com/douglowe/WRF_UoM_EMIT/issues. For new code developments please send a pull request.
+
 
 ## Versions<a name="Versions"></a>
 
 * v1.0 - baseline setup for the PROMOTE project 
-
 
 
 ## Acknowledgements<a name="Acknowledgements"></a>
@@ -180,5 +178,6 @@ Thanks to:
 * Scott Archer-Nicholls, Alex Archibald, and Gordon McFiggans, for the provision of MACCITY and EDGAR NMVOC mapping schemes.
 * Eric Muller for the provision of the timezone maps provided at [http://efele.net/maps/tz/world/](http://efele.net/maps/tz/world/).
 * Chris Webber and Ying Chen for the mapping of `cbmz_mos_orig` emissions.
+* Yafang Cheng and Meng Gao for discussions on the EPRES tool, and provision of their vertical distribution estimates for different emission types.
 
 
