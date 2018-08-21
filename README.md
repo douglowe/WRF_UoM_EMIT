@@ -13,11 +13,13 @@ This project is licensed under the terms of the GNU General Public License v3.0,
 5. [Methodology](#Methodology)
    1. [Diurnal Cycle](#Diurnal-cycle) 
    2. [Conforming Aerosol Emissions](#Conforming-aerosols)
-   3. [Regional Modification of Emissions](Regional-modification)
-   4. [Vertical Distribution of Emissions](Vertical-distribution)
+   3. [Regional Modification of Emissions](#Regional-modification)
+   4. [Vertical Distribution of Emissions](#Vertical-distribution)
    5. [Mapping to WRF-Chem Scheme](#WRF-mapping)
    5. [Mapping VOC emissions](#VOC-mapping)
-6. [Contributing](#contributing)
+6. [Contributing](#Contributing)
+7. [Versions](#Versions)
+8. [Acknowledgements](#Acknowledgements)
 
 ## Overview<a name="Overview"></a>
 
@@ -129,7 +131,11 @@ Olivier, J., J. Peters, C. Granier, G. Pétron, J.F. Müller, and S. Wallens, 
 
 ### Conforming Aerosol Emissions<a name="Conforming-aerosols"></a>
 
-Aerosol emissions for each sector are conformed in a three stage process, using routines in the `preprocess_emissions_routines.ncl` module. Firstly the organic carbon (OC) emissions data provided is scaled by the `oc_om_scale` factor, to give a mass value for organic matter (OM) emissions (which is what WRF-Chem expects). Currently one scaling factor is used for all emission sectors. Secondly the PM2.5 emissions for each sector are compared with the summed black carbon (BC) and OM emissions, and increased to match the BC+OM sum if they are lower. Finally the PM10 emissions for each sector are compared with the PM2.5 emissions, and again increased to match this if they are lower.
+PM2.5 and PM10 emission inputs for WRF-Chem (for MOSAIC aerosol, at least) are treated as simply other inorganic (OIN) emissions (e.g. dust) for these two size ranges (the PM10 size range is 2.5 to 10 um). Most emission databases treat PM2.5 and PM10 emissions as total emitted mass (including OIN, BC, OM, etc), so these emissions must be processed in order to produce inputs suitable for WRF-Chem.
+
+Aerosol emissions for each sector are conformed in a three stage process, using routines in the `preprocess_emissions_routines.ncl` module. Firstly the organic carbon (OC) emissions data provided is scaled by the `oc_om_scale` factor, to give a mass value for organic matter (OM) emissions (which is what WRF-Chem expects). Currently one scaling factor is used for all emission sectors. Secondly the the summed black carbon (BC) and OM emissions are subtracted from the PM2.5 emissions for each sector, to give the remainder PM2.5 mass (setting this to zero if PM2.5 < OM+BC). Finally the sum of the remainder PM2.5 and BC and OM is subtracted from the PM10 emissions for each sector, to give the remainder PM10 mass (again, setting this to zero if it is less than the sum of BC, OM and PM2.5). Subsequentually, the remainder PM2.5 and PM10 mass can be split between OIN and other non-carbon components, if desired.
+
+If the assumptions made here do not fit with the modelling system you use, then this routine will need adapting.
 
 ### Regional Modification of Emissions<a name="Regional-modification"></a>
 
@@ -146,7 +152,6 @@ The combining of input emissions from different sectors, and mapping of these to
 There are two special cases to this:
 
 1. The calculation of NO and NO2 emissions from NOx are controlled by the `nox_frac` variable, not the values stored in `INORG_MAP_TRN_[schemeID]@E_NO` and `INORG_MAP_TRN_[schemeID]@E_NO2`.
-2. PM2.5 and PM10 emission inputs for WRF-Chem (for MOSAIC aerosol, at least) are treated as simply other inorganic (OIN) emissions (e.g. dust) for these size ranges (the PM10 size range is 2.5 to 10 um). Most emission databases treat PM2.5 and PM10 emissions as total emitted mass (including OIN, BC, OM, etc). To convert to the WRF-Chem definition this tool subtracts BC and OM mass from PM2.5 mass, and then PM2.5 mass from PM10 mass.
 
 If you wish to change these special cases, or to add your own, then you will need to edit the routines in `speciating_emissions_routines.ncl`.
 
@@ -162,14 +167,18 @@ More detail on VOC mapping (particularly on multi-step mapping) can be found on 
 ## Contributing<a name="Contributing"></a>
 
 
+## Versions<a name="Versions"></a>
+
+* v1.0 - baseline setup for the PROMOTE project 
+
+
+
 ## Acknowledgements<a name="Acknowledgements"></a>
 
-Rajash Kumar sharing the diurnal cycle information with me, as well as his IDL code which inspired the first version of this tool.
-
-Scott Archer-Nicholls, Alex Archibald, and Gordon McFiggans, for the provision of MACCITY and EDGAR NMVOC mapping schemes.
-
-Eric Muller for the provision of the timezone maps provided at [http://efele.net/maps/tz/world/](http://efele.net/maps/tz/world/).
-
-Chris Webber and Ying Chen for the mapping of `cbmz_mos_orig` emissions.
+Thanks to:
+* Rajash Kumar sharing the diurnal cycle information with me, as well as his IDL code which inspired the initial development of this tool.
+* Scott Archer-Nicholls, Alex Archibald, and Gordon McFiggans, for the provision of MACCITY and EDGAR NMVOC mapping schemes.
+* Eric Muller for the provision of the timezone maps provided at [http://efele.net/maps/tz/world/](http://efele.net/maps/tz/world/).
+* Chris Webber and Ying Chen for the mapping of `cbmz_mos_orig` emissions.
 
 
