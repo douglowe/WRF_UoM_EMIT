@@ -230,7 +230,7 @@ begin
 	do isp = 0, dimsizes(control@vars_mask)-1
 	
 		;;; check that this variable is in the file
-		if(isfilevar(FILE,vars_mask(isp)))
+		if(isfilevar(FILE,control@vars_mask(isp)))
 			;;; extract variable to process
 			var = FILE->$control@vars_mask(isp)$
 		

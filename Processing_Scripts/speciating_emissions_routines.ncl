@@ -1134,6 +1134,32 @@ begin
 		end if
 		end if
 
+	else if(wrfchem_scheme .eq. "cri_mos_tm135b_edgar_htap")
+
+		INORG_VAR = INORG_MAP_VAR_cri_mos_tm135b_edgar_htap
+		INORG_TRN = INORG_MAP_TRN_cri_mos_tm135b_edgar_htap
+		AERO_VAR  = AERO_MAP_VAR_cri_mos_tm135b_edgar_htap
+		AERO_TRN  = AERO_MAP_TRN_cri_mos_tm135b_edgar_htap
+
+
+		if(nmvoc_scheme .eq. "MACCITY_NMVOC")
+		
+			;NMVOC_VAR = NMVOC_maccity_MAP_VAR_cri_mos_edgar_htap
+			;NMVOC_TRN = NMVOC_maccity_MAP_TRN_cri_mos_edgar_htap
+			;NMVOC_WGT = NMVOC_maccity_MOL_WGT_cri_mos_edgar_htap
+
+			print("wrfchem_scheme"+wrfchem_scheme+" not currently supported with nmvoc_scheme "+nmvoc_scheme)
+			exit()
+
+		else if(nmvoc_scheme .eq. "EDGAR_NMVOC_V432")
+		
+			NMVOC_VAR = NMVOC_edgar_MAP_VAR_cri_mos_tm135b_edgar_htap
+			NMVOC_TRN = NMVOC_edgar_MAP_TRN_cri_mos_tm135b_edgar_htap
+			NMVOC_WGT = NMVOC_edgar_MOL_WGT_cri_mos_tm135b_edgar_htap
+			
+		end if
+		end if
+
 	else if(wrfchem_scheme .eq. "cbmz_mos_orig")
 
 		INORG_VAR = INORG_MAP_VAR_cbmz_mos_orig
@@ -1165,6 +1191,7 @@ begin
 	end if
 	end if
 	end if
+    end if
     end if
     
 	;;; load the NMVOC information which is generic for all chemical schemes

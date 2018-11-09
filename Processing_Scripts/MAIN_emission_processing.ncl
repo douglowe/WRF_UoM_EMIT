@@ -117,6 +117,12 @@ regional_modification_of_emissions@vars_scale = (/0.0,50.0/)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;; Options for controlling the creation of NetCDF files.
+;;;;   "NetCDF4Classic" is a flexible format that is compatible
+;;;;    with WRF-Chem (using compression for input files is not
+;;;;    advised).
+setfileoption("nc","Format","NetCDF4Classic")
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;; END OF CONFIGURATION CODE, START OF OPERATIONAL CODE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
