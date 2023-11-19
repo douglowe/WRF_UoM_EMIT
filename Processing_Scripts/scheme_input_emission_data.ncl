@@ -96,7 +96,6 @@ begin
 									"SWD_LDF","SWD_INC","FFF"/)
 	emiss_cat_EDGAR_AP_V432@NH3   = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
 									"CHE","PRU_SOL","MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC"/)
-	emiss_cat_EDGAR_AP_V432@HCL   = (/"ENE","IND","RCO","AGS","AWB","SWD_INC"/)
 	; Definitions for DOM (domestic) and TRA (traffic) are taken from our original speciation for the RONOCO work
 	;           In the long term we need to think about how we want to split these (especially when we're working
 	;           with the individual VBS emission groups)
@@ -131,6 +130,68 @@ begin
 	emiss_cycle_EDGAR_AP_V432_sectors@WWT 		= "RES"
 	emiss_cycle_EDGAR_AP_V432_sectors@SWD_INC 	= "RES"
 	emiss_cycle_EDGAR_AP_V432_sectors@FFF		= "IND"
+
+
+
+;;; EDGAR-HTAP, with HCl, input data
+
+	emiss_cat_EDGAR_AP_V432_HCL = ""
+	;;;; define the sector indexes for each variable
+	emiss_cat_EDGAR_AP_V432_HCL@CO    = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","NFE","FOO_PAP","AWB","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@NOx   = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO",\
+									"CHE","IRO","NFE","FOO_PAP","MNM","AGS","AWB","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@SO2   = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","NFE","FOO_PAP","AWB","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@NMVOC = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","FOO_PAP","PRU_SOL","AWB","SWD_LDF","WWT","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@BC    = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","NFE","FOO_PAP","AWB","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@OC    = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO",\
+									"AWB","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@PM2_5 = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","NFE","FOO_PAP","PRU_SOL","MNM","AGS","AWB",\
+									"SWD_LDF","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@PM10  = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","IRO","NFE","FOO_PAP","NEU","PRU_SOL","MNM","AGS","AWB",\
+									"SWD_LDF","SWD_INC","FFF"/)
+	emiss_cat_EDGAR_AP_V432_HCL@NH3   = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
+									"CHE","PRU_SOL","MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC"/)
+	emiss_cat_EDGAR_AP_V432_HCL@HCL   = (/"ENE","IND","RCO","AGS","AWB","SWD_INC"/)
+	; Definitions for DOM (domestic) and TRA (traffic) are taken from our original speciation for the RONOCO work
+	;           In the long term we need to think about how we want to split these (especially when we're working
+	;           with the individual VBS emission groups)
+	emiss_cat_EDGAR_AP_V432_HCL@OC_DOM= (/"RCO","SWD_INC"/)
+	emiss_cat_EDGAR_AP_V432_HCL@OC_TRA= (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship",\
+									"AWB","FFF"/)
+
+
+	; list of diurnal cycle matching emission sectors for EDGAR AP v432
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO",\
+											"PRO","NMM","CHE","IRO","NFE","FOO_PAP","NEU","PRU_SOL",\
+											"MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC","FFF"/)
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@ENE 		= "POW"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@REF_TRF 	= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@IND 		= "IND" 
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@TRO 		= "TRA"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@TNR_Other = "TRA"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@TNR_Ship  = "SHP"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@RCO 		= "RES"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@PRO 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@NMM 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@CHE 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@IRO 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@NFE 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@FOO_PAP 	= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@NEU 		= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@PRU_SOL 	= "IND"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@MNM 		= "AGR"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@AGS 		= "AGR"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@AWB 		= "AGR"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@SWD_LDF 	= "RES"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@WWT 		= "RES"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@SWD_INC 	= "RES"
+	emiss_cycle_EDGAR_AP_V432_HCL_sectors@FFF		= "IND"
 
 
 
