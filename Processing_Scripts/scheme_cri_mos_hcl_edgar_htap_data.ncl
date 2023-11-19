@@ -27,7 +27,7 @@ INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_NO 	= "NOx"
 INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_NO2 	= "NOx"
 INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_SO2 	= "SO2"
 INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_NH3 	= "NH3"
-INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_HCL 	= "HCl"
+INORG_MAP_VAR_cri_mos_hcl_edgar_htap@E_HCl 	= "HCl"
 
 INORG_MAP_TRN_cri_mos_hcl_edgar_htap = True
 INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_CO 	= 1.0
@@ -35,7 +35,7 @@ INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_NO 	= -9999. 	; this will be replaced lat
 INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_NO2 	= -9999.	; this will be replaced later with 1-NOX_FRAC
 INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_SO2 	= 1.0
 INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_NH3 	= 1.0
-INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_HCL 	= 1.0
+INORG_MAP_TRN_cri_mos_hcl_edgar_htap@E_HCl 	= 1.0
 
 
 ;;;;; aerosol data
