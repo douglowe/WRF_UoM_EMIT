@@ -355,9 +355,9 @@ begin
 		copy_VarAtts(emiss_cat_EDGAR_AP_V432,emiss_cat)
 		emission_sectors = emiss_cycle_EDGAR_AP_V432_sectors
 
-	else if(input_scheme.eq."EDGAR_AP_V432_HCL")
-		copy_VarAtts(emiss_cat_EDGAR_AP_V432_HCL,emiss_cat)
-		emission_sectors = emiss_cycle_EDGAR_AP_V432_HCL_sectors
+	else if(input_scheme.eq."SANH_HCL")
+		copy_VarAtts(emiss_cat_SANH_HCL,emiss_cat)
+		emission_sectors = emiss_cycle_SANH_HCL_sectors
 
 	;;; NMVOC Emission Schemes (note: don't need to copy attributes to emiss_cat for these)
 	else if(input_scheme.eq."EDGAR_NMVOC_V432")

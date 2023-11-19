@@ -151,7 +151,7 @@ begin
 ;;;;; INPUT schemes setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-available_input_schemes = (/"EDGAR_HTAP","EDGAR_AP_V432","EDGAR_AP_V432_HCL","IITM"/)   ; this is be a single string, space delimited, listing all the available schemes
+available_input_schemes = (/"EDGAR_HTAP","EDGAR_AP_V432","SANH_HCL","IITM"/)   ; this is be a single string, space delimited, listing all the available schemes
 
 
 
