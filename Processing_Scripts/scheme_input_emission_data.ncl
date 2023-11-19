@@ -96,6 +96,7 @@ begin
 									"SWD_LDF","SWD_INC","FFF"/)
 	emiss_cat_EDGAR_AP_V432@NH3   = (/"ENE","REF_TRF","IND","TRO","TNR_Other","TNR_Ship","RCO","NMM",\
 									"CHE","PRU_SOL","MNM","AGS","AWB","SWD_LDF","WWT","SWD_INC"/)
+	emiss_cat_EDGAR_AP_V432@HCL   = (/"ENE","IND","RCO","AGS","AWB","SWD_INC"/)
 	; Definitions for DOM (domestic) and TRA (traffic) are taken from our original speciation for the RONOCO work
 	;           In the long term we need to think about how we want to split these (especially when we're working
 	;           with the individual VBS emission groups)
