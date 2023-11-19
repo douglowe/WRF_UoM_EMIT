@@ -155,7 +155,7 @@ begin
 									"AWB","SWD_INC","PRO","MNM","AGS"/)
 	emiss_cat_SANH_HCL@NH3   = (/"ENE","IND","TRO","TNR_Other","TNR_Ship","RCO",\
 									"AWB","MNM","AGS"/)
-	emiss_cat_SANH_HCL@HCL   = (/"ENE","IND","RCO","AGS","AWB","SWD_INC"/)
+	emiss_cat_SANH_HCL@HCl   = (/"ENE","IND","RCO","AGS","AWB","SWD_INC"/)
 	; Definitions for DOM (domestic) and TRA (traffic) are taken from our original speciation for the RONOCO work
 	;           In the long term we need to think about how we want to split these (especially when we're working
 	;           with the individual VBS emission groups)
