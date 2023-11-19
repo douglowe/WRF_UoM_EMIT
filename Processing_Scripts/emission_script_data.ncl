@@ -212,11 +212,11 @@ variable_lists@AERO_cri_mos_tm135b_edgar_htap = (/"E_BC_1","E_EC_1_25","E_EC_25_
 										"E_OC_25_10","E_PM25","E_OIN_25","E_OIN_10"/)
 
 ; settings for "cri_mos_hcl_edgar_htap" (emiss_opt==?????)
-variable_lists@GAS_cri_mos_hcl_edgar_htap = (/"E_CO", "E_NO", "E_NO2",  "E_SO2", "E_NH3"/)
+variable_lists@GAS_cri_mos_hcl_edgar_htap = (/"E_CO", "E_NO", "E_NO2",  "E_SO2", "E_NH3", "E_HCl"/)
 variable_lists@NMVOC_cri_mos_hcl_edgar_htap = (/"E_C2H6","E_C3H8","E_NC4H10","E_C2H4","E_C3H6","E_TBUT2ENE",\
 									"E_C2H2","E_HCHO","E_CH3CHO","E_C2H5CHO","E_KET","E_MEK",\
 									"E_CH3OH","E_C2H5OH","E_HCOOH","E_CH3CO2H","E_BENZENE",\
-									"E_TOLUENE","E_OXYL","E_C5H8","E_APINENE","E_BPINENE","E_HCl"/)
+									"E_TOLUENE","E_OXYL","E_C5H8","E_APINENE","E_BPINENE"/)
 variable_lists@AERO_cri_mos_hcl_edgar_htap = (/"E_BC_1","E_EC_1_25","E_EC_25_10","E_OC_DOM","E_OC_TRA", \
 										"E_OC_25_10","E_PM25","E_OIN_25","E_OIN_10"/)
 
